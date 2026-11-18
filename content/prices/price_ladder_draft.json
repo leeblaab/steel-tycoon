@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "note": "Grade ladder: revenue = dispatch outflow x grade price. Gates tie tramp chemistry (and QTB) to revenue. Ranges flagged sme_pending; commodity bands cross-checked against Turkish long-products market (Oct 2026 spot: rebar ~600-645, commodity WR ~595-665, special WR ~675-720). Restructured to a flat 'grades' array to match the verified Python mirror (mirror/grade_pricing_mirror.py); 'CQ_high_strength' merges the draft's 1008 high-strength and CQ-15 rows using Yasser's values (640-680, Cu 0.12, Sn 0.025).",
+  "grades": [
+    {
+      "id": "B500B",
+      "product": "rebar",
+      "price_usd_t": "620-650",
+      "price_mid": 635.0,
+      "cu_max": 0.25,
+      "sn_max": 0.05,
+      "requires": null,
+      "sme_pending": true
+    },
+    {
+      "id": "QST32-3",
+      "product": "rebar",
+      "price_usd_t": "675-700",
+      "price_mid": 687.5,
+      "cu_max": 0.1,
+      "sn_max": 0.02,
+      "requires": "qtb",
+      "sme_pending": true
+    },
+    {
+      "id": "SAE1006_1008_commodity",
+      "product": "wire_rod",
+      "price_usd_t": "595-665",
+      "price_mid": 630.0,
+      "cu_max": 0.25,
+      "sn_max": 0.05,
+      "requires": null,
+      "sme_pending": true
+    },
+    {
+      "id": "CQ_high_strength",
+      "product": "wire_rod",
+      "price_usd_t": "640-680",
+      "price_mid": 660.0,
+      "cu_max": 0.12,
+      "sn_max": 0.025,
+      "requires": null,
+      "sme_pending": false
+    },
+    {
+      "id": "SG-2_special",
+      "product": "wire_rod",
+      "price_usd_t": "680-720",
+      "price_mid": 700.0,
+      "cu_max": 0.05,
+      "sn_max": 0.01,
+      "requires": null,
+      "sme_pending": true
+    }
+  ],
+  "fallback": {
+    "id": "off_grade_scrap",
+    "price_usd_t": 475.0,
+    "sme_pending": false
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "$schema_draft": "SteelX drill-in process map v0.1 (UI Phase, locked 2026-10-07)",
+  "purpose": "Data-driven flat-vector process schematic per plant, opened by tapping a placed node. Renderer draws symbols + edges + labels; tap symbol -> info card pops. Phase 2 later attaches live parameters + editable controls to symbols.",
+  "fields": {
+    "id": "snake_case unique id, matches the node id in nodes_phase1.json (e.g. drp, eaf, lf, cc, bar_mill, wire_rod_mill, smp_overview)",
+    "title": "display title of the map",
+    "symbols": "array of {id, label, symbol, x, y, card_id}. x/y are normalized canvas coords 0..1 (renderer scales to panel size). symbol = glyph key resolved to content/assets/symbols/<map_id>_<symbol>.png; missing file -> renderer falls back to a flat vector glyph. card_id optional: tap symbol pops that card (must resolve in cards_phase1_draft.json).",
+    "edges": "array of {from, to, label, kind}. from/to are symbol ids. kind: gas|solid|liquid|electric — color language: gas teal, solid material keeps the material color (ore red, scrap grey, product grey, hot zone orange), electric grey. label = stream name shown on the edge (e.g. 'Reducing gas').",
+    "style": "flat vector grammar (Yasser reference, Midrex diagram): slate-blue background, white symbols/pipes, white annotation labels, orange = hot-zone accent. Colors must match the grid colors the player already learned.",
+    "sme_pending": "true until Yasser calibrates the process topology/labels",
+    "calibrated_by": "SME name once calibrated"
+  },
+  "phase1_maps": [
+    "drp",
+    "eaf",
+    "lf",
+    "cc",
+    "bar_mill",
+    "wire_rod_mill",
+    "smp_overview"
+  ],
+  "entry_point": "tap placed node -> opens its map (confirmed 2026-10-07); maps for non-listed plants are simple maps later",
+  "naming": "symbol art files: content/assets/symbols/<map_id>_<symbol>.png; grid tiles: content/assets/icons/<node_id>.png (matches node ids exactly)"
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "id": "dispatch",
+  "name": "Dispatch Bay (overhead crane + truck/rail)",
+  "category": "logistics",
+  "crane_rate_t_h": "60-120",
+  "truck_cycle_min": "15-20",
+  "truck_size_t": "20-25",
+  "effective_tph": "60-100",
+  "capex_usd": "3-8M",
+  "opex_per_t": 4,
+  "notes": "effective rate = min(crane rate, truck cadence x truck size); the forgotten tail bottleneck — can back up both mills",
+  "sme_pending": true
+}

@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "schema": {
+    "id": "string",
+    "name": "string",
+    "category": "technology|equipment",
+    "prerequisites": "list of node_ids placed and/or upgrade_ids completed",
+    "cost_usd": "number",
+    "effect": "{stat, delta} applied to the target node",
+    "appears_when": "bottleneck trigger — upgrade only shows in palette when firing",
+    "card_id": "learning card explaining why the upgrade works",
+    "sme_pending": "bool"
+  },
+  "upgrades": [
+    {
+      "id": "scrap_contract_bushing",
+      "name": "Premium Scrap Contract (Bushing)",
+      "category": "material",
+      "prerequisites": [
+        "scrap_yard"
+      ],
+      "cost_usd": 5000000,
+      "effect": {
+        "node": "scrap_yard",
+        "stat": "yield_loss_pct",
+        "delta": -3
+      },
+      "appears_when": "yield_loss_cost_usd_per_tick > threshold for 10 ticks",
+      "card_id": "scrap_grades",
+      "sme_pending": true
+    },
+    {
+      "id": "eaf_upgrade",
+      "name": "EAF Power & DRI Ceiling Upgrade",
+      "category": "equipment",
+      "prerequisites": [
+        "eaf"
+      ],
+      "cost_usd": 25000000,
+      "effect": {
+        "node": "eaf",
+        "stat": "dri_soft_ceiling_pct",
+        "delta": 10
+      },
+      "appears_when": "tap_to_tap_min > 90 OR eaf_queue_tph > 0 for 10 ticks",
+      "card_id": "eaf_melt_shop",
+      "sme_pending": true
+    },
+    {
+      "id": "ccm_extra_strand",
+      "name": "Additional CCM Strand",
+      "category": "equipment",
+      "prerequisites": [
+        "cc",
+        "eaf_upgrade"
+      ],
+      "cost_usd": 30000000,
+      "effect": {
+        "node": "cc",
+        "stat": "rate_t_h",
+        "delta": 40
+      },
+      "appears_when": "cc_queue_tph > 0 for 10 ticks (governing limit firing)",
+      "card_id": "continuous_caster",
+      "sme_pending": true
+    },
+    {
+      "id": "rf_recuperator",
+      "name": "Reheating Furnace Recuperator",
+      "category": "equipment",
+      "prerequisites": [
+        "bar_mill"
+      ],
+      "cost_usd": 8000000,
+      "effect": {
+        "node": "bar_mill",
+        "stat": "opex_per_t",
+        "delta": -6
+      },
+      "appears_when": "reheating opex share > 25% of mill opex for 10 ticks",
+      "card_id": "reheating_furnace",
+      "sme_pending": true
+    },
+    {
+      "id": "qtb",
+      "name": "Quench and Self-Tempering Box (QST line)",
+      "category": "equipment",
+      "prerequisites": [
+        "bar_mill",
+        "eaf_upgrade",
+        "ccm_extra_strand"
+      ],
+      "cost_usd": 12000000,
+      "effect": {
+        "node": "bar_mill",
+        "stat": "grade_access",
+        "delta": "QST32-3"
+      },
+      "appears_when": "process gate: clean steel (chemistry) + consistent hot billet — not a shopping-list unlock",
+      "card_id": "qtb",
+      "sme_pending": true
+    },
+    {
+      "id": "covered_dri_storage",
+      "name": "Covered DRI Storage",
+      "category": "equipment",
+      "prerequisites": [
+        "dri_yard"
+      ],
+      "cost_usd": 6000000,
+      "effect": {
+        "node": "dri_yard",
+        "stat": "aging_penalty_days",
+        "delta": 30
+      },
+      "appears_when": "stockpile_age_days > 30 (aging penalty firing)",
+      "card_id": "dri_storage",
+      "sme_pending": true
+    }
+  ]
+}

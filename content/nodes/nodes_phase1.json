@@ -1,0 +1,292 @@
+{
+  "schema_version": 1,
+  "phase1_nodes": [
+    {
+      "id": "jetty",
+      "name": "Bulk Jetty",
+      "category": "logistics",
+      "role": "raw material intake",
+      "supply_rate_t_month": "80000-150000",
+      "capex_usd": "20-50M",
+      "notes": "unloader 500-1000 t/h; ship cadence is the supply bottleneck",
+      "sme_pending": false,
+      "calibrated_by": "Yasser Awadein",
+      "capex_usd_mid": 35000000.0,
+      "opex_per_t": 12,
+      "art": "assets/icons/jetty.png"
+    },
+    {
+      "id": "scrap_yard",
+      "name": "Scrap Yard",
+      "category": "material",
+      "grades": [
+        {
+          "name": "bushing",
+          "cu_pct": "<0.05",
+          "sn_pct": "<0.01",
+          "game_effect": "lowest yield loss, highest premium product output"
+        },
+        {
+          "name": "hms1_hms2",
+          "cu_pct": "0.10-0.25",
+          "sn_pct": "0.02-0.05",
+          "game_effect": "standard baseline"
+        },
+        {
+          "name": "shredded",
+          "cu_pct": "0.25-0.50",
+          "sn_pct": "0.04-0.08",
+          "game_effect": "high yield loss, forces blending with DRI to dilute"
+        }
+      ],
+      "stockpile_kt": "50-150",
+      "scrap_blend_default": {
+        "hms1_hms2": 0.7,
+        "DRI": 0.3
+      },
+      "capex_usd": "5-15M",
+      "sme_pending": false,
+      "calibrated_by": "Yasser Awadein",
+      "capex_usd_mid": 10000000.0,
+      "opex_per_t": 8,
+      "scrap_arrival_t_day": "1000-2000",
+      "scrap_arrival_t_day_mid": 1500.0,
+      "supply_note": "scrap arrives on its own cadence (separate from ore vessels) — for SME confirm",
+      "art": "assets/icons/scrap_yard.png",
+      "handling_loss_pct": "1-2",
+      "handling_loss_pct_mid": 1.5
+    },
+    {
+      "id": "dri_yard",
+      "name": "DRI Storage / Silos",
+      "category": "material",
+      "stockpile_kt": "30-100",
+      "notes": "re-oxidation risk, density ~1000 kg/m3",
+      "capex_usd": "10-25M",
+      "sme_pending": false,
+      "calibrated_by": "Yasser Awadein",
+      "aging_penalty_days": 30,
+      "aging_penalty_energy_pct": 5,
+      "capex_usd_mid": 17500000.0,
+      "opex_per_t": 6,
+      "art": "assets/icons/dri_yard.png"
+    },
+    {
+      "id": "drp",
+      "name": "Direct Reduction Plant",
+      "category": "technology",
+      "variants": [
+        "gas_shaft",
+        "coal_rotary_kiln"
+      ],
+      "capacity_t_year": "500000-2500000",
+      "capex_usd_per_tpa": "150-350",
+      "sme_pending": false,
+      "calibrated_by": "Yasser Awadein",
+      "sub_optimal": {
+        "met_pct": 85,
+        "energy_gj_t": 14
+      },
+      "capex_usd_mid": 250000000.0,
+      "opex_per_t": 45,
+      "processor": true,
+      "yield_pct": "95-98",
+      "yield_note": "metal yield from ore to DRI (FeO reduction + dust/fines loss) — for SME confirm",
+      "art": "assets/icons/drp.png",
+      "drift_days": 10,
+      "kiln_availability_pct": "85-92",
+      "kiln_availability_pct_mid": 88.5
+    },
+    {
+      "id": "eaf",
+      "name": "EAF Melt Shop",
+      "category": "equipment",
+      "tap_t": "80-120",
+      "tap_to_tap_min": "45-60",
+      "power_kwh_t": "450-600",
+      "capex_usd_per_tpa": "300-500",
+      "sme_pending": false,
+      "calibrated_by": "Yasser Awadein",
+      "dri_soft_ceiling_pct": "60-70",
+      "power_delta_kwh_t_per_10pct_dri": 14.5,
+      "capex_usd_mid": 175000000.0,
+      "opex_per_t": 60,
+      "processor": true,
+      "yield_pct": "94-97",
+      "yield_note": "EAF melt yield (burning loss + slag carry) — for SME confirm; discrete-heat model in sim uses this only as a placeholder",
+      "art": "assets/icons/eaf.png"
+    },
+    {
+      "id": "lf",
+      "name": "Ladle Furnace",
+      "category": "equipment",
+      "cycle_min": "20-40",
+      "capex_usd": "15-30M",
+      "sme_pending": false,
+      "calibrated_by": "Yasser Awadein",
+      "capex_usd_mid": 22500000.0,
+      "opex_per_t": 12,
+      "art": "assets/icons/lf.png"
+    },
+    {
+      "id": "cc",
+      "name": "Continuous Caster",
+      "category": "equipment",
+      "strands": "4",
+      "rate_t_h": "150-200",
+      "yield_pct": "96-98",
+      "capex_usd": "40-80M",
+      "sme_pending": false,
+      "calibrated_by": "Yasser Awadein",
+      "governing_limit": true,
+      "hold_penalty_tiers": [
+        {
+          "max_hour": 1,
+          "power_penalty_pct": 5,
+          "note": "minor energy penalty to keep heat liquid"
+        },
+        {
+          "max_hour": 2,
+          "power_penalty_pct": 15,
+          "refractory_wear": true,
+          "note": "moderate penalty + refractory wear"
+        },
+        {
+          "max_hour": 99,
+          "note": "temp below tapping threshold: dump (100% material loss) or chemical heat injection (massive opex spike)"
+        }
+      ],
+      "capex_usd_mid": 60000000.0,
+      "opex_per_t": 15,
+      "art": "assets/icons/cc.png"
+    },
+    {
+      "id": "bar_mill",
+      "name": "Bar Mill (6-8 stands + block)",
+      "category": "equipment",
+      "rate_t_h": "60-100",
+      "capex_usd_per_tpa": "125-250",
+      "sme_pending": false,
+      "calibrated_by": "Yasser Awadein",
+      "capex_usd_mid": 100000000.0,
+      "opex_per_t": 25,
+      "processor": true,
+      "yield_pct": "92-96",
+      "yield_note": "mill yield incl. crop/scraps and cobble loss — for SME confirm",
+      "art": "assets/icons/bar_mill.png"
+    },
+    {
+      "id": "wire_rod_mill",
+      "name": "Wire Rod Mill (10-16 stands, Stelmor)",
+      "category": "equipment",
+      "rate_t_h": "40-60",
+      "capex_usd_per_tpa": "150-300",
+      "sme_pending": false,
+      "calibrated_by": "Yasser Awadein",
+      "capex_usd_mid": 67500000.0,
+      "opex_per_t": 30,
+      "processor": true,
+      "yield_pct": "92-96",
+      "yield_note": "mill yield incl. crop/scraps and cobble loss — for SME confirm",
+      "art": "assets/icons/wire_rod_mill.png"
+    },
+    {
+      "id": "billet_yard",
+      "name": "Billet / Bloom Yard",
+      "category": "logistics",
+      "buffer_days": "3-10",
+      "sme_pending": false,
+      "calibrated_by": "Yasser Awadein",
+      "capex_usd_mid": 8000000.0,
+      "opex_per_t": 4,
+      "art": "assets/icons/billet_yard.png"
+    },
+    {
+      "id": "finished_yard",
+      "name": "Finished Goods Yard",
+      "category": "logistics",
+      "buffer_days": "5-15",
+      "sme_pending": false,
+      "calibrated_by": "Yasser Awadein",
+      "capex_usd_mid": 6000000.0,
+      "opex_per_t": 4,
+      "art": "assets/icons/finished_yard.png"
+    },
+    {
+      "id": "dispatch",
+      "name": "Dispatch Bay (overhead crane + truck/rail)",
+      "category": "logistics",
+      "crane_rate_t_h": "60-120",
+      "truck_cycle_min": "15-20",
+      "truck_size_t": "20-25",
+      "effective_tph": "60-100",
+      "capex_usd": "3-8M",
+      "capex_usd_mid": 5500000.0,
+      "opex_per_t": 4,
+      "processor": true,
+      "yield_pct": "100",
+      "yield_note": "no conversion; dispatch is a pure throughput node (crane + truck cadence)",
+      "notes": "effective rate = min(crane rate, truck cadence x truck size); the forgotten tail bottleneck — can back up both mills; revenue only when the crane loads the truck",
+      "sme_pending": false,
+      "calibrated_by": "Yasser Awadein",
+      "art": "assets/icons/dispatch.png"
+    }
+  ],
+  "flow": [
+    {
+      "from": "jetty",
+      "to": "drp",
+      "transport": "conv_ore_drp"
+    },
+    {
+      "from": "drp",
+      "to": "eaf",
+      "transport": "conv_dri_eaf"
+    },
+    {
+      "from": "scrap_yard",
+      "to": "eaf",
+      "transport": "scrap_feed"
+    },
+    {
+      "from": "eaf",
+      "to": "lf",
+      "transport": null
+    },
+    {
+      "from": "lf",
+      "to": "cc",
+      "transport": null
+    },
+    {
+      "from": "cc",
+      "to": "billet_yard",
+      "transport": "conv_ccm_billet"
+    },
+    {
+      "from": "billet_yard",
+      "to": "bar_mill",
+      "transport": "conv_billet_rebar"
+    },
+    {
+      "from": "billet_yard",
+      "to": "wire_rod_mill",
+      "transport": "conv_billet_wr"
+    },
+    {
+      "from": "bar_mill",
+      "to": "finished_yard",
+      "transport": null
+    },
+    {
+      "from": "wire_rod_mill",
+      "to": "finished_yard",
+      "transport": null
+    },
+    {
+      "from": "finished_yard",
+      "to": "dispatch",
+      "transport": "conv_mill_dispatch"
+    }
+  ]
+}

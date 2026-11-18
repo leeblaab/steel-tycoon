@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "note": "Domain 3 Operations configuration (demo defaults, editable at later stages — Yasser GO 2026-10-10). Values are configuration data, NOT industrial calibration claims; each asset entry keeps sme_pending=true until SME calibration. Mirror contract: mirror/operations_domain3_mirror.py. Rule logic lives in the mirror; this file carries only tunable parameters.",
+  "assets": [
+    {"id": "eaf", "mtbf_hours": 2000.0, "mttr_hours": 24.0, "headcount": 30, "sme_pending": true},
+    {"id": "drp", "mtbf_hours": 3000.0, "mttr_hours": 36.0, "headcount": 25, "sme_pending": true},
+    {"id": "cc", "mtbf_hours": 1500.0, "mttr_hours": 12.0, "headcount": 20, "sme_pending": true},
+    {"id": "bar_mill", "mtbf_hours": 2500.0, "mttr_hours": 18.0, "headcount": 25, "sme_pending": true},
+    {"id": "wire_rod_mill", "mtbf_hours": 2500.0, "mttr_hours": 18.0, "headcount": 20, "sme_pending": true},
+    {"id": "crane", "mtbf_hours": 1800.0, "mttr_hours": 8.0, "headcount": 10, "sme_pending": true}
+  ],
+  "spares": {
+    "delivery_lead_days": 7.0,
+    "unit": "days",
+    "sme_pending": true
+  },
+  "planned_shutdown": {
+    "every_days": 90.0,
+    "duration_days": 3.0,
+    "unit": "days",
+    "sme_pending": true
+  },
+  "manpower": {
+    "wage_per_person_day": 120.0,
+    "unit": "USD per person per day",
+    "sme_pending": true
+  },
+  "morale": {
+    "bands": [
+      {"threshold": 50, "breakdown_multiplier": 1.0, "sme_pending": true},
+      {"threshold": 70, "breakdown_multiplier": 0.7, "sme_pending": true},
+      {"threshold": 90, "breakdown_multiplier": 0.5, "sme_pending": true}
+    ],
+    "unit": "multiplier on per-tick failure probability",
+    "sme_pending": true
+  },
+  "demurrage": {
+    "free_days": 3.0,
+    "penalty_usd_per_day": 15000.0,
+    "unit": "USD per day beyond free time",
+    "berth_capacity": 1,
+    "arrival_ships_per_day": 1,
+    "unload_t_per_day": 1000.0,
+    "ship_cargo_t": 1000.0,
+    "note": "Micro-step 6 berth model (Yasser GO 2026-10-11): single berth, FIFO ships; flat USD/day per ship beyond free time. Ship state machine: arrive (only while berth has capacity) -> wait (ship-day accrual, billed beyond free time) -> unload (berth->yard boundary, block rule intact) -> depart when hold empty. Demo cadence/rate values, editable later.",
+    "sme_pending": true
+  },
+  "dispatch": {
+    "effective_tph": 80.0,
+    "arrival_t_per_tick": 100.0,
+    "yard_capacity_t": 5000.0,
+    "congestion_ticks": 3,
+    "unit": "tonnes per tick (1 tick = 1 in-game hour)",
+    "note": "Micro-step 5 chain contract: dispatch capacity = effective_tph when crane available, 0 when crane down; arrivals at arrival_t_per_tick while yard below capacity; yard capped at yard_capacity_t; upstream restricted after congestion_ticks consecutive restricted ticks. Demo values, editable later.",
+    "sme_pending": true
+  }
+}

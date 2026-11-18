@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "note": "Domain 2 Economics configuration (demo defaults, editable at later stages — Yasser GO 2026-10-11). Values are configuration data, NOT industrial calibration claims; every entry keeps sme_pending=true until SME calibration. Rule logic lives in mirror/economics_domain2_mirror.py; this file carries only tunable parameters. Grade price bands live in content/prices/price_ladder_draft.json (single source of truth — economics does NOT re-define them). Canonical units per docs/foundations_definitions.md.",
+  "sales_index": {
+    "band": [0.85, 1.05],
+    "step": 0.02,
+    "mean_reversion_prob": 0.5,
+    "unit": "index (dimensionless multiplier on grade price_mid)",
+    "note": "Yasser-approved 2026-10-10: band 0.85-1.05, walk step 0.02 per day, mean-reverting toward 1.0. Seeded RNG walk only — economics consumes no other RNG draws (RNG contract belongs to Domain 3).",
+    "sme_pending": false
+  },
+  "demand_gate": {
+    "min_index_to_sell": 0.90,
+    "unit": "index",
+    "note": "Below this index customers do not take delivery; tonnes stay as finished_yard inventory (material stored, not lost — balance-safe). Demo value, editable later.",
+    "sme_pending": true
+  },
+  "order_book": {
+    "late_penalty_pct_per_day": 1.5,
+    "late_penalty_cap_pct": 10.0,
+    "unit": "percent of order signed value per day late, capped at cap_pct",
+    "note": "Recommended demo value 1.5%/day capped at 10% (flagged sme_pending). Penalty accrues on the FULL signed order value (tonnage x price_mid at signing), not on remaining tonnage at fulfillment. Late-delivery risk is the forward-contract trade-off (playability).",
+    "sme_pending": true
+  },
+  "qc_tiers": {
+    "tiers": [
+      {"id": "prime", "haircut_pct": 0.0, "sme_pending": true},
+      {"id": "secondary", "haircut_pct": 8.0, "sme_pending": true},
+      {"id": "prompt", "haircut_pct": 15.0, "sme_pending": true}
+    ],
+    "unit": "percent haircut applied to grade price_mid",
+    "note": "QC tier = how many price bands the chemistry fell below the assigned grade (0=prime, 1=secondary, 2+=prompt). Downgrade trigger: chemistry fail on Cu/Sn gate -> next passing band. Grade assignment rule is NOT re-implemented here — it is grade_pricing_mirror.assign_grade (highest price-band midpoint the chemistry passes, inclusive at-limit). Haircuts are recommended demo values, flagged sme_pending.",
+    "sme_pending": true
+  },
+  "utilities": {
+    "unit": "USD per tonne processed per day (per asset, per utility)",
+    "note": "Per-asset daily utility cost breakdown. Config-driven only — engine logic contains no hard-coded commercial assumptions. Demo values, editable later.",
+    "assets": [
+      {"id": "eaf", "water_usd_t": 2.5, "compressed_air_usd_t": 4.0, "electricity_usd_t": 45.0, "ng_usd_t": 12.0, "sme_pending": true},
+      {"id": "drp", "water_usd_t": 2.0, "compressed_air_usd_t": 3.0, "electricity_usd_t": 20.0, "ng_usd_t": 25.0, "sme_pending": true},
+      {"id": "cc", "water_usd_t": 1.5, "compressed_air_usd_t": 2.0, "electricity_usd_t": 10.0, "ng_usd_t": 0.0, "sme_pending": true},
+      {"id": "bar_mill", "water_usd_t": 2.0, "compressed_air_usd_t": 3.5, "electricity_usd_t": 25.0, "ng_usd_t": 15.0, "sme_pending": true},
+      {"id": "wire_rod_mill", "water_usd_t": 2.0, "compressed_air_usd_t": 3.5, "electricity_usd_t": 28.0, "ng_usd_t": 18.0, "sme_pending": true},
+      {"id": "dispatch", "water_usd_t": 0.5, "compressed_air_usd_t": 1.0, "electricity_usd_t": 3.0, "ng_usd_t": 0.0, "sme_pending": true}
+    ],
+    "sme_pending": true
+  },
+  "specific_energy": {
+    "unit": "kWh per tonne processed and Nm3 NG per tonne processed (per asset)",
+    "note": "Specific energy consumption KPI per asset. Zero-production days report KPI as None/NA — never 0, never a division by zero. Demo values, editable later.",
+    "assets": [
+      {"id": "eaf", "kwh_t": 520.0, "nm3_ng_t": 20.0, "sme_pending": true},
+      {"id": "drp", "kwh_t": 100.0, "nm3_ng_t": 45.0, "sme_pending": true},
+      {"id": "cc", "kwh_t": 30.0, "nm3_ng_t": 0.0, "sme_pending": true},
+      {"id": "bar_mill", "kwh_t": 120.0, "nm3_ng_t": 30.0, "sme_pending": true},
+      {"id": "wire_rod_mill", "kwh_t": 140.0, "nm3_ng_t": 35.0, "sme_pending": true},
+      {"id": "dispatch", "kwh_t": 5.0, "nm3_ng_t": 0.0, "sme_pending": true}
+    ],
+    "sme_pending": true
+  }
+}

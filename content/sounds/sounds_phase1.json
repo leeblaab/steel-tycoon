@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "sound_events": {
+    "place_confirm": "click1.wav",
+    "crisis_alarm": "error_001.wav",
+    "day_chime": "confirmation_001.wav",
+    "dispatch_kaching": "handleCoins.ogg"
+  },
+  "source": "Kenney CC0 packs via GitHub mirrors (Calinou/kenney-ui-audio, Calinou/kenney-interface-sounds, iwenzhou/kenney RPG pack)",
+  "license": "CC0 1.0 Universal — see LICENSE.txt"
+}

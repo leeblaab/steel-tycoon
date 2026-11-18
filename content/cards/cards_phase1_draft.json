@@ -1,0 +1,448 @@
+{
+  "schema_version": 1,
+  "items": [
+    {
+      "id": "drp_gas_shaft",
+      "title": "Gas-Based Shaft Furnace (DRP)",
+      "category": "technology",
+      "body": "Natural gas is reformed into H2/CO and reduces iron ore pellets in a counter-current shaft. Highest metallization of the DR routes; needs good-quality pellets and cheap gas.",
+      "key_stats": {
+        "capacity": "0.5-2.5 Mt/yr",
+        "metallization": "92-95%",
+        "vertical_reduction": "85-95%",
+        "product_density": "~1000 kg/m3",
+        "energy": "10-12 GJ/t DRI"
+      },
+      "unlock_condition": "on_place:drp",
+      "trivia": "Gas-based DR dominates globally because one shaft line is simpler to run than a kiln + cooler circuit.",
+      "sme_pending": false,
+      "source": "worldsteel/GAST vendor literature",
+      "calibrated_by": "Yasser Awadein",
+      "game_mechanic": {
+        "optimal": "92-95% met, 10-12 GJ/t (well-optimized modern plant)",
+        "sub_optimal_state": "85% met, 14 GJ/t when gas-to-ore ratio or shaft temperature is mismanaged - teaches process control"
+      }
+    },
+    {
+      "id": "drp_rotary_kiln",
+      "title": "Coal-Based Rotary Kiln (DRP)",
+      "category": "technology",
+      "body": "Co-reduction of ore fines + coal in a rotating kiln. Lower metallization but tolerant of cheaper ores and no gas dependency; kiln dust is recycled back.",
+      "key_stats": {
+        "capacity": "0.3-1.5 Mt/yr",
+        "metallization": "85-92%",
+        "ore_grade_tolerance": "wider than shaft route",
+        "capex_per_tpa": "150-250 USD"
+      },
+      "unlock_condition": "on_place:drp",
+      "trivia": "Kiln plants historically won where gas was expensive and ore was cheap fines.",
+      "sme_pending": false,
+      "source": "GAST / vendor literature",
+      "calibrated_by": "Yasser Awadein",
+      "game_mechanic": {
+        "availability_stat": "added - kiln availability/repair rate becomes a card key_stat and engine field"
+      }
+    },
+    {
+      "id": "eaf_melt_shop",
+      "title": "EAF Melt Shop",
+      "category": "equipment",
+      "body": "Arc melting of scrap + DRI. The DRI share is capped by metallization and Si/Al handling — most shops run 50-70% DRI without penalty, higher shares need hot-briquetted or carbothermic input.",
+      "key_stats": {
+        "tap_size": "80-120 t",
+        "tap_to_tap": "45-60 min",
+        "power": "450-600 kWh/t",
+        "dri_share_typical": "50-70%"
+      },
+      "unlock_condition": "on_place:eaf",
+      "trivia": "Tap-to-tap time, not arc power, is where melt shops actually lose tonnage.",
+      "sme_pending": false,
+      "source": "industry ranges",
+      "calibrated_by": "Yasser Awadein",
+      "game_mechanic": {
+        "dri_soft_ceiling": "60-70%",
+        "power_rule": "+14.5 kWh/t per 10% DRI share increase",
+        "penalty_state": "DRI share >80% without Carbon Injection or Hot DRI Charging tech -> tap-to-tap balloons to 90+ min (chemical energy deficit)"
+      }
+    },
+    {
+      "id": "lf_ladle",
+      "title": "Ladle Furnace",
+      "category": "equipment",
+      "body": "The chemistry and temperature tuner. It does not melt steel — it refines it: superheat to casting temperature, trim chemistry with alloying additions, desulfurize under basic slag. It slightly reduces tramp/impurity level and guarantees the heat reaches the caster at the exact right temperature. If skipped, caster yield drops.",
+      "key_stats": {
+        "cycle": "20-40 min/heat",
+        "argon": "refining gas for stirring/degassing",
+        "consumables": "electrode wear, refractories, alloying additions",
+        "capex": "15-30M USD"
+      },
+      "unlock_condition": "on_place:lf",
+      "trivia": "LF is the node that lets one EAF feed a caster without waiting for every heat.",
+      "sme_pending": false,
+      "source": "industry ranges",
+      "calibrated_by": "Yasser Awadein",
+      "game_mechanic": {
+        "tramp_reduction": "reduces heat impurity level slightly",
+        "temperature_guarantee": "heat at exact casting temperature",
+        "skip_penalty": "if skipped, caster yield drops"
+      }
+    },
+    {
+      "id": "cc_strands",
+      "title": "Continuous Caster",
+      "category": "equipment",
+      "body": "The governing limit. Turns liquid steel into solid billets at 150-200 t/h across 1-4 strands. If the EAF taps faster than the CCM can cast, the Heat Hold timer starts — and hold vs dump is the melt shop's defining dilemma.",
+      "key_stats": {
+        "casting_speed": "per strand, m/min",
+        "strands": "1-4",
+        "yield": "96-98%",
+        "rate": "150-200 t/h (4 strands)",
+        "capex": "40-80M USD"
+      },
+      "unlock_condition": "on_place:cc",
+      "trivia": "Caster availability, not furnace power, usually sets long-product plant throughput.",
+      "sme_pending": false,
+      "source": "industry ranges",
+      "calibrated_by": "Yasser Awadein",
+      "game_mechanic": {
+        "governing_limit_rule": "caster throughput is the hard governing limit of the melt shop (engine-hardcoded); caster down -> hold heat (energy/temperature penalty) or dump (total loss)",
+        "hold_vs_dump_escalation": "exponential time-based tiers: h0-1 +5% power, h1-2 +15% power + refractory wear, h2+ below tapping threshold -> dump (100% loss) or chemical heat injection (opex spike)",
+        "heat_hold": "EAF taps faster than CCM casts -> Heat Hold timer starts"
+      }
+    },
+    {
+      "id": "bar_mill",
+      "title": "Bar Mill",
+      "category": "equipment",
+      "body": "6-8 roughing/intermediate stands + block train, reheating furnace upstream, cooling bed and bundling downstream. Billet yard buffers it from the caster.",
+      "key_stats": {
+        "rate": "60-100 t/h",
+        "annual": "400-600 kt",
+        "capex_per_tpa": "125-250 USD"
+      },
+      "unlock_condition": "on_place:bar_mill",
+      "trivia": "A bar mill is only as fast as its slowest stand — pass schedules are the real capacity document.",
+      "sme_pending": false,
+      "source": "industry ranges",
+      "calibrated_by": "Yasser Awadein",
+      "game_mechanic": {
+        "phase2_mechanic": "pass schedules as an upgrade path, not a manual mini-game"
+      }
+    },
+    {
+      "id": "wire_rod_mill",
+      "title": "Wire Rod Mill + Stelmor",
+      "category": "equipment",
+      "body": "10-16 stands, high speed, Stelmor line controls coil cooling structure. Quality-sensitive: cooling rate decides downstream drawing behaviour.",
+      "key_stats": {
+        "rate": "40-60 t/h",
+        "annual": "300-500 kt",
+        "capex_per_tpa": "150-300 USD"
+      },
+      "unlock_condition": "on_place:wire_rod_mill",
+      "trivia": "Stelmor is a metallurgy line disguised as a conveyor.",
+      "sme_pending": false,
+      "source": "industry ranges",
+      "calibrated_by": "Yasser Awadein"
+    },
+    {
+      "id": "scrap_grades",
+      "title": "Scrap Grades & Yard Losses",
+      "category": "material",
+      "body": "HMS1/2, bushing, plate differ in density, yield and tramp content. Yard losses (3-8%) and grading disputes are real opex, not rounding.",
+      "key_stats": {
+        "grades": "HMS1, HMS2, bushing, plate",
+        "yard_yield_loss": "3-8%",
+        "stockpile": "50-150 kt",
+        "tramp_by_grade": {
+          "bushing": "Cu <0.05%, Sn <0.01%",
+          "hms1_hms2": "Cu 0.10-0.25%, Sn 0.02-0.05%",
+          "shredded": "Cu 0.25-0.50%, Sn 0.04-0.08%"
+        }
+      },
+      "unlock_condition": "on_place:scrap_yard",
+      "trivia": "Scrap density changes charge weight per basket — yards are a logistics problem, not a parking lot.",
+      "sme_pending": false,
+      "source": "industry practice",
+      "calibrated_by": "Yasser Awadein",
+      "game_mechanic": {
+        "grade_effect": "bushing = premium output; hms = baseline; shredded = high yield loss, forces DRI blending to dilute Cu/Sn",
+        "separated_losses": "tramp content loss and handling/yield loss are separate stats"
+      }
+    },
+    {
+      "id": "dri_handling",
+      "title": "DRI Handling & Re-oxidation",
+      "category": "material",
+      "body": "DRI re-oxidizes on storage and is lower density than scrap — handling and silo design matter for furnace consistency. Briquetting recovers fines.",
+      "key_stats": {
+        "density": "~1000 kg/m3 vs scrap 1300-1600",
+        "stockpile": "30-100 kt"
+      },
+      "unlock_condition": "on_place:dri_yard",
+      "trivia": "Old DRI stock quietly lowers metallization — the furnace pays for yard time.",
+      "sme_pending": false,
+      "source": "industry practice",
+      "calibrated_by": "Yasser Awadein",
+      "game_mechanic": {
+        "yard_aging_timer": ">30 in-game days open-yard -> +5% EAF energy penalty per heat; mitigations: Covered Storage, HBI plant upgrade"
+      }
+    },
+    {
+      "id": "jetty_logistics",
+      "title": "Jetty & Ship Cadence",
+      "category": "logistics",
+      "body": "A jetty is the plant's marine terminal: a reinforced berth structure that extends into deep water so bulk carriers can moor alongside. Process: ships moor -> ship-unloader grabs ore/coal from the holds -> conveyor or truck transfer to stockyards; the same quay handles exports via gantry cranes. Berth occupancy, not furnace size, sets inbound throughput — in economy-lite, ship arrival cadence IS the material supply bottleneck and yard capacity absorbs the gaps.",
+      "key_stats": {
+        "berth depth": "12-18 m (Capesize draft)",
+        "vessel": "10-30 kt",
+        "unloader": "500-1000 t/h",
+        "supply": "80-150 kt/month"
+      },
+      "unlock_condition": "on_place:jetty",
+      "trivia": "A plant with perfect furnaces still starves if the berth is occupied.",
+      "sme_pending": false,
+      "source": "industry ranges",
+      "calibrated_by": "Yasser Awadein",
+      "game_mechanic": {
+        "verified": "cadence math confirmed: 50-150 kt yard absorbs a missed ship"
+      }
+    },
+    {
+      "id": "route_comparison",
+      "title": "Three Routes Compared",
+      "category": "knowledge",
+      "body": "BF-BOF (ore->hot metal), 100% scrap EAF, and DRI-EAF. This plant is DRI-EAF: energy-intensive but flexible on raw materials and lower CO2 than the integrated route.",
+      "key_stats": {
+        "co2_scope1+2": "BF-BOF ~1.9-2.5 t/t vs EAF ~0.7-1.2 t/t"
+      },
+      "unlock_condition": "knowledge",
+      "trivia": "Route choice is a raw-material bet as much as a technology choice.",
+      "sme_pending": false,
+      "source": "worldsteel climate data",
+      "calibrated_by": "Yasser Awadein",
+      "game_mechanic": {
+        "verified": "keep exactly as is"
+      }
+    },
+    {
+      "id": "intro_integrated_plant",
+      "title": "Welcome to SteelX — The Integrated Steel Plant",
+      "category": "knowledge",
+      "body": "Your goal: build an integrated steel plant and manage the flow of materials from the jetty to dispatch, optimizing for profit and quality. Raw material lands at the jetty, becomes steel, gets rolled into rebar and wire rod, and ships out — every link in the chain has capacity, and the slowest one sets your plant's rhythm. Tap the Jetty to begin.",
+      "key_stats": {
+        "plant_type": "DRI-EAF long products"
+      },
+      "unlock_condition": "game_start",
+      "trivia": "In an integrated plant, no machine works alone — the plant's output is set by its bottleneck.",
+      "sme_pending": false,
+      "calibrated_by": "Yasser Awadein"
+    },
+    {
+      "id": "dispatch_crane",
+      "title": "Dispatch Bay — The Tail Bottleneck",
+      "category": "logistics",
+      "body": "Overhead cranes load finished product onto trucks or rail wagons. If the crane is too slow, the finished yard fills up; if the finished yard is full, the rolling mills must stop — even if they have billets. Revenue is only generated when the crane actually loads the truck.",
+      "key_stats": {
+        "crane_cycle": "min/lift",
+        "truck_cycle": "15-20 min",
+        "truck_size": "20-25 t",
+        "effective_rate": "60-100 t/h = min(crane rate, truck cadence x truck size)",
+        "capex": "3-8M USD"
+      },
+      "unlock_condition": "on_place:dispatch",
+      "trivia": "Dispatch is the bottleneck nobody budgets for — until the mill stops and trucks wait.",
+      "sme_pending": false,
+      "calibrated_by": "Yasser Awadein",
+      "game_mechanic": {
+        "tail_bottleneck": "crane too slow -> finished yard fills -> mills stop even with billets",
+        "revenue_trigger": "revenue only when the crane loads the truck (dispatch outflow)"
+      }
+    },
+    {
+      "id": "crisis",
+      "title": "CRISIS: Heat below tapping threshold",
+      "category": "capacity",
+      "body": "A bottleneck has occurred. The heat is holding. Choose an action below to resolve.",
+      "key_stats": {},
+      "unlock_condition": "on_crisis",
+      "trivia": "In a real melt shop this decision can cost a six-figure day.",
+      "sme_pending": false,
+      "calibrated_by": "Yasser Awadein"
+    },
+    {
+      "id": "conv_ore_drp",
+      "title": "Ore Belt — Port to Plant",
+      "category": "logistics",
+      "body": "Ship unloader feeding an overland belt to the DRP. Port infrastructure is the biggest upfront logistics investment in the plant — the belt is cheap per tonne, the berth and unloader are not.",
+      "key_stats": {
+        "capacity": "400-800 t/h",
+        "capex": "3.5-5.0M USD",
+        "opex": "1.5 USD/t"
+      },
+      "unlock_condition": "on_place:conv_ore_drp",
+      "trivia": "The belt never stops, but the ship does — unloader downtime is berth downtime.",
+      "sme_pending": false,
+      "source": "Yasser calibration 2026-10-04 (conveyors_draft.json)",
+      "calibrated_by": "Yasser Awadein",
+      "game_mechanic": {
+        "note": "most expensive logistics item in Phase 1; teaches that supply starts at the berth, not the gate"
+      }
+    },
+    {
+      "id": "conv_dri_eaf",
+      "title": "DRI Belt — Gentle Handling",
+      "category": "logistics",
+      "body": "Covered conveyor from DRP to EAF. DRI is friable and re-oxidizes in open transfer — covered belts and gentle handling protect metallization. Hot vs cold DRI charging is a later upgrade axis.",
+      "key_stats": {
+        "capacity": "150-300 t/h",
+        "capex": "1.2-2.0M USD",
+        "opex": "2.0 USD/t"
+      },
+      "unlock_condition": "on_place:conv_dri_eaf",
+      "trivia": "Every tonne spilled or re-oxidized on this belt shows up as extra kWh/t at the furnace.",
+      "sme_pending": false,
+      "source": "Yasser calibration 2026-10-04 (conveyors_draft.json)",
+      "calibrated_by": "Yasser Awadein",
+      "game_mechanic": {
+        "note": "covered handling preserves the DRP metallization stat into the EAF charge"
+      }
+    },
+    {
+      "id": "scrap_feed",
+      "title": "Scrap Feed — Trucks and Buckets",
+      "category": "logistics",
+      "body": "Scrap is NOT belted. Trucks (20-25 t) run from the yard to the charging bay; overhead crane charges scrap buckets into the EAF. This node sets the DRI:scrap blend ratio available per charge — the blend is a logistics decision before it is a metallurgy one.",
+      "key_stats": {
+        "effective_feed": "150-300 t/h",
+        "truck_cycle": "10-15 min",
+        "truck_size": "20-25 t",
+        "capex": "8-15M USD (band pending SME confirm)",
+        "opex": "3 USD/t"
+      },
+      "unlock_condition": "on_place:scrap_feed",
+      "trivia": "A charging bay that can't feed the furnace turns the best EAF into a waiting room.",
+      "sme_pending": false,
+      "source": "Yasser calibration 2026-10-04 (conveyors_draft.json); capex band pending his confirm",
+      "calibrated_by": "Yasser Awadein",
+      "game_mechanic": {
+        "blend_gate": "sets the scrap:DRI blend ratio available per charge per steel grade",
+        "note": "truck cadence x truck size caps effective feed; feed below demand starves the EAF"
+      }
+    },
+    {
+      "id": "conv_ccm_billet",
+      "title": "Hot Delivery Line",
+      "category": "logistics",
+      "body": "Roller tables and insulated conveyors from CCM to billet yard. Keeping billets hot is what makes hot charging possible — the line is not moving material, it is moving heat.",
+      "key_stats": {
+        "capacity": "150-200 t/h",
+        "capex": "2.5-3.5M USD",
+        "opex": "1.8 USD/t"
+      },
+      "unlock_condition": "on_place:conv_ccm_billet",
+      "trivia": "Hot charging saves the reheating furnace its fuel bill — cold charging pays it back slowly.",
+      "sme_pending": false,
+      "source": "Yasser calibration 2026-10-04 (conveyors_draft.json)",
+      "calibrated_by": "Yasser Awadein",
+      "game_mechanic": {
+        "phase2_hook": "hot charging vs yard cooling is a Phase 2 upgrade path"
+      }
+    },
+    {
+      "id": "conv_billet_rebar",
+      "title": "Billet Carrier — Yard to Rebar Mill",
+      "category": "logistics",
+      "body": "Standard internal transfer from billet yard to bar mill. Sized to the mill, not the caster — the yard buffers the mismatch between 150-200 t/h casting and 60-100 t/h rolling.",
+      "key_stats": {
+        "capacity": "60-100 t/h",
+        "capex": "1.2-2.0M USD",
+        "opex": "1.5 USD/t"
+      },
+      "unlock_condition": "on_place:conv_billet_rebar",
+      "trivia": "Buffers exist because the caster runs on heat time and the mill runs on pass time — they never agree.",
+      "sme_pending": false,
+      "source": "Yasser calibration 2026-10-04 (conveyors_draft.json)",
+      "calibrated_by": "Yasser Awadein",
+      "game_mechanic": {
+        "note": "congestion here is the visible symptom of caster-vs-mill capacity mismatch"
+      }
+    },
+    {
+      "id": "conv_billet_wr",
+      "title": "Billet Carrier — Yard to Wire Rod Mill",
+      "category": "logistics",
+      "body": "Internal transfer from billet yard to wire rod mill. Two mills, one yard, two carriers — splitting billets between rebar and wire rod is a production-mix decision every day.",
+      "key_stats": {
+        "capacity": "40-60 t/h",
+        "capex": "1.2-2.0M USD",
+        "opex": "1.5 USD/t"
+      },
+      "unlock_condition": "on_place:conv_billet_wr",
+      "trivia": "Wire rod pays more per tonne, but the mill is slower — the yard decides which line wins.",
+      "sme_pending": false,
+      "source": "Yasser calibration 2026-10-04 (conveyors_draft.json)",
+      "calibrated_by": "Yasser Awadein",
+      "game_mechanic": {
+        "note": "billet split between rebar and WR lines; grade pricing premium vs throughput tradeoff"
+      }
+    },
+    {
+      "id": "conv_mill_dispatch",
+      "title": "Finished Goods Transfer",
+      "category": "logistics",
+      "body": "Yards to dispatch bay. Cheap per tonne, but it is the last pipe before revenue — if this line backs up, the mills stop even with billets in hand.",
+      "key_stats": {
+        "capacity": "60-120 t/h",
+        "capex": "1.2-2.0M USD",
+        "opex": "1.2 USD/t"
+      },
+      "unlock_condition": "on_place:conv_mill_dispatch",
+      "trivia": "Revenue is booked at dispatch, not at the mill — a full FG yard is cash sitting on the ground.",
+      "sme_pending": false,
+      "source": "Yasser calibration 2026-10-04 (conveyors_draft.json)",
+      "calibrated_by": "Yasser Awadein",
+      "game_mechanic": {
+        "note": "feeds the dispatch tail-bottleneck chain (see dispatch_crane card)"
+      }
+    },
+    {
+      "id": "billet_yard",
+      "title": "Billet Yard — The Shock Absorber",
+      "category": "logistics",
+      "body": "Pure buffer between the caster and the rolling mills. It exists because the caster works in heats and the mills work in passes — the yard converts one rhythm into the other.",
+      "key_stats": {
+        "buffer_days": "3-10",
+        "capex": "8M USD",
+        "opex": "4 USD/t"
+      },
+      "unlock_condition": "on_place:billet_yard",
+      "trivia": "Hot-charging plants shrink the billet yard; cold-charging plants need it — that tradeoff is real capex.",
+      "sme_pending": false,
+      "source": "Yasser calibration (nodes_phase1.json)",
+      "calibrated_by": "Yasser Awadein",
+      "game_mechanic": {
+        "note": "yards are pure buffers — no yield, no processing, only storage time and handling opex"
+      }
+    },
+    {
+      "id": "finished_yard",
+      "title": "Finished Goods Yard — Cash in Storage",
+      "category": "logistics",
+      "body": "Buffer between the mills and dispatch. Full FG yard means the mills must stop even if they have billets — the tail bottleneck starts here.",
+      "key_stats": {
+        "buffer_days": "5-15",
+        "capex": "6M USD",
+        "opex": "4 USD/t"
+      },
+      "unlock_condition": "on_place:finished_yard",
+      "trivia": "Every tonne in the FG yard is revenue that hasn't been booked yet.",
+      "sme_pending": false,
+      "source": "Yasser calibration (nodes_phase1.json)",
+      "calibrated_by": "Yasser Awadein",
+      "game_mechanic": {
+        "note": "full FG yard -> mills stop (see dispatch_crane card tail_bottleneck)"
+      }
+    }
+  ]
+}

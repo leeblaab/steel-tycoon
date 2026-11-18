@@ -1,0 +1,554 @@
+{
+  "schema_version": 1,
+  "items": [
+    {
+      "file": ".\\city-kit-industrial\\building-a.glb",
+      "tris": 2046,
+      "dims_m": [
+        2.08,
+        1.47,
+        1.24
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\building-b.glb",
+      "tris": 2422,
+      "dims_m": [
+        2.08,
+        1.47,
+        1.26
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\building-c.glb",
+      "tris": 1928,
+      "dims_m": [
+        1.88,
+        1.25,
+        2.11
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\building-d.glb",
+      "tris": 1158,
+      "dims_m": [
+        0.88,
+        1.41,
+        1.42
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\building-e.glb",
+      "tris": 1484,
+      "dims_m": [
+        1.68,
+        1.65,
+        1.29
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\building-f.glb",
+      "tris": 1552,
+      "dims_m": [
+        1.79,
+        1.92,
+        1.28
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\building-g.glb",
+      "tris": 1242,
+      "dims_m": [
+        1.68,
+        1.28,
+        1.28
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\building-h.glb",
+      "tris": 698,
+      "dims_m": [
+        1.32,
+        0.73,
+        1.31
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\building-i.glb",
+      "tris": 798,
+      "dims_m": [
+        1.03,
+        0.73,
+        1.3
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\building-j.glb",
+      "tris": 886,
+      "dims_m": [
+        1.03,
+        0.86,
+        1.3
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\building-k.glb",
+      "tris": 702,
+      "dims_m": [
+        1.3,
+        0.77,
+        0.91
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\building-l.glb",
+      "tris": 1896,
+      "dims_m": [
+        2.08,
+        1.92,
+        1.87
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\building-m.glb",
+      "tris": 1694,
+      "dims_m": [
+        1.32,
+        1.52,
+        1.7
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\building-n.glb",
+      "tris": 1262,
+      "dims_m": [
+        0.98,
+        1.9,
+        1.42
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\building-o.glb",
+      "tris": 868,
+      "dims_m": [
+        0.88,
+        0.92,
+        1.24
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\building-p.glb",
+      "tris": 1162,
+      "dims_m": [
+        1.68,
+        0.71,
+        0.99
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\building-q.glb",
+      "tris": 2062,
+      "dims_m": [
+        2.14,
+        0.88,
+        1.77
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\building-r.glb",
+      "tris": 1912,
+      "dims_m": [
+        2.48,
+        1.39,
+        1.27
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\building-s.glb",
+      "tris": 876,
+      "dims_m": [
+        2.12,
+        0.84,
+        0.92
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\building-t.glb",
+      "tris": 1586,
+      "dims_m": [
+        1.72,
+        1.01,
+        1.39
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\chimney-large.glb",
+      "tris": 218,
+      "dims_m": [
+        1.08,
+        1.7,
+        1.08
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\chimney-medium.glb",
+      "tris": 160,
+      "dims_m": [
+        0.45,
+        1.92,
+        0.45
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\chimney-small.glb",
+      "tris": 124,
+      "dims_m": [
+        0.3,
+        0.75,
+        0.3
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\detail-tank-large.glb",
+      "tris": 566,
+      "dims_m": [
+        1.51,
+        0.96,
+        1.65
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\detail-tank.glb",
+      "tris": 310,
+      "dims_m": [
+        0.85,
+        0.42,
+        0.52
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\shipping-container-a.glb",
+      "tris": 402,
+      "dims_m": [
+        1.38,
+        1.29,
+        3.05
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\shipping-container-b.glb",
+      "tris": 402,
+      "dims_m": [
+        1.38,
+        1.29,
+        3.05
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\shipping-container-c.glb",
+      "tris": 402,
+      "dims_m": [
+        1.38,
+        1.29,
+        3.05
+      ]
+    },
+    {
+      "file": ".\\city-kit-industrial\\water-tower.glb",
+      "tris": 968,
+      "dims_m": [
+        0.91,
+        2.28,
+        0.88
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\box-large.glb",
+      "tris": 70,
+      "dims_m": [
+        1.1,
+        0.55,
+        1.0
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\box-wide.glb",
+      "tris": 70,
+      "dims_m": [
+        0.59,
+        0.55,
+        1.0
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\cone.glb",
+      "tris": 66,
+      "dims_m": [
+        0.3,
+        0.31,
+        0.3
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\conveyor-corner.glb",
+      "tris": 234,
+      "dims_m": [
+        1.0,
+        0.45,
+        1.0
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\conveyor-junction-t.glb",
+      "tris": 120,
+      "dims_m": [
+        1.0,
+        0.4,
+        1.0
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\conveyor-long-sides.glb",
+      "tris": 228,
+      "dims_m": [
+        2.0,
+        0.4,
+        1.0
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\conveyor-long.glb",
+      "tris": 196,
+      "dims_m": [
+        2.0,
+        0.4,
+        1.0
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\crane-lift.glb",
+      "tris": 304,
+      "dims_m": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\crane-magnet.glb",
+      "tris": 172,
+      "dims_m": [
+        0.72,
+        0.9,
+        0.72
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\crane.glb",
+      "tris": 564,
+      "dims_m": [
+        1.93,
+        3.0,
+        1.07
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\door-wide-open.glb",
+      "tris": 16,
+      "dims_m": [
+        1.8,
+        0.78,
+        0.3
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\floor-large.glb",
+      "tris": 2,
+      "dims_m": [
+        2.0,
+        0.0,
+        2.0
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\floor.glb",
+      "tris": 2,
+      "dims_m": [
+        1.0,
+        0.0,
+        1.0
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\hopper-round.glb",
+      "tris": 144,
+      "dims_m": [
+        1.12,
+        1.0,
+        1.12
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\hopper-square.glb",
+      "tris": 104,
+      "dims_m": [
+        1.12,
+        1.0,
+        1.12
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\lever-single.glb",
+      "tris": 102,
+      "dims_m": [
+        0.5,
+        0.2,
+        0.34
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\machine-bed.glb",
+      "tris": 568,
+      "dims_m": [
+        2.35,
+        1.3,
+        2.35
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\machine.glb",
+      "tris": 268,
+      "dims_m": [
+        1.2,
+        1.3,
+        1.5
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\pipe-large-bend.glb",
+      "tris": 448,
+      "dims_m": [
+        1.9,
+        1.0,
+        1.9
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\pipe-large-long.glb",
+      "tris": 292,
+      "dims_m": [
+        2.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\pipe-large.glb",
+      "tris": 248,
+      "dims_m": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\piston-round.glb",
+      "tris": 276,
+      "dims_m": [
+        1.0,
+        0.7,
+        1.0
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\robot-arm-a.glb",
+      "tris": 472,
+      "dims_m": [
+        1.0,
+        0.3,
+        1.0
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\scanner-high.glb",
+      "tris": 240,
+      "dims_m": [
+        0.48,
+        1.27,
+        1.77
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\structure-doorway.glb",
+      "tris": 60,
+      "dims_m": [
+        1.0,
+        3.0,
+        2.0
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\structure-medium.glb",
+      "tris": 268,
+      "dims_m": [
+        0.3,
+        1.0,
+        1.1
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\structure-short.glb",
+      "tris": 268,
+      "dims_m": [
+        0.3,
+        0.5,
+        1.1
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\structure-tall.glb",
+      "tris": 268,
+      "dims_m": [
+        0.3,
+        2.0,
+        1.1
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\structure-wall.glb",
+      "tris": 26,
+      "dims_m": [
+        1.0,
+        3.0,
+        2.0
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\top-large.glb",
+      "tris": 2,
+      "dims_m": [
+        2.0,
+        0.0,
+        2.0
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\top.glb",
+      "tris": 2,
+      "dims_m": [
+        1.0,
+        0.0,
+        1.0
+      ]
+    },
+    {
+      "file": ".\\factory-kit\\warning-orange.glb",
+      "tris": 154,
+      "dims_m": [
+        0.4,
+        1.29,
+        0.4
+      ]
+    }
+  ]
+}

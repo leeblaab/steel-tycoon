@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "note": "Level 1 quest content (Phase-2 prep, authored 2026-10-19 from docs/gameplay.md §2.1 quest contract + Appendix A fields; Yasser GO 2026-10-19). Five-part pattern per gameplay.md §1.3: situation / goal / decision / consequence / learning. All numbers are game-plausible placeholders flagged sme_pending (standing rule: never invented precision; no calibration loops per roadmap §17.2). Quest types rotate diagnosis -> improvement -> prioritization -> balancing (§1.3 rotation rule). Slice 1 hub port wired same day (web/src/ports/slice1/slice1_hub.ts) so level_1 quests target live slice1 observables; success_criteria reference state fields verbatim. Level completion gate per §2.1: player can explain why reliable upstream supply matters downstream.",
+  "levels": [
+    {
+      "id": "level_1",
+      "title": "The First Flow: Raw Materials and Logistics",
+      "primary_learning_objective": "Production starts with reliable material supply.",
+      "player_fantasy": "I have a factory, but can I get the materials moving?",
+      "starting_situation": "The plant has a basic production route, but raw-material handling is incomplete or inefficient.",
+      "new_mechanics": ["ship_arrival", "unloading", "stockpiles", "material_movement", "basic_throughput"],
+      "visual_milestones": ["ship_unloading", "conveyor_movement", "growing_stockpile", "furnace_cycle", "first_production_success"],
+      "keep_simplified": ["tariffs", "detailed_chemistry", "maintenance_schedules", "complex_finance"],
+      "completion_criterion": "The player can explain why reliable upstream supply matters to downstream production.",
+      "quests": [
+        {
+          "id": "l1_q1_first_arrival",
+          "number": 1,
+          "title": "First Arrival",
+          "quest_type": "diagnosis",
+          "situation": "A cargo ship is arriving at the berth with the plant's first raw-material cargo. Nothing has unloaded yet; the yard is empty.",
+          "goal": "Receive the first cargo ship and get raw material into the yard.",
+          "decision": {
+            "kind": "observe_and_confirm",
+            "options": [
+              {"id": "confirm_unload_route", "label": "Initiate/confirm the basic unloading route (berth -> yard)"}
+            ],
+            "note": "No trade-off yet — this quest teaches the flow, not a choice. One action: confirm the route."
+          },
+          "consequence": "The ship's hold visibly empties tonne by tonne; the first stockpile appears in the yard and the HUD yard-stock number starts climbing.",
+          "learning_takeaway": "Material must enter the plant before production can consume it.",
+          "cards": ["jetty_logistics", "intro_integrated_plant"],
+          "success_criteria": {
+            "slice": "slice1",
+            "conditions": [
+              {"field": "ships_arrived", "op": ">=", "value": 1, "sme_pending": false},
+              {"field": "arrived_t", "op": ">=", "value": 100.0, "unit": "t", "note": "one day of unload cadence landed in the yard (placeholder band)", "sme_pending": true}
+            ]
+          },
+          "scoring_tiers": {"bronze": "ship unloaded", "silver": "unloaded without blocking the berth queue", "gold": "unloaded with the yard route confirmed before arrival"},
+          "target_duration_minutes": 3,
+          "sme_pending": false
+        },
+        {
+          "id": "l1_q2_keep_it_moving",
+          "number": 2,
+          "title": "Keep It Moving",
+          "quest_type": "improvement",
+          "situation": "Material is in the yard, but movement into storage is restricted — unloading stalls while the yard still has room (unload_blocked_t climbs: the handling link, not the stock, is limiting).",
+          "goal": "Identify the restricted link and choose a simple flow improvement.",
+          "decision": {
+            "kind": "diagnose_then_improve",
+            "options": [
+              {"id": "raise_unload_rate", "label": "Increase the unload rate (handling equipment upgrade)", "cost_band_usd": [50000, 120000], "sme_pending": true},
+              {"id": "free_yard_space", "label": "Reorganize the yard layout to open more receiving space", "cost_band_usd": [10000, 30000], "sme_pending": true}
+            ],
+            "note": "Both are simple first-level options; the cheaper one teaches that flow fixes are not always purchases."
+          },
+          "consequence": "unload_blocked_t stops climbing, ship holds empty faster, berth queue shortens and demurrage pressure eases.",
+          "learning_takeaway": "Material handling can limit production even when stock exists.",
+          "cards": ["jetty_logistics", "dispatch_crane"],
+          "success_criteria": {
+            "slice": "slice1",
+            "conditions": [
+              {"field": "unload_blocked_t", "op": "==", "value": 0.0, "unit": "t", "note": "no unload blocked over the final stretch (placeholder band)", "sme_pending": true},
+              {"field": "berth_wait_ship_days_beyond_free", "op": "<=", "value": 1.0, "unit": "ship-days beyond free time", "sme_pending": true}
+            ]
+          },
+          "scoring_tiers": {"bronze": "stall resolved", "silver": "resolved with the cheaper option", "gold": "resolved before any demurrage accrued"},
+          "target_duration_minutes": 4,
+          "sme_pending": false
+        },
+        {
+          "id": "l1_q3_feed_the_furnace",
+          "number": 3,
+          "title": "Feed the Furnace",
+          "quest_type": "prioritization",
+          "situation": "The EAF needs a sufficient scrap supply to start its production cycle; incoming arrivals alone do not cover the furnace's consumption if the yard buffer runs thin.",
+          "goal": "Keep the furnace fed for a full production cycle by prioritizing replenishment of the yard buffer.",
+          "decision": {
+            "kind": "prioritize_replenishment",
+            "options": [
+              {"id": "front_load_arrivals", "label": "Prioritize unloading of the arrivals that feed the furnace stockpile"},
+              {"id": "build_buffer_first", "label": "Build the yard buffer above target before starting the furnace cycle"}
+            ],
+            "note": "Supply-plan priority, not machine control — the player plans the flow (visible-not-micromanaged transport ruling, gameplay.md §8)."
+          },
+          "consequence": "yard stock stays above the furnace feed line; production runs without starvation gaps (upstream_blocked_t stays low).",
+          "learning_takeaway": "Upstream shortages cause downstream starvation.",
+          "cards": ["scrap_feed", "eaf_melt_shop"],
+          "success_criteria": {
+            "slice": "slice1",
+            "conditions": [
+              {"field": "produced_t", "op": ">=", "value": 500.0, "unit": "t", "note": "one furnace cycle worth (placeholder band)", "sme_pending": true},
+              {"field": "upstream_blocked_t", "op": "<=", "value": 100.0, "unit": "t", "note": "starvation kept under one day of production draw (placeholder band)", "sme_pending": true}
+            ]
+          },
+          "scoring_tiers": {"bronze": "cycle completed", "silver": "cycle completed with buffer never below target", "gold": "completed without a single restricted tick"},
+          "target_duration_minutes": 5,
+          "sme_pending": false
+        },
+        {
+          "id": "l1_q4_first_steel",
+          "number": 4,
+          "title": "First Steel",
+          "quest_type": "balancing",
+          "situation": "Arrivals keep coming on a fixed cadence while the furnace keeps consuming. The supply route must stay balanced across a full run — overloading one side blocks the other.",
+          "goal": "Restore a stable material flow and complete the first production milestone: the plant's first steel produced from a balanced flow.",
+          "decision": {
+            "kind": "balance_flow_over_run",
+            "options": [
+              {"id": "match_arrival_to_consumption", "label": "Adjust operating hours so arrivals, unloading and furnace draw match over the run"},
+              {"id": "grow_buffer_cushion", "label": "Grow the yard buffer as a cushion against arrival jitter"}
+            ],
+            "note": "No single right answer — both strategies work; scoring rewards low congestion."
+          },
+          "consequence": "First Steel milestone fires: stockpile, furnace cycle and dispatch all move together on screen; congestion_flag stays down.",
+          "learning_takeaway": "The plant is a connected flow, not a collection of isolated machines.",
+          "cards": ["intro_integrated_plant", "route_comparison"],
+          "success_criteria": {
+            "slice": "slice1",
+            "conditions": [
+              {"field": "produced_t", "op": ">=", "value": 2000.0, "unit": "t", "note": "first-milestone band over a ~5-day run (placeholder)", "sme_pending": true},
+              {"field": "congestion_flag", "op": "==", "value": false, "note": "no congestion at milestone tick", "sme_pending": false}
+            ]
+          },
+          "scoring_tiers": {"bronze": "milestone reached", "silver": "milestone with no congestion event", "gold": "milestone with ledger tidy AND zero demurrage"},
+          "target_duration_minutes": 5,
+          "sme_pending": false
+        }
+      ],
+      "optional_challenges": [
+        {
+          "id": "l1_opt_no_idle_furnace",
+          "title": "No Idle Furnace",
+          "quest_type": "balancing",
+          "situation": "Same Level 1 run, stricter terms: meet the production target while minimizing avoidable raw-material starvation.",
+          "goal": "Meet the production target with minimal upstream_blocked_t.",
+          "decision": {"kind": "optimize_starvation", "options": [{"id": "tight_flow", "label": "Tighten the arrival/unload/consume balance to near-zero blocked tonnage"}]},
+          "consequence": "Starvation counter visibly drops toward zero; a clean-flow badge appears on the plant.",
+          "learning_takeaway": "Avoidable starvation is an operational choice, not bad luck.",
+          "cards": ["scrap_feed"],
+          "success_criteria": {
+            "slice": "slice1",
+            "conditions": [
+              {"field": "produced_t", "op": ">=", "value": 2000.0, "unit": "t", "sme_pending": true},
+              {"field": "upstream_blocked_t", "op": "<=", "value": 50.0, "unit": "t", "note": "near-zero starvation band (placeholder)", "sme_pending": true}
+            ]
+          },
+          "scoring_tiers": {"bronze": null, "silver": "target met under band", "gold": "target met with zero blocked tonnage"},
+          "target_duration_minutes": 6,
+          "sme_pending": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "note": "Material taxonomy (Yasser SME calibration 2026-10-10). Grade dimension: purchase price, metallurgical yield loss, TTT quality factor. Size dimension: physical handling loss only (size does not change metallurgical yield). Charge = sum over (grade, size) cells. Mirror contract: mirror/production_core_mirror.py.",
+  "grades": [
+    {
+      "id": "bushing",
+      "price_usd_t": 340.0,
+      "yield_loss_pct": 3.0,
+      "ttt_quality_factor": 0.95,
+      "cu_pct": "<0.05",
+      "sn_pct": "<0.01",
+      "calibrated_by": "Yasser Awadein",
+      "sme_pending": false
+    },
+    {
+      "id": "hms1_hms2",
+      "price_usd_t": 300.0,
+      "yield_loss_pct": 5.0,
+      "ttt_quality_factor": 1.00,
+      "cu_pct": "0.10-0.25",
+      "sn_pct": "0.02-0.05",
+      "calibrated_by": "Yasser Awadein",
+      "sme_pending": false
+    },
+    {
+      "id": "shredded",
+      "price_usd_t": 310.0,
+      "yield_loss_pct": 8.0,
+      "ttt_quality_factor": 1.10,
+      "cu_pct": "0.25-0.50",
+      "sn_pct": "0.04-0.08",
+      "calibrated_by": "Yasser Awadein",
+      "sme_pending": false
+    }
+  ],
+  "sizes": [
+    {
+      "id": "plate",
+      "handling_loss_pct": 1.0,
+      "note": "large, clean — lowest handling loss",
+      "calibrated_by": "Yasser Awadein",
+      "sme_pending": false
+    },
+    {
+      "id": "hms",
+      "handling_loss_pct": 1.5,
+      "note": "heavy melting scrap — baseline (matches existing 1-2% band)",
+      "calibrated_by": "Yasser Awadein",
+      "sme_pending": false
+    },
+    {
+      "id": "light",
+      "handling_loss_pct": 2.5,
+      "note": "shreds/bundles — highest handling loss",
+      "calibrated_by": "Yasser Awadein",
+      "sme_pending": false
+    }
+  ],
+  "furnace_condition": {
+    "condition_overhaul_at": 85.0,
+    "ttt_degrade_max": 1.15,
+    "degrade_rate_per_heat": 0.5,
+    "note": "linear degradation 100 -> threshold; forced overhaul resets to 100. TTT factor = 1.0 at 100, ttt_degrade_max at threshold. Crew factor hook reserved for morale (domain 3).",
+    "calibrated_by": "Yasser Awadein",
+    "sme_pending": false
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "$schema_draft": "SteelX popup card v0.1",
+  "fields": {
+    "id": "snake_case unique id",
+    "title": "display title",
+    "category": [
+      "technology",
+      "equipment",
+      "material",
+      "capacity",
+      "logistics",
+      "knowledge"
+    ],
+    "body": "1-3 sentences, plain, no marketing tone",
+    "key_stats": "object of stat_name -> value string (range, flagged unit)",
+    "unlock_condition": "on_place:<node_id> | on_first_heat | knowledge (always visible)",
+    "trivia": "one-line 'did you know' tied to real practice",
+    "sme_pending": "true until Yasser calibrates the numbers",
+    "source": "public source the range came from",
+    "calibrated_by": "SME name once calibrated; renders in-game as the 'Calibrated by Industry Veteran' badge",
+    "game_mechanic": "engine-readable rule derived from SME calibration (state penalties, governing limits, timers)"
+  }
+}

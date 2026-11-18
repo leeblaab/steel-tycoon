@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "note": "Calibrated 2026-10-04. Real topology: ore jetty->DRP by belt; scrap by trucks+buckets (scrap_feed), no scrap belt. | Park gate added 2026-10-26: guided build stops after slice 1; slice-2 builds unlock only when all level-1 quests complete.",
+  "level1_sequence": [
+    {
+      "step": 0,
+      "type": "card",
+      "id": "intro_integrated_plant"
+    },
+    {
+      "step": 1,
+      "type": "build",
+      "node_id": "jetty",
+      "card_id": "jetty_logistics"
+    },
+    {
+      "step": 2,
+      "type": "build",
+      "node_id": "scrap_yard",
+      "card_id": "scrap_grades"
+    },
+    {
+      "step": 3,
+      "type": "build",
+      "node_id": "conv_ore_drp",
+      "note": "ship unloader + overland belt to DRP",
+      "card_id": "conv_ore_drp"
+    },
+    {
+      "step": 4,
+      "type": "park",
+      "note": "Slice 1 complete. Play the Level-1 quests — completing them commissions the next areas and unlocks Slice 2 building."
+    },
+    {
+      "step": 5,
+      "type": "resume",
+      "note": "Quests done — continue building."
+    },
+    {
+      "step": 6,
+      "type": "build",
+      "node_id": "drp",
+      "card_id": "drp_gas_shaft"
+    },
+    {
+      "step": 7,
+      "type": "build",
+      "node_id": "conv_dri_eaf",
+      "card_id": "conv_dri_eaf"
+    },
+    {
+      "step": 8,
+      "type": "build",
+      "node_id": "scrap_feed",
+      "note": "scrap trucks + charging bay — sets DRI:scrap blend",
+      "card_id": "scrap_feed"
+    },
+    {
+      "step": 9,
+      "type": "build",
+      "node_id": "eaf",
+      "card_id": "eaf_melt_shop"
+    },
+    {
+      "step": 10,
+      "type": "build",
+      "node_id": "lf",
+      "card_id": "lf_ladle"
+    },
+    {
+      "step": 11,
+      "type": "build",
+      "node_id": "cc",
+      "card_id": "cc_strands"
+    },
+    {
+      "step": 12,
+      "type": "build",
+      "node_id": "conv_ccm_billet",
+      "note": "hot delivery line",
+      "card_id": "conv_ccm_billet"
+    },
+    {
+      "step": 13,
+      "type": "build",
+      "node_id": "billet_yard",
+      "card_id": "billet_yard"
+    },
+    {
+      "step": 14,
+      "type": "build",
+      "node_id": "conv_billet_rebar",
+      "card_id": "conv_billet_rebar"
+    },
+    {
+      "step": 15,
+      "type": "build",
+      "node_id": "bar_mill",
+      "card_id": "bar_mill"
+    },
+    {
+      "step": 16,
+      "type": "build",
+      "node_id": "conv_billet_wr",
+      "card_id": "conv_billet_wr"
+    },
+    {
+      "step": 17,
+      "type": "build",
+      "node_id": "wire_rod_mill",
+      "card_id": "wire_rod_mill"
+    },
+    {
+      "step": 18,
+      "type": "build",
+      "node_id": "finished_yard",
+      "note": "FG yard — buffer before dispatch; if full, mills stop",
+      "card_id": "finished_yard"
+    },
+    {
+      "step": 19,
+      "type": "build",
+      "node_id": "conv_mill_dispatch",
+      "card_id": "conv_mill_dispatch"
+    },
+    {
+      "step": 20,
+      "type": "build",
+      "node_id": "dispatch",
+      "card_id": "dispatch_crane"
+    },
+    {
+      "step": 21,
+      "type": "milestone",
+      "flag": "first_heat_milestone",
+      "note": "heat tapped without dump AND billet reached a rolling mill -> Free Play unlocks"
+    }
+  ],
+  "palette_lock": "icons greyed until their step; TIME RULE UPDATED 2026-10-26 (Yasser, docs/gameplay.md §1.5): sim clock frozen from game start until the jetty build completes, then runs — equipment built afterwards joins a live ticking plant (supersedes 'sim runs during construction')"
+}

@@ -1,0 +1,370 @@
+{
+ "note": "CC0 vendor model kits excluded from git (download from kenney.nl). Hash manifest for integrity + provenance. See LICENSES.md.",
+ "generated": "2026-11-18",
+ "files": {
+  "content/_vendor/cc0/side_by_side.png": {
+   "sha256": "d6f2b7203045737569b48cf29bc9b8c0164c4514083a0bcf83cb01ad8a77eaff",
+   "bytes": 32083
+  },
+  "content/_vendor/cc0/variant_a_kenney.png": {
+   "sha256": "4f9542989d18454e1d38194b88dc94457a2597ee21fac7e95cf0296d6a04a9b9",
+   "bytes": 15214
+  },
+  "content/_vendor/cc0/variant_b_blockout.png": {
+   "sha256": "c37d7165558897b93f660ad26b3720016948db996d8673fe0e19dbe489946695",
+   "bytes": 8309
+  },
+  "content/_vendor/cc0/city-kit-industrial/building-a.glb": {
+   "sha256": "0e6ef8eb1e1bdbb9d06b5496b5daf3066e00eaf74b3fcd61b74072116a1c86cf",
+   "bytes": 177316
+  },
+  "content/_vendor/cc0/city-kit-industrial/building-b.glb": {
+   "sha256": "2ae65bd9166449f0bef438fbefb75d57451cb15c16659d7f22a7d895296a46af",
+   "bytes": 212040
+  },
+  "content/_vendor/cc0/city-kit-industrial/building-c.glb": {
+   "sha256": "94eb05acef8d8e4c1d817eb12e1c2a1287ffed625879170663a8c4f48786b465",
+   "bytes": 175844
+  },
+  "content/_vendor/cc0/city-kit-industrial/building-d.glb": {
+   "sha256": "72b9e9e29986df0778ffa7c56e2f92fcfadfaa0f89bf167603877db4f38a789e",
+   "bytes": 100768
+  },
+  "content/_vendor/cc0/city-kit-industrial/building-e.glb": {
+   "sha256": "d61fed5e9502af9c698367ab69d5bc50b673375929e51c22af247dfb1db6cd16",
+   "bytes": 129400
+  },
+  "content/_vendor/cc0/city-kit-industrial/building-f.glb": {
+   "sha256": "05a91ab02f424ca4f4819c1749e014bc4404cdf2a75242190c066bb24b59cde7",
+   "bytes": 134916
+  },
+  "content/_vendor/cc0/city-kit-industrial/building-g.glb": {
+   "sha256": "d09d0d53e85989870f39087435f3c8fc788fe68e87589439fa6bf227c2e4a611",
+   "bytes": 106940
+  },
+  "content/_vendor/cc0/city-kit-industrial/building-h.glb": {
+   "sha256": "5a6a6c6824467972ba00b5a3c3cbb19da6e96673bc4e42daf1f09cfd4d2ed0e1",
+   "bytes": 63644
+  },
+  "content/_vendor/cc0/city-kit-industrial/building-i.glb": {
+   "sha256": "12d9be598becf2b6d3758d23aba6c573ca2701fca5e77870d2ee5645647765ca",
+   "bytes": 73848
+  },
+  "content/_vendor/cc0/city-kit-industrial/building-j.glb": {
+   "sha256": "58f135e706662a201bc0c660c2c680ec6bf2997233dd61fe03c28d4965b45bc9",
+   "bytes": 80792
+  },
+  "content/_vendor/cc0/city-kit-industrial/building-k.glb": {
+   "sha256": "ae0692f7a9fa20bb4ae6cc4deb56d5e1919b1ba2188a1f282295ab2be5e9645d",
+   "bytes": 65472
+  },
+  "content/_vendor/cc0/city-kit-industrial/building-l.glb": {
+   "sha256": "86f03eb0b0c5882c59de79b505ffba4377a9b4591588215aa880ab6362087066",
+   "bytes": 162424
+  },
+  "content/_vendor/cc0/city-kit-industrial/building-m.glb": {
+   "sha256": "526881cb1851120a60195f76bd4d8c1963653cdda66e4d1d53f085b3395fb8a9",
+   "bytes": 138920
+  },
+  "content/_vendor/cc0/city-kit-industrial/building-n.glb": {
+   "sha256": "56b895860fb841ecee3e4d13d0745c6cd838da231af79cd90fb8dc0e32a97a96",
+   "bytes": 109256
+  },
+  "content/_vendor/cc0/city-kit-industrial/building-o.glb": {
+   "sha256": "eec5728a268e122da91fa2cc4ed571a0b12e2cdd5c200828ab0d4f31ab1c8765",
+   "bytes": 76552
+  },
+  "content/_vendor/cc0/city-kit-industrial/building-p.glb": {
+   "sha256": "d3e701ba7bf548519731d9c68d5a47d09654bccef6f93be759eaafb55cdb2f78",
+   "bytes": 103760
+  },
+  "content/_vendor/cc0/city-kit-industrial/building-q.glb": {
+   "sha256": "19e65a2547db017af11dedc00a772e0421e580eb31815d8788ab11db232f89d2",
+   "bytes": 181248
+  },
+  "content/_vendor/cc0/city-kit-industrial/building-r.glb": {
+   "sha256": "3bf50032b629c97e249a9219851fd385347608bcb896c5bed06870e3957de5fe",
+   "bytes": 173056
+  },
+  "content/_vendor/cc0/city-kit-industrial/building-s.glb": {
+   "sha256": "065fbcbeb5e79ab21d8cd71b69b925a41d842e6f61296078619e6682d4487a82",
+   "bytes": 81192
+  },
+  "content/_vendor/cc0/city-kit-industrial/building-t.glb": {
+   "sha256": "865f92dc0ca0ce147c2b784bfda0773698e80896c372146e2b53811f1758607f",
+   "bytes": 139896
+  },
+  "content/_vendor/cc0/city-kit-industrial/chimney-large.glb": {
+   "sha256": "fd88d6c971ffb27f5ee5b0df9f7c23ac82f9b6d32e85d3e2066f90a62f92f59f",
+   "bytes": 20932
+  },
+  "content/_vendor/cc0/city-kit-industrial/chimney-medium.glb": {
+   "sha256": "ef1605601d85b5fff97d6596b6552d936a1d6be06ec0609242f6bcfb640d91f6",
+   "bytes": 15020
+  },
+  "content/_vendor/cc0/city-kit-industrial/chimney-small.glb": {
+   "sha256": "22b09845e3df85102278eb440a1cbf9751790d5133a847469e112c55f8b44ff2",
+   "bytes": 10536
+  },
+  "content/_vendor/cc0/city-kit-industrial/colormap.png": {
+   "sha256": "950f4f891ebd05a2affac810e6eeb0fea1511bc39039b65a3cbf2e17d17bc6a2",
+   "bytes": 11986
+  },
+  "content/_vendor/cc0/city-kit-industrial/detail-tank-large.glb": {
+   "sha256": "2fbf65dfbae114235dec65cc8730a870cf7d29dd76f9473218e96ee83e9f5f43",
+   "bytes": 47452
+  },
+  "content/_vendor/cc0/city-kit-industrial/detail-tank.glb": {
+   "sha256": "9e955732e4ef9ccff4a4d6967d29d8a7d2f9ed16c903923f2568216d9f0b50d2",
+   "bytes": 31436
+  },
+  "content/_vendor/cc0/city-kit-industrial/shipping-container-a.glb": {
+   "sha256": "7b2d5ca874c8e659ee6cfd1614f0470b70410b2ddc7620ac83b8954dedeb861d",
+   "bytes": 36624
+  },
+  "content/_vendor/cc0/city-kit-industrial/shipping-container-b.glb": {
+   "sha256": "290b3808149f8a9456ee96ff682fcf6a99f76adeac8e3b7b38234be434ea455c",
+   "bytes": 37052
+  },
+  "content/_vendor/cc0/city-kit-industrial/shipping-container-c.glb": {
+   "sha256": "6a272420c37ccf4b354565d75c5d1fd889cd568297c215c681fcf11ef8c8ae13",
+   "bytes": 36620
+  },
+  "content/_vendor/cc0/city-kit-industrial/water-tower.glb": {
+   "sha256": "11ac7ae19f32ce889bfe7a9c8e78c8ce8c77b7a76b52fd4ffa439a022ea2ef40",
+   "bytes": 93836
+  },
+  "content/_vendor/cc0/factory-kit/box-large.glb": {
+   "sha256": "f5c7a7b4d7ec48c2695dc5241d62a38dbb54b487e6be0f089548582c91bacdfd",
+   "bytes": 7496
+  },
+  "content/_vendor/cc0/factory-kit/box-wide.glb": {
+   "sha256": "41507d9e035b23e586cbf6bcc63427c810aefd428620264bebefc25c98922ff4",
+   "bytes": 7496
+  },
+  "content/_vendor/cc0/factory-kit/colormap.png": {
+   "sha256": "35d7bd6900dde0208429eeaec87fa17fbf024ed59f3f4eab54bc92802eba9dd7",
+   "bytes": 11813
+  },
+  "content/_vendor/cc0/factory-kit/cone.glb": {
+   "sha256": "deb6ea20fe61bc094f0e64a3d6891b029ff552c5ab00bf57b763798624228e41",
+   "bytes": 7028
+  },
+  "content/_vendor/cc0/factory-kit/conveyor-corner.glb": {
+   "sha256": "e1169e56b61e952350545664993d7d1662dc4b33fa301100f3bad4b0e07870e2",
+   "bytes": 22088
+  },
+  "content/_vendor/cc0/factory-kit/conveyor-junction-t.glb": {
+   "sha256": "a640c87707f17ddf49179f7dc00fc3621f84bb751bf0bfea90e537c153606ed3",
+   "bytes": 12296
+  },
+  "content/_vendor/cc0/factory-kit/conveyor-long-sides.glb": {
+   "sha256": "511a8f3613c20ccf8039cdc63b7635b9e2fba928c2c9a8a13a63b3e33864b310",
+   "bytes": 22100
+  },
+  "content/_vendor/cc0/factory-kit/conveyor-long.glb": {
+   "sha256": "9087ec11d9dcc85ada9d14a66910244bfbb5df57c64b2647956a32525935dee3",
+   "bytes": 18688
+  },
+  "content/_vendor/cc0/factory-kit/crane-lift.glb": {
+   "sha256": "060197cd67598ed4359ecbcb0af980d4505992213c1ab6cc9f56812dff7bbf07",
+   "bytes": 31836
+  },
+  "content/_vendor/cc0/factory-kit/crane-magnet.glb": {
+   "sha256": "9ed1d4690e03fd4cafcd30d182b2319cc6c743794a50108332cab9d76a083f6e",
+   "bytes": 16912
+  },
+  "content/_vendor/cc0/factory-kit/crane.glb": {
+   "sha256": "ceaf20fb976ce0415d2b3d40e723b6ad377845818fa4fa68b55434108b1a6880",
+   "bytes": 53396
+  },
+  "content/_vendor/cc0/factory-kit/door-wide-open.glb": {
+   "sha256": "bc8cfb0d899c512d85241c41db4247be11cfe833cab56949f19e2903789133d9",
+   "bytes": 3000
+  },
+  "content/_vendor/cc0/factory-kit/floor-large.glb": {
+   "sha256": "6d4cf453bcacd653389a4a3071468ae1167b98c2b13f042aba55e8fe3de21db0",
+   "bytes": 1804
+  },
+  "content/_vendor/cc0/factory-kit/floor.glb": {
+   "sha256": "6fd1acd1b3fed85093fd000410cd9b010f4c169e4f10a53699993f0c5667b3a9",
+   "bytes": 1788
+  },
+  "content/_vendor/cc0/factory-kit/hopper-round.glb": {
+   "sha256": "8d4a49f1608b0cdb33d4506bed0ca0648df31437ae2b488a418fa15e5a65b278",
+   "bytes": 13700
+  },
+  "content/_vendor/cc0/factory-kit/hopper-square.glb": {
+   "sha256": "1b88e30011629015cea65777c5157026088ea557163bee43596d5083f1df0f39",
+   "bytes": 10092
+  },
+  "content/_vendor/cc0/factory-kit/lever-single.glb": {
+   "sha256": "d7056a698ecb46c972d51848a77c8a9aca86f085cc5800347fce1c19c6c59477",
+   "bytes": 17516
+  },
+  "content/_vendor/cc0/factory-kit/machine-bed.glb": {
+   "sha256": "17dc8afaa1cd627d1cdb59691b5921ba85846a0b7aeb9c3c6d885fe27db77878",
+   "bytes": 52136
+  },
+  "content/_vendor/cc0/factory-kit/machine.glb": {
+   "sha256": "a39e3042bcb7789274428357383317d70e1c31906e5301c99e7d9e90ac584863",
+   "bytes": 25620
+  },
+  "content/_vendor/cc0/factory-kit/pipe-large-bend.glb": {
+   "sha256": "e234cba2e29bd825b9acdab56c0ff36504a6ceea4c74b21dafbbd98e84bb793b",
+   "bytes": 44512
+  },
+  "content/_vendor/cc0/factory-kit/pipe-large-long.glb": {
+   "sha256": "8e6650cc662695c28fffb1ffa10f190255f7d9c6c1d4a2a48d375e9bbb89b04f",
+   "bytes": 27288
+  },
+  "content/_vendor/cc0/factory-kit/pipe-large.glb": {
+   "sha256": "e30500f8ec6dc1fcc04c350ff9ecfd06470ec73e70d53b7b3b571031f30a3311",
+   "bytes": 23156
+  },
+  "content/_vendor/cc0/factory-kit/piston-round.glb": {
+   "sha256": "cd67c755d4ea6f53b5a5583447f45e9abb5d87f344d9f053820d1b09d719fcdd",
+   "bytes": 37736
+  },
+  "content/_vendor/cc0/factory-kit/robot-arm-a.glb": {
+   "sha256": "ad3f766791adadd1cfb5ccc27d2b2ac8787848282f2a15b3c407f350dc281b68",
+   "bytes": 50592
+  },
+  "content/_vendor/cc0/factory-kit/scanner-high.glb": {
+   "sha256": "b71d8ab86fe1a12542eac14e4185e17babf15ac086c3343acf8600a080ed985a",
+   "bytes": 21656
+  },
+  "content/_vendor/cc0/factory-kit/structure-doorway.glb": {
+   "sha256": "3d06e694412c47b85a85b9f15a60c532900f7bb1a95dba5dc9b942dcdbb4ce12",
+   "bytes": 6464
+  },
+  "content/_vendor/cc0/factory-kit/structure-medium.glb": {
+   "sha256": "38366ce8ab3983848d3f9818889705c42f311a5c49ae3d49605927a4ba7ca053",
+   "bytes": 25852
+  },
+  "content/_vendor/cc0/factory-kit/structure-short.glb": {
+   "sha256": "7d5f736601a24d40196376fb113aabf9aed840249776c652e1c6a63e43b3612e",
+   "bytes": 25828
+  },
+  "content/_vendor/cc0/factory-kit/structure-tall.glb": {
+   "sha256": "b019fde05396ab9474a36b8923fd014a88122cda3d0c2f7aa3d89ddf41745167",
+   "bytes": 25828
+  },
+  "content/_vendor/cc0/factory-kit/structure-wall.glb": {
+   "sha256": "3bdcb31d693b4e97a9fa198e9de1a47bfd14e829520da08ceaacadbdb258582c",
+   "bytes": 4236
+  },
+  "content/_vendor/cc0/factory-kit/top-large.glb": {
+   "sha256": "50a6ce87367b8416417602c80cc0904b8c1c43a955fb8ef7d68e1005c0f964f9",
+   "bytes": 1800
+  },
+  "content/_vendor/cc0/factory-kit/top.glb": {
+   "sha256": "2792d5ffc4ff32586844a6092b5a0e1284770babd03209ecea3d399c24017747",
+   "bytes": 1780
+  },
+  "content/_vendor/cc0/factory-kit/warning-orange.glb": {
+   "sha256": "07974e9e78c2b2d2ed8198461a7fbac86d1744490ab687817543a07f163aa7d0",
+   "bytes": 16136
+  },
+  "content/_vendor/cc0/style_test/probe_minimal.png": {
+   "sha256": "40939bb4c6fcaccceac2b8ee42946aa3a9ff92d77a1166f18df4682331bcfd1f",
+   "bytes": 5517
+  },
+  "content/_vendor/cc0/style_test/render_style_test.py": {
+   "sha256": "0622773d892e3316d2bf92b91d0d121fd22e7e7467a8f63b1caa99eccfdc02f0",
+   "bytes": 6397
+  },
+  "content/_vendor/cc0/style_test/render_style_test_v2.py": {
+   "sha256": "2fd291ec94f3bb39cda9c50825bf0b743b59e2030f635decfc837e284db10c2d",
+   "bytes": 4553
+  },
+  "content/_vendor/cc0/style_test/render_style_test_v3.py": {
+   "sha256": "29ac2e795cc2c2369941a54a0e6e23da90f77b5729a1250d562ab77428c3efc4",
+   "bytes": 4469
+  },
+  "content/_vendor/cc0/style_test/side_by_side.png": {
+   "sha256": "3bd31cbdcdc95d6299c38dd02fee37ab2e15a8196dfe09a47dadaca2962df70a",
+   "bytes": 24544
+  },
+  "content/_vendor/cc0/style_test/simcity_demo.png": {
+   "sha256": "4105d17b59ea436d75e837fd3468dcc8384686baba0220640d0c53b6eaf8961c",
+   "bytes": 20332
+  },
+  "content/_vendor/cc0/style_test/simcity_demo.py": {
+   "sha256": "9b9447df10da5dff8c1b2f14b7c0bf7954704ef86b5b2bc872f671956eb74c2d",
+   "bytes": 5816
+  },
+  "content/_vendor/cc0/style_test/variant_a_kenney.png": {
+   "sha256": "b1cef1a12132e10273d1a22765e78957cfcc47cc76e3e6fe16b2a6b4a06b6a9d",
+   "bytes": 9854
+  },
+  "content/_vendor/cc0/style_test/variant_a_kenney_v2.png": {
+   "sha256": "b1cef1a12132e10273d1a22765e78957cfcc47cc76e3e6fe16b2a6b4a06b6a9d",
+   "bytes": 9854
+  },
+  "content/_vendor/cc0/style_test/variant_b_blockout.png": {
+   "sha256": "6f323239775537869dfbfe4ce2d8ca573e75a9ef497affabd5f8611ada1ce3d1",
+   "bytes": 8796
+  },
+  "content/_vendor/cc0/style_test/style_test/side_by_side.png": {
+   "sha256": "f7308c5ee27d5396ec18d9eb1a7ea1f8de70f4a37fe441f656ce96b58cce3114",
+   "bytes": 11102
+  },
+  "content/_vendor/cc0/style_test/style_test/variant_a_kenney.png": {
+   "sha256": "77f85d606945278492939cd2f5f129dbe14e70fbf8abe3b1b9c5b686877a9567",
+   "bytes": 2939
+  },
+  "content/_vendor/cc0/style_test/style_test/variant_b_blockout.png": {
+   "sha256": "77f85d606945278492939cd2f5f129dbe14e70fbf8abe3b1b9c5b686877a9567",
+   "bytes": 2939
+  },
+  "content/_vendor/cc0/yasser/bar_mill.glb": {
+   "sha256": "48ec5c6a259878c52cc15f5370fba464a16d234dab7a56ac08fc2d983ad7fac7",
+   "bytes": 12580628
+  },
+  "content/_vendor/cc0/yasser/cc.glb": {
+   "sha256": "0664f41a533beb947c71ac99d96210c4b12575cf38fe8c19cf97e3104e3b0a39",
+   "bytes": 12570944
+  },
+  "content/_vendor/cc0/yasser/drp.glb": {
+   "sha256": "fa4a68f899abca2e09338240b56d7d82ea7021f8d11a16928ba1a210c9d17ebd",
+   "bytes": 57557580
+  },
+  "content/_vendor/cc0/yasser/eaf.glb": {
+   "sha256": "b242cf16a9f03e658ae92e6aed50fd3296ed4a0764bf305f84230704290a1980",
+   "bytes": 12503108
+  },
+  "content/_vendor/cc0/yasser/lf.glb": {
+   "sha256": "130bb2a0a6f3733b49558dd1252ac517375f89f1fb3de523b25ca0dadb83b619",
+   "bytes": 12542608
+  },
+  "content/_vendor/cc0/yasser/wire_rod_mill.glb": {
+   "sha256": "bbc15c0ffba919a1e6a0eab42fa7a778950c9e87d616580a23f873bb36bf690c",
+   "bytes": 12590480
+  },
+  "content/_vendor/cc0/yasser_decimated/bar_mill.glb": {
+   "sha256": "1e686166efa59a50bb0e1280d3971e9094120ca49a61d5497b4fefc7ef8d50db",
+   "bytes": 899272
+  },
+  "content/_vendor/cc0/yasser_decimated/cc.glb": {
+   "sha256": "e5be6a580636aa9cd89b47732e76c89ee3ced52f52430f6790a54be1e7769aec",
+   "bytes": 881644
+  },
+  "content/_vendor/cc0/yasser_decimated/drp.glb": {
+   "sha256": "6037e36816f74e36ca9de92cecaf1882f43c0b07ed50f669735a94cc760d4ec1",
+   "bytes": 38377132
+  },
+  "content/_vendor/cc0/yasser_decimated/eaf.glb": {
+   "sha256": "3b3e1fa1a829cb79d439bd9191adf9e264eed8d719d3c2d7405a3839b7483776",
+   "bytes": 888344
+  },
+  "content/_vendor/cc0/yasser_decimated/lf.glb": {
+   "sha256": "05bf45b31b5afbccb83d0e5287c705ce84bcfc26f988f7e5e85298660b070aa7",
+   "bytes": 897016
+  },
+  "content/_vendor/cc0/yasser_decimated/wire_rod_mill.glb": {
+   "sha256": "f6c2efccd82070adccf386137dd8b2cd9315a8f869f0ff17405baba44b7db30f",
+   "bytes": 894844
+  }
+ }
+}

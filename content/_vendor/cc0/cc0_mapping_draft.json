@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "note": "Hermes-drafted CC0 asset mapping for UI Phase Option B (Kenney modular, fixed-tilt orthographic camera, minimal animation). Generic blockout look per Yasser 2026-10-07: use available models now, enhance later. Footprints are proposals for approval, not locked. Scale rule: 1 grid cell = 2 m (Kenney native unit); models are in meters.",
+  "packs": {
+    "factory-kit": "CC0, Kenney, 140 models, single colormap texture — conveyors, pipes, structures, machines, cranes",
+    "city-kit-industrial": "CC0, Kenney, 40 models — buildings, chimneys, tanks, containers, water tower"
+  },
+  "nodes": {
+    "jetty": {
+      "footprint": [
+        3,
+        2
+      ],
+      "parts": [
+        "city-kit-industrial/shipping-container-a",
+        "factory-kit/conveyor-long",
+        "factory-kit/conveyor-corner",
+        "factory-kit/crane"
+      ]
+    },
+    "scrap_yard": {
+      "footprint": [
+        3,
+        3
+      ],
+      "parts": [
+        "factory-kit/floor-large",
+        "factory-kit/box-large",
+        "factory-kit/box-wide",
+        "factory-kit/crane-magnet"
+      ]
+    },
+    "dri_yard": {
+      "footprint": [
+        2,
+        3
+      ],
+      "parts": [
+        "city-kit-industrial/detail-tank-large",
+        "city-kit-industrial/detail-tank",
+        "factory-kit/conveyor-long"
+      ]
+    },
+    "drp": {
+      "footprint": [
+        3,
+        2
+      ],
+      "parts": [
+        "city-kit-industrial/building-m",
+        "factory-kit/pipe-large-long",
+        "factory-kit/pipe-large-bend",
+        "city-kit-industrial/chimney-medium",
+        "factory-kit/conveyor-long"
+      ]
+    },
+    "eaf": {
+      "footprint": [
+        3,
+        3
+      ],
+      "parts": [
+        "city-kit-industrial/building-l",
+        "factory-kit/machine-bed",
+        "factory-kit/piston-round",
+        "city-kit-industrial/chimney-large"
+      ]
+    },
+    "lf": {
+      "footprint": [
+        2,
+        2
+      ],
+      "parts": [
+        "city-kit-industrial/building-h",
+        "factory-kit/machine",
+        "factory-kit/structure-tall"
+      ]
+    },
+    "cc": {
+      "footprint": [
+        2,
+        4
+      ],
+      "parts": [
+        "factory-kit/structure-tall",
+        "factory-kit/structure-medium",
+        "factory-kit/machine",
+        "city-kit-industrial/chimney-small"
+      ]
+    },
+    "bar_mill": {
+      "footprint": [
+        2,
+        4
+      ],
+      "parts": [
+        "city-kit-industrial/building-r",
+        "factory-kit/machine-bed",
+        "factory-kit/structure-medium",
+        "factory-kit/conveyor-long"
+      ]
+    },
+    "wire_rod_mill": {
+      "footprint": [
+        2,
+        4
+      ],
+      "parts": [
+        "city-kit-industrial/building-q",
+        "factory-kit/machine-bed",
+        "factory-kit/conveyor-long",
+        "factory-kit/conveyor-corner"
+      ]
+    },
+    "billet_yard": {
+      "footprint": [
+        2,
+        3
+      ],
+      "parts": [
+        "factory-kit/floor-large",
+        "factory-kit/box-wide",
+        "factory-kit/crane"
+      ]
+    },
+    "finished_yard": {
+      "footprint": [
+        3,
+        3
+      ],
+      "parts": [
+        "factory-kit/floor-large",
+        "factory-kit/box-large",
+        "city-kit-industrial/shipping-container-b",
+        "factory-kit/crane"
+      ]
+    },
+    "dispatch": {
+      "footprint": [
+        2,
+        3
+      ],
+      "parts": [
+        "factory-kit/crane",
+        "factory-kit/crane-lift",
+        "factory-kit/structure-doorway",
+        "factory-kit/floor-large"
+      ]
+    }
+  },
+  "connections": {
+    "rule": "belts built from repeatable segments between node footprints (Yasser 2026-10-07): conveyor-long (2 m), conveyor-corner, conveyor-junction-t; segments placed by distance between endpoints",
+    "parts": [
+      "factory-kit/conveyor-long",
+      "factory-kit/conveyor-corner",
+      "factory-kit/conveyor-junction-t",
+      "factory-kit/conveyor-long-sides"
+    ]
+  },
+  "ground": {
+    "rule": "pending pack — Kenney Road Pack / Nature Kit (CC0) for roads, green areas, unpaved patches; or factory-kit floor tiles as base slab",
+    "parts": [
+      "factory-kit/floor",
+      "factory-kit/floor-large"
+    ]
+  },
+  "style_test": {
+    "node": "drp",
+    "variant_a": "pure Kenney assembly (this mapping)",
+    "variant_b": "Blender stylized blockout",
+    "gate": "side-by-side render, same camera, same lighting — Yasser picks the anchor"
+  }
+}

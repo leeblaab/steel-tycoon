@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "note": "Domain 4 Sustainability & circular economy configuration (demo defaults, editable at later stages). Values are configuration data, NOT industrial calibration claims; each entry keeps sme_pending=true until SME calibration. Mirror contract: mirror/sustainability_domain4_mirror.py. Rule logic lives in the mirror; this file carries only tunable parameters. Boundary contract (foundations_definitions.md B): by-product streams (slag, dust, scale) live as Losses until the sustainability domain converts them to sellable outputs — then they move from Losses to Products. Energy is NOT material: it lives in a separate energy ledger and never enters the material balance. Stable asset IDs reuse the existing set (eaf, drp, cc, bar_mill, wire_rod_mill, crane) — no competing representations.",
+  "assets": [
+    {"id": "eaf", "steel_output_t_per_tick": 100.0, "sme_pending": true},
+    {"id": "drp", "steel_output_t_per_tick": 100.0, "sme_pending": true},
+    {"id": "cc", "steel_output_t_per_tick": 100.0, "sme_pending": true},
+    {"id": "bar_mill", "steel_output_t_per_tick": 100.0, "sme_pending": true},
+    {"id": "wire_rod_mill", "steel_output_t_per_tick": 100.0, "sme_pending": true},
+    {"id": "crane", "steel_output_t_per_tick": 100.0, "sme_pending": true}
+  ],
+  "byproduct_streams": [
+    {
+      "id": "slag",
+      "stage_boundary": "slag",
+      "yield_fraction_of_input_mass": 0.040,
+      "price_usd_t": 25.0,
+      "handling_cost_usd_t": 4.0,
+      "off_route": false,
+      "unit": "fraction of per-asset input mass (t/t); price and handling USD per tonne",
+      "note": "Slag to cement industry. 40 kg/t steel = 4% of input mass (demo, sme_pending). Handling cost is the trade-off against by-product revenue.",
+      "sme_pending": true
+    },
+    {
+      "id": "eaf_dust",
+      "stage_boundary": "dust",
+      "yield_fraction_of_input_mass": 0.012,
+      "price_usd_t": 40.0,
+      "handling_cost_usd_t": 6.0,
+      "off_route": true,
+      "unit": "fraction of per-asset input mass (t/t); price and handling USD per tonne",
+      "note": "EAF dust to treatment / zinc recovery. 12 kg/t steel = 1.2% of input mass (demo, sme_pending). Off-route assets contribute zero — no double counting.",
+      "sme_pending": true
+    },
+    {
+      "id": "scale",
+      "stage_boundary": "scale",
+      "yield_fraction_of_input_mass": 0.005,
+      "price_usd_t": 15.0,
+      "handling_cost_usd_t": 3.0,
+      "off_route": true,
+      "unit": "fraction of per-asset input mass (t/t); price and handling USD per tonne",
+      "note": "Rolling-mill scale (cc/bar_mill/wire_rod_mill). Demo value, sme_pending. Sells only when the sustainability domain converts it to a product (boundary contract B).",
+      "sme_pending": true
+    },
+    {
+      "id": "oxidation",
+      "stage_boundary": "oxidation",
+      "yield_fraction_of_input_mass": 0.010,
+      "price_usd_t": 0.0,
+      "handling_cost_usd_t": 0.0,
+      "off_route": false,
+      "unit": "fraction of per-asset input mass (t/t); unsellable loss stream",
+      "note": "Oxidation loss boundary (EAF/DRP). NOT a sellable by-product — stays in Losses. Included so the stage boundaries are explicit and the balance closes without double counting.",
+      "sme_pending": true
+    }
+  ],
+  "carbon": {
+    "intensity_t_co2_per_t_steel": {
+      "eaf": 0.70,
+      "drp": 1.15,
+      "cc": 0.05,
+      "bar_mill": 0.05,
+      "wire_rod_mill": 0.05,
+      "crane": 0.01
+    },
+    "carbon_tax_usd_per_t_co2": 30.0,
+    "green_threshold_t_co2_per_t_steel": 0.60,
+    "green_bonus_usd_per_t_steel": 10.0,
+    "green_penalty_usd_per_t_steel": 5.0,
+    "green_upgrade_capex_usd": 2000000.0,
+    "green_upgrade_intensity_reduction_t_co2_per_t_steel": 0.15,
+    "unit": "intensity t CO2 per t steel per asset; tax USD per t CO2; bonus/penalty USD per t steel",
+    "note": "DRI-EAF route industry-plausible ranges: EAF ~0.6-0.8 t/t on gas (demo 0.70), DRP ~1.0-1.3 t/t (demo 1.15); downstream assets small. Green upgrade (capex) lowers per-asset intensity; plant average below green_threshold earns bonus, above earns penalty. All demo values, sme_pending.",
+    "sme_pending": true
+  },
+  "green_premium": {
+    "premium_usd_per_t": 20.0,
+    "threshold_t_co2_per_t_steel": 0.60,
+    "rec_revenue_usd_per_t_steel": 5.0,
+    "unit": "premium and REC revenue USD per tonne sold",
+    "note": "Green-flagged product earns premium only when plant-average carbon intensity is below the threshold (threshold-based, config-editable policy assumption). REC revenue is a SEPARATE stream from the premium. Demo values, sme_pending.",
+    "sme_pending": true
+  },
+  "energy_recovery": {
+    "off_gas_recovery_gj_per_t_steel": {
+      "drp": 1.5,
+      "eaf": 0.4,
+      "cc": 0.0,
+      "bar_mill": 0.0,
+      "wire_rod_mill": 0.0,
+      "crane": 0.0
+    },
+    "waste_heat_boiler_kwh_per_t_steel": {
+      "eaf": 40.0,
+      "cc": 15.0,
+      "bar_mill": 10.0,
+      "wire_rod_mill": 10.0,
+      "drp": 0.0,
+      "crane": 0.0
+    },
+    "baseline_energy_kpi_gj_per_t_steel": {
+      "drp": 11.0,
+      "eaf": 2.5,
+      "cc": 0.3,
+      "bar_mill": 0.4,
+      "wire_rod_mill": 0.4,
+      "crane": 0.0
+    },
+    "unit": "recovered energy GJ/t and kWh/t steel per asset; KPI baseline GJ/t",
+    "note": "Recovered energy reduces the energy KPI only. Energy is NOT material: it never enters the material balance (separate energy ledger). kWh->GJ conversion factor fixed at 0.0036 (physics constant, not a commercial assumption). Demo values, sme_pending.",
+    "sme_pending": true
+  }
+}

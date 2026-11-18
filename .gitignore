@@ -39,5 +39,13 @@ godot/bin/
 # archived out of GitHub repo (option A slim rebuild, 2026-11-18) — kept on disk
 assets_incoming/
 godot/
-content/
 docs/archive/
+
+# FORGED plan F-02 (18.11): content/ is PUBLISHED (open source). Only the CC0 vendor
+# model kits stay out of git — they're freely downloadable; in-repo hash manifest +
+# inventory JSONs record them. Everything else under content/ ships with the clone.
+content/_vendor/cc0/*
+!content/_vendor/cc0/cc0_inventory.json
+!content/_vendor/cc0/cc0_mapping_draft.json
+!content/_vendor/cc0/LICENSES.md
+

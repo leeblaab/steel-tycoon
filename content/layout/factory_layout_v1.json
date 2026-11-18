@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "id": "factory_layout_v1",
+  "status": "draft — pending Yasser approval (Phase 1 build item d)",
+  "design_source": "docs/factory_scene_design_v1.md (four binding decisions, agreed 2026-10-19)",
+  "units_note": "Positions/bounds are arbitrary scene units on a flat plane for the fixed cinematic camera; exact numbers get pinned when layout rendering runs. No sim or economics values live here — presentation + content references only.",
+  "zones": [
+    { "id": "yard", "slice": "slice1", "label": "Yard & Berths", "color": "#4a5568", "bounds": { "x": [0, 24], "z": [0, 16] } },
+    { "id": "drp", "slice": "slice3", "label": "DRP", "color": "#7c5c2e", "bounds": { "x": [24, 44], "z": [0, 16] } },
+    { "id": "eaf_zone", "slice": "slice4", "label": "EAF", "color": "#8b2f2f", "bounds": { "x": [44, 58], "z": [0, 16] } },
+    { "id": "lrf_zone", "slice": "slice4", "label": "Ladle Refining", "color": "#6b3fa0", "bounds": { "x": [58, 68], "z": [0, 16] } },
+    { "id": "ccm_zone", "slice": "slice4", "label": "Caster", "color": "#a0522d", "bounds": { "x": [68, 82], "z": [0, 16] } },
+    { "id": "mill", "slice": "slice5", "label": "Rolling Mill", "color": "#2f6b5a", "bounds": { "x": [82, 104], "z": [0, 16] } }
+  ],
+  "flow_links": [
+    { "from": "yard", "to": "drp", "label": "ore / scrap" },
+    { "from": "drp", "to": "eaf_zone", "label": "DRI" },
+    { "from": "eaf_zone", "to": "lrf_zone", "label": "hot metal (ladle)" },
+    { "from": "lrf_zone", "to": "ccm_zone", "label": "refined ladle" },
+    { "from": "ccm_zone", "to": "mill", "label": "billet" }
+  ],
+  "slots": [
+    {
+      "id": "s1_berth_1", "zone": "yard", "kind": "machine",
+      "position": { "x": 6, "z": 4 },
+      "inspect_key": "berth_queue",
+      "note": "Berth-queue state IS observable slice1 sim state (ship waiting / unloader busy) — approved exception keeping cards as pure projections."
+    },
+    {
+      "id": "s1_scrap_yard", "zone": "yard", "kind": "ghost",
+      "position": { "x": 14, "z": 8 },
+      "content_ref": "content/nodes/nodes_phase1.json#scrap_yard",
+      "preview": {
+        "capacity_band": "50-150 kt stockpile",
+        "cost_band_usd": "5-15M",
+        "learning_line": "Scrap is graded: clean bushing gives the best yield; shredded scrap forces blending with DRI to dilute copper and tin."
+      }
+    },
+    {
+      "id": "s3_drp", "zone": "drp", "kind": "ghost",
+      "position": { "x": 32, "z": 8 },
+      "content_ref": "content/nodes/nodes_phase1.json#drp",
+      "preview": {
+        "capacity_band": "500k-2.5M t/yr",
+        "cost_band_usd": "75-875M (150-350 USD per annual ton)",
+        "learning_line": "A DRP reduces ore to DRI continuously — it never stops, so downstream storage decides whether the EAF ever starves."
+      }
+    },
+    {
+      "id": "s3_dri_buffer", "zone": "drp", "kind": "ghost",
+      "position": { "x": 40, "z": 8 },
+      "content_ref": "content/nodes/nodes_phase1.json#dri_yard",
+      "preview": {
+        "capacity_band": "30-100 kt stockpile",
+        "cost_band_usd": "10-25M",
+        "learning_line": "A DRP discharges continuously; this slot holds its output so the EAF never starves."
+      }
+    },
+    {
+      "id": "s4_eaf_main", "zone": "eaf_zone", "kind": "machine",
+      "position": { "x": 50, "z": 8 },
+      "inspect_key": "eaf",
+      "note": "Projection fields: eaf.busy_charge_id, eaf.remaining_ticks, eaf.bath_t; counters charge_wait_ticks, heats_starved."
+    },
+    {
+      "id": "s4_lrf", "zone": "lrf_zone", "kind": "machine",
+      "position": { "x": 62, "z": 8 },
+      "inspect_key": "lrf",
+      "note": "Projection fields: lrf.busy_ladle_id, lrf.remaining_ticks; counter ladle_wait_ticks."
+    },
+    {
+      "id": "s4_ccm_strand1", "zone": "ccm_zone", "kind": "machine",
+      "position": { "x": 74, "z": 8 },
+      "inspect_key": "ccm",
+      "note": "Projection fields: ccm.busy_ladle_id, ccm.remaining_ticks; counter caster_wait_ticks. Single strand in v1."
+    },
+    {
+      "id": "s5_billet_yard", "zone": "mill", "kind": "ghost",
+      "position": { "x": 86, "z": 8 },
+      "content_ref": "content/nodes/nodes_phase1.json#billet_yard",
+      "preview": {
+        "capacity_band": "3-10 days of cast output",
+        "cost_band_usd": "5-12M",
+        "learning_line": "Billets cool and wait here; the mill eats from its own stock, so this yard is what keeps the rolls fed between casts."
+      }
+    },
+    {
+      "id": "s5_rebar_mill", "zone": "mill", "kind": "machine",
+      "position": { "x": 94, "z": 8 },
+      "inspect_key": "mill",
+      "note": "Projection fields: mill.busy, mill.remaining_ticks, mill.batch_t; counters mill_wait_ticks, mill_starved_ticks. V3 covers the rebar branch only (wire-rod is a later phase)."
+    }
+  ]
+}

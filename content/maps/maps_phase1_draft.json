@@ -1,0 +1,507 @@
+{
+  "schema_version": 1,
+  "maps": [
+    {
+      "id": "drp",
+      "title": "Direct Reduction Plant (Midrex-type)",
+      "symbols": [
+        {
+          "id": "stockyard",
+          "label": "Ore Stockyard",
+          "symbol": "stockyard",
+          "x": 0.1,
+          "y": 0.72,
+          "card_id": ""
+        },
+        {
+          "id": "ore_belt",
+          "label": "Ore Belt",
+          "symbol": "conveyor",
+          "x": 0.22,
+          "y": 0.6,
+          "card_id": ""
+        },
+        {
+          "id": "shaft_furnace",
+          "label": "Shaft Furnace",
+          "symbol": "shaft_furnace",
+          "x": 0.45,
+          "y": 0.42,
+          "card_id": ""
+        },
+        {
+          "id": "reformer",
+          "label": "Reformer",
+          "symbol": "reformer",
+          "x": 0.3,
+          "y": 0.3,
+          "card_id": ""
+        },
+        {
+          "id": "top_gas_scrubber",
+          "label": "Top Gas Scrubber",
+          "symbol": "scrubber",
+          "x": 0.62,
+          "y": 0.22,
+          "card_id": ""
+        },
+        {
+          "id": "gas_compressors",
+          "label": "Process Gas Compressors",
+          "symbol": "compressor",
+          "x": 0.45,
+          "y": 0.15,
+          "card_id": ""
+        },
+        {
+          "id": "air_blower",
+          "label": "Main Air Blower",
+          "symbol": "compressor",
+          "x": 0.2,
+          "y": 0.45,
+          "card_id": ""
+        },
+        {
+          "id": "heat_recovery",
+          "label": "Heat Recovery",
+          "symbol": "heat_recovery",
+          "x": 0.15,
+          "y": 0.35,
+          "card_id": ""
+        },
+        {
+          "id": "discharge_screen",
+          "label": "Discharge + Hot Briquette Screen",
+          "symbol": "screen",
+          "x": 0.68,
+          "y": 0.62,
+          "card_id": ""
+        },
+        {
+          "id": "hbi",
+          "label": "HBI to Melt Shop",
+          "symbol": "product",
+          "x": 0.85,
+          "y": 0.72,
+          "card_id": ""
+        }
+      ],
+      "edges": [
+        {
+          "from": "stockyard",
+          "to": "ore_belt",
+          "label": "Ore",
+          "kind": "solid"
+        },
+        {
+          "from": "ore_belt",
+          "to": "shaft_furnace",
+          "label": "Ore feed",
+          "kind": "solid"
+        },
+        {
+          "from": "reformer",
+          "to": "shaft_furnace",
+          "label": "Reducing gas",
+          "kind": "gas"
+        },
+        {
+          "from": "gas_compressors",
+          "to": "reformer",
+          "label": "Process gas",
+          "kind": "gas"
+        },
+        {
+          "from": "top_gas_scrubber",
+          "to": "gas_compressors",
+          "label": "Top gas recycle",
+          "kind": "gas"
+        },
+        {
+          "from": "shaft_furnace",
+          "to": "top_gas_scrubber",
+          "label": "Top gas",
+          "kind": "gas"
+        },
+        {
+          "from": "air_blower",
+          "to": "heat_recovery",
+          "label": "Combustion air",
+          "kind": "gas"
+        },
+        {
+          "from": "heat_recovery",
+          "to": "reformer",
+          "label": "Feed gas",
+          "kind": "gas"
+        },
+        {
+          "from": "shaft_furnace",
+          "to": "discharge_screen",
+          "label": "Hot DRI",
+          "kind": "solid"
+        },
+        {
+          "from": "discharge_screen",
+          "to": "hbi",
+          "label": "HBI > 6.3 mm",
+          "kind": "solid"
+        },
+        {
+          "from": "discharge_screen",
+          "to": "shaft_furnace",
+          "label": "Hot fines recycle",
+          "kind": "solid"
+        }
+      ],
+      "sme_pending": true,
+      "calibrated_by": ""
+    },
+    {
+      "id": "smp_overview",
+      "title": "Steel Making Plant (EAF + LRF + CCM)",
+      "symbols": [
+        {
+          "id": "eaf",
+          "label": "EAF Melt Shop",
+          "symbol": "eaf",
+          "x": 0.25,
+          "y": 0.45,
+          "card_id": "eaf_melt_shop"
+        },
+        {
+          "id": "lf",
+          "label": "Ladle Furnace",
+          "symbol": "ladle",
+          "x": 0.5,
+          "y": 0.45,
+          "card_id": "lf_ladle"
+        },
+        {
+          "id": "ccm",
+          "label": "Continuous Caster",
+          "symbol": "caster",
+          "x": 0.75,
+          "y": 0.45,
+          "card_id": "cc_strands"
+        }
+      ],
+      "edges": [
+        {
+          "from": "eaf",
+          "to": "lf",
+          "label": "Tapped heat (ladle)",
+          "kind": "solid"
+        },
+        {
+          "from": "lf",
+          "to": "ccm",
+          "label": "Ladle to caster",
+          "kind": "solid"
+        }
+      ],
+      "sme_pending": true,
+      "calibrated_by": ""
+    },
+    {
+      "id": "eaf",
+      "title": "EAF Melt Shop",
+      "symbols": [
+        {
+          "id": "scrap_charge",
+          "label": "Scrap Charge (bucket + crane)",
+          "symbol": "crane",
+          "x": 0.2,
+          "y": 0.25,
+          "card_id": ""
+        },
+        {
+          "id": "dri_charge",
+          "label": "DRI Charge",
+          "symbol": "product",
+          "x": 0.2,
+          "y": 0.6,
+          "card_id": ""
+        },
+        {
+          "id": "furnace",
+          "label": "EAF Shell",
+          "symbol": "eaf",
+          "x": 0.45,
+          "y": 0.45,
+          "card_id": "eaf_melt_shop"
+        },
+        {
+          "id": "tap",
+          "label": "Tap to Ladle",
+          "symbol": "tap",
+          "x": 0.7,
+          "y": 0.45,
+          "card_id": ""
+        }
+      ],
+      "edges": [
+        {
+          "from": "scrap_charge",
+          "to": "furnace",
+          "label": "Scrap (blend ratio)",
+          "kind": "solid"
+        },
+        {
+          "from": "dri_charge",
+          "to": "furnace",
+          "label": "DRI (blend ratio)",
+          "kind": "solid"
+        },
+        {
+          "from": "furnace",
+          "to": "tap",
+          "label": "Heat",
+          "kind": "solid"
+        }
+      ],
+      "sme_pending": true,
+      "calibrated_by": ""
+    },
+    {
+      "id": "lf",
+      "title": "Ladle Furnace",
+      "symbols": [
+        {
+          "id": "ladle",
+          "label": "Ladle + Arc",
+          "symbol": "ladle",
+          "x": 0.45,
+          "y": 0.45,
+          "card_id": "lf_ladle"
+        },
+        {
+          "id": "alloy",
+          "label": "Alloy / Deox Addition",
+          "symbol": "addition",
+          "x": 0.2,
+          "y": 0.25,
+          "card_id": ""
+        },
+        {
+          "id": "fines",
+          "label": "Slag + Fines Removal",
+          "symbol": "screen",
+          "x": 0.7,
+          "y": 0.25,
+          "card_id": ""
+        }
+      ],
+      "edges": [
+        {
+          "from": "alloy",
+          "to": "ladle",
+          "label": "Alloy",
+          "kind": "solid"
+        },
+        {
+          "from": "ladle",
+          "to": "fines",
+          "label": "Slag",
+          "kind": "solid"
+        }
+      ],
+      "sme_pending": true,
+      "calibrated_by": ""
+    },
+    {
+      "id": "cc",
+      "title": "Continuous Caster",
+      "symbols": [
+        {
+          "id": "ladle",
+          "label": "Ladle at Tundish",
+          "symbol": "ladle",
+          "x": 0.25,
+          "y": 0.3,
+          "card_id": ""
+        },
+        {
+          "id": "tundish",
+          "label": "Tundish",
+          "symbol": "tundish",
+          "x": 0.45,
+          "y": 0.35,
+          "card_id": ""
+        },
+        {
+          "id": "strand",
+          "label": "Strand (governing limit)",
+          "symbol": "caster",
+          "x": 0.6,
+          "y": 0.55,
+          "card_id": "cc_strands"
+        },
+        {
+          "id": "billet",
+          "label": "Billet to Hot Delivery",
+          "symbol": "product",
+          "x": 0.8,
+          "y": 0.7,
+          "card_id": ""
+        }
+      ],
+      "edges": [
+        {
+          "from": "ladle",
+          "to": "tundish",
+          "label": "Steel",
+          "kind": "solid"
+        },
+        {
+          "from": "tundish",
+          "to": "strand",
+          "label": "Casting",
+          "kind": "solid"
+        },
+        {
+          "from": "strand",
+          "to": "billet",
+          "label": "Billet",
+          "kind": "solid"
+        }
+      ],
+      "sme_pending": true,
+      "calibrated_by": ""
+    },
+    {
+      "id": "bar_mill",
+      "title": "Bar Mill (6-8 stands + block)",
+      "symbols": [
+        {
+          "id": "furnace",
+          "label": "Reheating Furnace",
+          "symbol": "furnace",
+          "x": 0.15,
+          "y": 0.45,
+          "card_id": ""
+        },
+        {
+          "id": "stands",
+          "label": "Rolling Stands",
+          "symbol": "stand",
+          "x": 0.4,
+          "y": 0.45,
+          "card_id": ""
+        },
+        {
+          "id": "qtb",
+          "label": "QTB (QT grades only)",
+          "symbol": "qtb",
+          "x": 0.55,
+          "y": 0.3,
+          "card_id": ""
+        },
+        {
+          "id": "cooling",
+          "label": "Cooling Bed",
+          "symbol": "cooling",
+          "x": 0.7,
+          "y": 0.55,
+          "card_id": ""
+        },
+        {
+          "id": "bundle",
+          "label": "Bundling Press",
+          "symbol": "press",
+          "x": 0.85,
+          "y": 0.45,
+          "card_id": ""
+        }
+      ],
+      "edges": [
+        {
+          "from": "furnace",
+          "to": "stands",
+          "label": "Hot billet",
+          "kind": "solid"
+        },
+        {
+          "from": "stands",
+          "to": "qtb",
+          "label": "Bar (QT path)",
+          "kind": "solid"
+        },
+        {
+          "from": "stands",
+          "to": "cooling",
+          "label": "Bar",
+          "kind": "solid"
+        },
+        {
+          "from": "cooling",
+          "to": "bundle",
+          "label": "Product",
+          "kind": "solid"
+        }
+      ],
+      "sme_pending": true,
+      "calibrated_by": ""
+    },
+    {
+      "id": "wire_rod_mill",
+      "title": "Wire Rod Mill (10-16 stands, Stelmor)",
+      "symbols": [
+        {
+          "id": "furnace",
+          "label": "Reheating Furnace",
+          "symbol": "furnace",
+          "x": 0.15,
+          "y": 0.45,
+          "card_id": ""
+        },
+        {
+          "id": "stands",
+          "label": "Rolling Stands",
+          "symbol": "stand",
+          "x": 0.4,
+          "y": 0.45,
+          "card_id": ""
+        },
+        {
+          "id": "stelmor",
+          "label": "Stelmor Cooling Line",
+          "symbol": "cooling",
+          "x": 0.65,
+          "y": 0.45,
+          "card_id": ""
+        },
+        {
+          "id": "coil",
+          "label": "Coiling / Mandrel",
+          "symbol": "coil",
+          "x": 0.85,
+          "y": 0.45,
+          "card_id": ""
+        }
+      ],
+      "edges": [
+        {
+          "from": "furnace",
+          "to": "stands",
+          "label": "Hot billet",
+          "kind": "solid"
+        },
+        {
+          "from": "stands",
+          "to": "stelmor",
+          "label": "Rod",
+          "kind": "solid"
+        },
+        {
+          "from": "stelmor",
+          "to": "coil",
+          "label": "Coils",
+          "kind": "solid"
+        }
+      ],
+      "sme_pending": true,
+      "calibrated_by": ""
+    }
+  ]
+}
