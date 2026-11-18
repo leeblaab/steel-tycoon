@@ -24,8 +24,8 @@ Owner: Yasser (SME). Execution: Hermes agent, one Go-gated micro-step at a time.
 | F-03 | 18.11 | Stream-color material language is the PRIMARY visual grammar; zone tints demoted to secondary pad color | per-zone rainbow identity |
 | F-04 | 18.11 | Art bar = "readable industrial diorama"; SME gates on "reads as a real plant's flow and equipment", never photoreal; NO day/night, NO DOF, no photoreal ambitions | (clarifies §9) |
 | F-05 | 18.11 | Treatment order: lighting + palette + fog applied to the CURRENT scene first; before-screenshot captured for measurable after | — |
-| F-06 | 18.11 | Nothing sacred: every old hero GLB (incl. rebuilt 21 MB jetty.glb) dies at its slice gate; swap = add new + delete old + validate budget in ONE gated commit; one hero per gate; repo keeps shrinking | rebuild-all approval |
-| F-07 | 18.11 | Breadth freeze: no S2 scheduling engine, no seventh slice, no extra economy systems until the six slices are connected and readable | — |
+| F-06 | 18.11 | Nothing sacred: every old hero GLB (incl. rebuilt 21 MB jetty.glb) dies at its chapter gate; swap = add new + delete old + validate budget in ONE gated commit; one hero per gate; repo keeps shrinking | rebuild-all approval |
+| F-07 | 18.11 | Breadth freeze: no S2 scheduling engine, no seventh chapter, no extra economy systems until the six chapters are connected and readable (Stage 5 guard: dispatch revenue counter ONLY — no wallet/upgrades/spend) | — |
 | F-08 | 18.11 | Mill routing (rebar vs wire rod) = visuals first, real player decision only when the order book exists; billet→mill interface stays tonnage-only (grade-OUT stands); minimal mirror logic now | — |
 | F-09 | 18.11 | Gate discipline: sensory gate ("Yasser plays it, says it reads right") + per stage one objective perf gate (draw calls/tris/fps budget) + one "still playable" smoke; a closed stage never reopens (anti-polish-loop rule) | — |
 | F-10 | 18.11 | License: **Apache-2.0 code + CC BY-SA 4.0 content** (NC dropped; SME monetizes as copyright holder via dual-license if ever needed) | ISC license field, "proprietary" README claim |
@@ -213,7 +213,7 @@ mirror-first — this saves weeks and keeps one owner per rule (§2.1).
   value per unit effort; reuses the digital-twin diagram grammar.
 - Poly Haven ground/cladding textures + KTX2 compression; 1K HDRI desktop env lighting.
 
-### STAGE 7 — After the six slices prove it (planned, not scheduled)
+### STAGE 7 — After the six chapters prove it (planned, not scheduled)
 S2 collision fixture freeze → S2 port (scheduling/priority gameplay) → drill-in contract
 for legacy slice scenes → order book + mill routing as a real decision (F-08 unlocks) →
 mobile packaging exploration (Capacitor; budgets already enforced since S0.4).
