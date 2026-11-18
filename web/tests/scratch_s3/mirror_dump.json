@@ -1,0 +1,4485 @@
+{
+ "primary": {
+  "fixture_id": "s3_dri_buffer_scenario_seed11_120",
+  "records": [
+   {
+    "tick": 1,
+    "buffer_t": 2.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (2.0t)"
+    ]
+   },
+   {
+    "tick": 2,
+    "buffer_t": 4.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (4.0t)"
+    ]
+   },
+   {
+    "tick": 3,
+    "buffer_t": 6.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (6.0t)"
+    ]
+   },
+   {
+    "tick": 4,
+    "buffer_t": 8.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (8.0t)"
+    ]
+   },
+   {
+    "tick": 5,
+    "buffer_t": 10.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (10.0t)"
+    ]
+   },
+   {
+    "tick": 6,
+    "buffer_t": 12.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (12.0t)"
+    ]
+   },
+   {
+    "tick": 7,
+    "buffer_t": 14.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (14.0t)"
+    ]
+   },
+   {
+    "tick": 8,
+    "buffer_t": 16.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (16.0t)"
+    ]
+   },
+   {
+    "tick": 9,
+    "buffer_t": 18.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (18.0t)"
+    ]
+   },
+   {
+    "tick": 10,
+    "buffer_t": 20.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (20.0t)"
+    ]
+   },
+   {
+    "tick": 11,
+    "buffer_t": 22.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (22.0t)"
+    ]
+   },
+   {
+    "tick": 12,
+    "buffer_t": 24.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (24.0t)"
+    ]
+   },
+   {
+    "tick": 13,
+    "buffer_t": 26.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (26.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 14,
+    "buffer_t": 28.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (28.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 15,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (30.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 16,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 17,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 18,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 19,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 20,
+    "buffer_t": 10.0,
+    "drp_tripped": true,
+    "heat": "charged",
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP TRIP fires at tick 20 (draw 0.0007 < p 0.3), halted 6 ticks",
+     "DRP halted (trip)",
+     "EAF heat at tick 20: 20.0t taken (lots M1,M2,M3,M4,M5,M6,M7,M8,M9,M10)"
+    ]
+   },
+   {
+    "tick": 21,
+    "buffer_t": 10.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 22,
+    "buffer_t": 10.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 23,
+    "buffer_t": 10.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 24,
+    "buffer_t": 10.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 25,
+    "buffer_t": 10.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 26,
+    "buffer_t": 10.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 27,
+    "buffer_t": 12.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (12.0t)"
+    ]
+   },
+   {
+    "tick": 28,
+    "buffer_t": 14.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (14.0t)"
+    ]
+   },
+   {
+    "tick": 29,
+    "buffer_t": 16.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (16.0t)"
+    ]
+   },
+   {
+    "tick": 30,
+    "buffer_t": 18.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": true
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (18.0t)",
+     "EAF heat at tick 30 SKIPPED: buffer short (18.0t < 20.0t)",
+     "buffer state: STARVED (< 10.0t)"
+    ]
+   },
+   {
+    "tick": 31,
+    "buffer_t": 20.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (20.0t)"
+    ]
+   },
+   {
+    "tick": 32,
+    "buffer_t": 22.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (22.0t)"
+    ]
+   },
+   {
+    "tick": 33,
+    "buffer_t": 24.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (24.0t)"
+    ]
+   },
+   {
+    "tick": 34,
+    "buffer_t": 26.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (26.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 35,
+    "buffer_t": 28.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (28.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 36,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (30.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 37,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 38,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 39,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 40,
+    "buffer_t": 10.0,
+    "drp_tripped": false,
+    "heat": "charged",
+    "flags": {
+     "full": false,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "EAF heat at tick 40: 20.0t taken (lots M11,M12,M13,M14,M15,M27,M28,M29,M30,M31)"
+    ]
+   },
+   {
+    "tick": 41,
+    "buffer_t": 12.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (12.0t)"
+    ]
+   },
+   {
+    "tick": 42,
+    "buffer_t": 14.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (14.0t)"
+    ]
+   },
+   {
+    "tick": 43,
+    "buffer_t": 16.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (16.0t)"
+    ]
+   },
+   {
+    "tick": 44,
+    "buffer_t": 18.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (18.0t)"
+    ]
+   },
+   {
+    "tick": 45,
+    "buffer_t": 18.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP TRIP fires at tick 45 (draw 0.1720 < p 0.3), halted 6 ticks",
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 46,
+    "buffer_t": 18.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 47,
+    "buffer_t": 18.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 48,
+    "buffer_t": 18.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 49,
+    "buffer_t": 18.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 50,
+    "buffer_t": 18.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": true
+    },
+    "events": [
+     "DRP halted (trip)",
+     "EAF heat at tick 50 SKIPPED: buffer short (18.0t < 20.0t)",
+     "buffer state: STARVED (< 10.0t)"
+    ]
+   },
+   {
+    "tick": 51,
+    "buffer_t": 18.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 52,
+    "buffer_t": 20.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (20.0t)"
+    ]
+   },
+   {
+    "tick": 53,
+    "buffer_t": 22.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (22.0t)"
+    ]
+   },
+   {
+    "tick": 54,
+    "buffer_t": 24.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (24.0t)"
+    ]
+   },
+   {
+    "tick": 55,
+    "buffer_t": 26.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (26.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 56,
+    "buffer_t": 28.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (28.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 57,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (30.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 58,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 59,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 60,
+    "buffer_t": 10.0,
+    "drp_tripped": false,
+    "heat": "charged",
+    "flags": {
+     "full": false,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "EAF heat at tick 60: 20.0t taken (lots M32,M33,M34,M35,M36,M41,M42,M43,M44,M52)"
+    ]
+   },
+   {
+    "tick": 61,
+    "buffer_t": 12.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (12.0t)"
+    ]
+   },
+   {
+    "tick": 62,
+    "buffer_t": 14.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (14.0t)"
+    ]
+   },
+   {
+    "tick": 63,
+    "buffer_t": 16.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (16.0t)"
+    ]
+   },
+   {
+    "tick": 64,
+    "buffer_t": 18.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (18.0t)"
+    ]
+   },
+   {
+    "tick": 65,
+    "buffer_t": 20.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (20.0t)"
+    ]
+   },
+   {
+    "tick": 66,
+    "buffer_t": 22.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (22.0t)"
+    ]
+   },
+   {
+    "tick": 67,
+    "buffer_t": 24.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (24.0t)"
+    ]
+   },
+   {
+    "tick": 68,
+    "buffer_t": 26.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (26.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 69,
+    "buffer_t": 28.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (28.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 70,
+    "buffer_t": 8.0,
+    "drp_tripped": true,
+    "heat": "charged",
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP TRIP fires at tick 70 (draw 0.0712 < p 0.3), halted 6 ticks",
+     "DRP halted (trip)",
+     "EAF heat at tick 70: 20.0t taken (lots M53,M54,M55,M56,M57,M61,M62,M63,M64,M65)"
+    ]
+   },
+   {
+    "tick": 71,
+    "buffer_t": 8.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 72,
+    "buffer_t": 8.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 73,
+    "buffer_t": 8.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 74,
+    "buffer_t": 8.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 75,
+    "buffer_t": 8.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 76,
+    "buffer_t": 8.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 77,
+    "buffer_t": 10.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (10.0t)"
+    ]
+   },
+   {
+    "tick": 78,
+    "buffer_t": 12.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (12.0t)"
+    ]
+   },
+   {
+    "tick": 79,
+    "buffer_t": 14.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (14.0t)"
+    ]
+   },
+   {
+    "tick": 80,
+    "buffer_t": 16.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": true
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (16.0t)",
+     "EAF heat at tick 80 SKIPPED: buffer short (16.0t < 20.0t)",
+     "buffer state: STARVED (< 10.0t)"
+    ]
+   },
+   {
+    "tick": 81,
+    "buffer_t": 18.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (18.0t)"
+    ]
+   },
+   {
+    "tick": 82,
+    "buffer_t": 20.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (20.0t)"
+    ]
+   },
+   {
+    "tick": 83,
+    "buffer_t": 22.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (22.0t)"
+    ]
+   },
+   {
+    "tick": 84,
+    "buffer_t": 24.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (24.0t)"
+    ]
+   },
+   {
+    "tick": 85,
+    "buffer_t": 26.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (26.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 86,
+    "buffer_t": 28.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (28.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 87,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (30.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 88,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 89,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 90,
+    "buffer_t": 10.0,
+    "drp_tripped": false,
+    "heat": "charged",
+    "flags": {
+     "full": false,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "EAF heat at tick 90: 20.0t taken (lots M66,M67,M68,M69,M77,M78,M79,M80,M81,M82)"
+    ]
+   },
+   {
+    "tick": 91,
+    "buffer_t": 12.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (12.0t)"
+    ]
+   },
+   {
+    "tick": 92,
+    "buffer_t": 14.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (14.0t)"
+    ]
+   },
+   {
+    "tick": 93,
+    "buffer_t": 16.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (16.0t)"
+    ]
+   },
+   {
+    "tick": 94,
+    "buffer_t": 18.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (18.0t)"
+    ]
+   },
+   {
+    "tick": 95,
+    "buffer_t": 20.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (20.0t)"
+    ]
+   },
+   {
+    "tick": 96,
+    "buffer_t": 22.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (22.0t)"
+    ]
+   },
+   {
+    "tick": 97,
+    "buffer_t": 24.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (24.0t)"
+    ]
+   },
+   {
+    "tick": 98,
+    "buffer_t": 26.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (26.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 99,
+    "buffer_t": 28.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (28.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 100,
+    "buffer_t": 10.0,
+    "drp_tripped": false,
+    "heat": "charged",
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (30.0t)",
+     "EAF heat at tick 100: 20.0t taken (lots M83,M84,M85,M86,M87,M91,M92,M93,M94,M95)"
+    ]
+   },
+   {
+    "tick": 101,
+    "buffer_t": 12.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (12.0t)"
+    ]
+   },
+   {
+    "tick": 102,
+    "buffer_t": 14.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (14.0t)"
+    ]
+   },
+   {
+    "tick": 103,
+    "buffer_t": 16.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (16.0t)"
+    ]
+   },
+   {
+    "tick": 104,
+    "buffer_t": 18.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (18.0t)"
+    ]
+   },
+   {
+    "tick": 105,
+    "buffer_t": 20.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (20.0t)"
+    ]
+   },
+   {
+    "tick": 106,
+    "buffer_t": 22.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (22.0t)"
+    ]
+   },
+   {
+    "tick": 107,
+    "buffer_t": 24.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (24.0t)"
+    ]
+   },
+   {
+    "tick": 108,
+    "buffer_t": 26.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (26.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 109,
+    "buffer_t": 28.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (28.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 110,
+    "buffer_t": 10.0,
+    "drp_tripped": false,
+    "heat": "charged",
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (30.0t)",
+     "EAF heat at tick 110: 20.0t taken (lots M96,M97,M98,M99,M100,M101,M102,M103,M104,M105)"
+    ]
+   },
+   {
+    "tick": 111,
+    "buffer_t": 12.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (12.0t)"
+    ]
+   },
+   {
+    "tick": 112,
+    "buffer_t": 14.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (14.0t)"
+    ]
+   },
+   {
+    "tick": 113,
+    "buffer_t": 16.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (16.0t)"
+    ]
+   },
+   {
+    "tick": 114,
+    "buffer_t": 18.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (18.0t)"
+    ]
+   },
+   {
+    "tick": 115,
+    "buffer_t": 20.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (20.0t)"
+    ]
+   },
+   {
+    "tick": 116,
+    "buffer_t": 22.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (22.0t)"
+    ]
+   },
+   {
+    "tick": 117,
+    "buffer_t": 24.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (24.0t)"
+    ]
+   },
+   {
+    "tick": 118,
+    "buffer_t": 26.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (26.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 119,
+    "buffer_t": 28.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (28.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 120,
+    "buffer_t": 10.0,
+    "drp_tripped": false,
+    "heat": "charged",
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (30.0t)",
+     "EAF heat at tick 120: 20.0t taken (lots M106,M107,M108,M109,M110,M111,M112,M113,M114,M115)"
+    ]
+   }
+  ],
+  "final_state_events_tail_ticks": [
+   {
+    "tick": 118,
+    "event": "DRP discharge 2.0t -> buffer (26.0t)"
+   },
+   {
+    "tick": 118,
+    "event": "buffer state: FULL (>= 25.0t)"
+   },
+   {
+    "tick": 119,
+    "event": "DRP discharge 2.0t -> buffer (28.0t)"
+   },
+   {
+    "tick": 119,
+    "event": "buffer state: FULL (>= 25.0t)"
+   },
+   {
+    "tick": 120,
+    "event": "DRP discharge 2.0t -> buffer (30.0t)"
+   },
+   {
+    "tick": 120,
+    "event": "EAF heat at tick 120: 20.0t taken (lots M106,M107,M108,M109,M110,M111,M112,M113,M114,M115)"
+   }
+  ],
+  "prng_series": [
+   {
+    "tick": 1,
+    "prng_state": 11
+   },
+   {
+    "tick": 2,
+    "prng_state": 11
+   },
+   {
+    "tick": 3,
+    "prng_state": 11
+   },
+   {
+    "tick": 4,
+    "prng_state": 11
+   },
+   {
+    "tick": 5,
+    "prng_state": 11
+   },
+   {
+    "tick": 6,
+    "prng_state": 11
+   },
+   {
+    "tick": 7,
+    "prng_state": 11
+   },
+   {
+    "tick": 8,
+    "prng_state": 11
+   },
+   {
+    "tick": 9,
+    "prng_state": 11
+   },
+   {
+    "tick": 10,
+    "prng_state": 11
+   },
+   {
+    "tick": 11,
+    "prng_state": 11
+   },
+   {
+    "tick": 12,
+    "prng_state": 11
+   },
+   {
+    "tick": 13,
+    "prng_state": 11
+   },
+   {
+    "tick": 14,
+    "prng_state": 11
+   },
+   {
+    "tick": 15,
+    "prng_state": 11
+   },
+   {
+    "tick": 16,
+    "prng_state": 11
+   },
+   {
+    "tick": 17,
+    "prng_state": 11
+   },
+   {
+    "tick": 18,
+    "prng_state": 11
+   },
+   {
+    "tick": 19,
+    "prng_state": 11
+   },
+   {
+    "tick": 20,
+    "prng_state": 2974059
+   },
+   {
+    "tick": 21,
+    "prng_state": 2974059
+   },
+   {
+    "tick": 22,
+    "prng_state": 2974059
+   },
+   {
+    "tick": 23,
+    "prng_state": 2974059
+   },
+   {
+    "tick": 24,
+    "prng_state": 2974059
+   },
+   {
+    "tick": 25,
+    "prng_state": 2974059
+   },
+   {
+    "tick": 26,
+    "prng_state": 2974059
+   },
+   {
+    "tick": 27,
+    "prng_state": 2974059
+   },
+   {
+    "tick": 28,
+    "prng_state": 2974059
+   },
+   {
+    "tick": 29,
+    "prng_state": 2974059
+   },
+   {
+    "tick": 30,
+    "prng_state": 2974059
+   },
+   {
+    "tick": 31,
+    "prng_state": 2974059
+   },
+   {
+    "tick": 32,
+    "prng_state": 2974059
+   },
+   {
+    "tick": 33,
+    "prng_state": 2974059
+   },
+   {
+    "tick": 34,
+    "prng_state": 2974059
+   },
+   {
+    "tick": 35,
+    "prng_state": 2974059
+   },
+   {
+    "tick": 36,
+    "prng_state": 2974059
+   },
+   {
+    "tick": 37,
+    "prng_state": 2974059
+   },
+   {
+    "tick": 38,
+    "prng_state": 2974059
+   },
+   {
+    "tick": 39,
+    "prng_state": 2974059
+   },
+   {
+    "tick": 40,
+    "prng_state": 2974059
+   },
+   {
+    "tick": 41,
+    "prng_state": 2974059
+   },
+   {
+    "tick": 42,
+    "prng_state": 2974059
+   },
+   {
+    "tick": 43,
+    "prng_state": 2974059
+   },
+   {
+    "tick": 44,
+    "prng_state": 2974059
+   },
+   {
+    "tick": 45,
+    "prng_state": 738900491
+   },
+   {
+    "tick": 46,
+    "prng_state": 738900491
+   },
+   {
+    "tick": 47,
+    "prng_state": 738900491
+   },
+   {
+    "tick": 48,
+    "prng_state": 738900491
+   },
+   {
+    "tick": 49,
+    "prng_state": 738900491
+   },
+   {
+    "tick": 50,
+    "prng_state": 738900491
+   },
+   {
+    "tick": 51,
+    "prng_state": 738900491
+   },
+   {
+    "tick": 52,
+    "prng_state": 738900491
+   },
+   {
+    "tick": 53,
+    "prng_state": 738900491
+   },
+   {
+    "tick": 54,
+    "prng_state": 738900491
+   },
+   {
+    "tick": 55,
+    "prng_state": 738900491
+   },
+   {
+    "tick": 56,
+    "prng_state": 738900491
+   },
+   {
+    "tick": 57,
+    "prng_state": 738900491
+   },
+   {
+    "tick": 58,
+    "prng_state": 738900491
+   },
+   {
+    "tick": 59,
+    "prng_state": 738900491
+   },
+   {
+    "tick": 60,
+    "prng_state": 738900491
+   },
+   {
+    "tick": 61,
+    "prng_state": 738900491
+   },
+   {
+    "tick": 62,
+    "prng_state": 738900491
+   },
+   {
+    "tick": 63,
+    "prng_state": 738900491
+   },
+   {
+    "tick": 64,
+    "prng_state": 738900491
+   },
+   {
+    "tick": 65,
+    "prng_state": 738900491
+   },
+   {
+    "tick": 66,
+    "prng_state": 738900491
+   },
+   {
+    "tick": 67,
+    "prng_state": 738900491
+   },
+   {
+    "tick": 68,
+    "prng_state": 738900491
+   },
+   {
+    "tick": 69,
+    "prng_state": 738900491
+   },
+   {
+    "tick": 70,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 71,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 72,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 73,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 74,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 75,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 76,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 77,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 78,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 79,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 80,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 81,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 82,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 83,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 84,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 85,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 86,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 87,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 88,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 89,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 90,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 91,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 92,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 93,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 94,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 95,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 96,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 97,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 98,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 99,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 100,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 101,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 102,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 103,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 104,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 105,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 106,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 107,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 108,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 109,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 110,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 111,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 112,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 113,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 114,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 115,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 116,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 117,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 118,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 119,
+    "prng_state": 305599086
+   },
+   {
+    "tick": 120,
+    "prng_state": 305599086
+   }
+  ],
+  "heats_final": [
+   {
+    "material_id": "H20",
+    "usable_t": 20.0,
+    "quality_metadata": null,
+    "source": "DRI buffer",
+    "readiness_timestamp": 20,
+    "destination": "EAF feed interface",
+    "status": "charged",
+    "lots_taken": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5",
+     "M6",
+     "M7",
+     "M8",
+     "M9",
+     "M10"
+    ]
+   },
+   {
+    "material_id": "H30",
+    "usable_t": 0.0,
+    "quality_metadata": null,
+    "source": "DRI buffer",
+    "readiness_timestamp": null,
+    "destination": "EAF feed interface",
+    "status": "skipped",
+    "failure_cause": "buffer_starved",
+    "lots_taken": []
+   },
+   {
+    "material_id": "H40",
+    "usable_t": 20.0,
+    "quality_metadata": null,
+    "source": "DRI buffer",
+    "readiness_timestamp": 40,
+    "destination": "EAF feed interface",
+    "status": "charged",
+    "lots_taken": [
+     "M11",
+     "M12",
+     "M13",
+     "M14",
+     "M15",
+     "M27",
+     "M28",
+     "M29",
+     "M30",
+     "M31"
+    ]
+   },
+   {
+    "material_id": "H50",
+    "usable_t": 0.0,
+    "quality_metadata": null,
+    "source": "DRI buffer",
+    "readiness_timestamp": null,
+    "destination": "EAF feed interface",
+    "status": "skipped",
+    "failure_cause": "buffer_starved",
+    "lots_taken": []
+   },
+   {
+    "material_id": "H60",
+    "usable_t": 20.0,
+    "quality_metadata": null,
+    "source": "DRI buffer",
+    "readiness_timestamp": 60,
+    "destination": "EAF feed interface",
+    "status": "charged",
+    "lots_taken": [
+     "M32",
+     "M33",
+     "M34",
+     "M35",
+     "M36",
+     "M41",
+     "M42",
+     "M43",
+     "M44",
+     "M52"
+    ]
+   },
+   {
+    "material_id": "H70",
+    "usable_t": 20.0,
+    "quality_metadata": null,
+    "source": "DRI buffer",
+    "readiness_timestamp": 70,
+    "destination": "EAF feed interface",
+    "status": "charged",
+    "lots_taken": [
+     "M53",
+     "M54",
+     "M55",
+     "M56",
+     "M57",
+     "M61",
+     "M62",
+     "M63",
+     "M64",
+     "M65"
+    ]
+   },
+   {
+    "material_id": "H80",
+    "usable_t": 0.0,
+    "quality_metadata": null,
+    "source": "DRI buffer",
+    "readiness_timestamp": null,
+    "destination": "EAF feed interface",
+    "status": "skipped",
+    "failure_cause": "buffer_starved",
+    "lots_taken": []
+   },
+   {
+    "material_id": "H90",
+    "usable_t": 20.0,
+    "quality_metadata": null,
+    "source": "DRI buffer",
+    "readiness_timestamp": 90,
+    "destination": "EAF feed interface",
+    "status": "charged",
+    "lots_taken": [
+     "M66",
+     "M67",
+     "M68",
+     "M69",
+     "M77",
+     "M78",
+     "M79",
+     "M80",
+     "M81",
+     "M82"
+    ]
+   },
+   {
+    "material_id": "H100",
+    "usable_t": 20.0,
+    "quality_metadata": null,
+    "source": "DRI buffer",
+    "readiness_timestamp": 100,
+    "destination": "EAF feed interface",
+    "status": "charged",
+    "lots_taken": [
+     "M83",
+     "M84",
+     "M85",
+     "M86",
+     "M87",
+     "M91",
+     "M92",
+     "M93",
+     "M94",
+     "M95"
+    ]
+   },
+   {
+    "material_id": "H110",
+    "usable_t": 20.0,
+    "quality_metadata": null,
+    "source": "DRI buffer",
+    "readiness_timestamp": 110,
+    "destination": "EAF feed interface",
+    "status": "charged",
+    "lots_taken": [
+     "M96",
+     "M97",
+     "M98",
+     "M99",
+     "M100",
+     "M101",
+     "M102",
+     "M103",
+     "M104",
+     "M105"
+    ]
+   },
+   {
+    "material_id": "H120",
+    "usable_t": 20.0,
+    "quality_metadata": null,
+    "source": "DRI buffer",
+    "readiness_timestamp": 120,
+    "destination": "EAF feed interface",
+    "status": "charged",
+    "lots_taken": [
+     "M106",
+     "M107",
+     "M108",
+     "M109",
+     "M110",
+     "M111",
+     "M112",
+     "M113",
+     "M114",
+     "M115"
+    ]
+   }
+  ],
+  "win": false,
+  "summary": {
+   "win": false,
+   "fill_ticks": [
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    55,
+    56,
+    57,
+    58,
+    59,
+    68,
+    69,
+    85,
+    86,
+    87,
+    88,
+    89,
+    98,
+    99,
+    108,
+    109,
+    118,
+    119
+   ],
+   "blocked_ticks": [
+    16,
+    17,
+    18,
+    19,
+    37,
+    38,
+    39,
+    40,
+    58,
+    59,
+    60,
+    88,
+    89,
+    90
+   ],
+   "starve_ticks": [
+    30,
+    50,
+    80
+   ],
+   "trip_fired_ticks": [
+    20,
+    45,
+    70
+   ],
+   "heats": {
+    "H20": [
+     "charged",
+     null
+    ],
+    "H30": [
+     "skipped",
+     "buffer_starved"
+    ],
+    "H40": [
+     "charged",
+     null
+    ],
+    "H50": [
+     "skipped",
+     "buffer_starved"
+    ],
+    "H60": [
+     "charged",
+     null
+    ],
+    "H70": [
+     "charged",
+     null
+    ],
+    "H80": [
+     "skipped",
+     "buffer_starved"
+    ],
+    "H90": [
+     "charged",
+     null
+    ],
+    "H100": [
+     "charged",
+     null
+    ],
+    "H110": [
+     "charged",
+     null
+    ],
+    "H120": [
+     "charged",
+     null
+    ]
+   }
+  }
+ },
+ "fill_negative": {
+  "fixture_id": "s3_fill_negative_seed11_120",
+  "records": [
+   {
+    "tick": 1,
+    "buffer_t": 2.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (2.0t)"
+    ]
+   },
+   {
+    "tick": 2,
+    "buffer_t": 4.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (4.0t)"
+    ]
+   },
+   {
+    "tick": 3,
+    "buffer_t": 6.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (6.0t)"
+    ]
+   },
+   {
+    "tick": 4,
+    "buffer_t": 8.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (8.0t)"
+    ]
+   },
+   {
+    "tick": 5,
+    "buffer_t": 10.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (10.0t)"
+    ]
+   },
+   {
+    "tick": 6,
+    "buffer_t": 12.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (12.0t)"
+    ]
+   },
+   {
+    "tick": 7,
+    "buffer_t": 14.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (14.0t)"
+    ]
+   },
+   {
+    "tick": 8,
+    "buffer_t": 16.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (16.0t)"
+    ]
+   },
+   {
+    "tick": 9,
+    "buffer_t": 18.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (18.0t)"
+    ]
+   },
+   {
+    "tick": 10,
+    "buffer_t": 20.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (20.0t)"
+    ]
+   },
+   {
+    "tick": 11,
+    "buffer_t": 22.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (22.0t)"
+    ]
+   },
+   {
+    "tick": 12,
+    "buffer_t": 24.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (24.0t)"
+    ]
+   },
+   {
+    "tick": 13,
+    "buffer_t": 26.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (26.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 14,
+    "buffer_t": 28.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (28.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 15,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (30.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 16,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 17,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 18,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 19,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 20,
+    "buffer_t": 10.0,
+    "drp_tripped": true,
+    "heat": "charged",
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP TRIP fires at tick 20 (draw 0.0007 < p 0.3), halted 6 ticks",
+     "DRP halted (trip)",
+     "EAF heat at tick 20: 20.0t taken (lots M1,M2,M3,M4,M5,M6,M7,M8,M9,M10)"
+    ]
+   },
+   {
+    "tick": 21,
+    "buffer_t": 10.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 22,
+    "buffer_t": 10.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 23,
+    "buffer_t": 10.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 24,
+    "buffer_t": 10.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 25,
+    "buffer_t": 10.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 26,
+    "buffer_t": 10.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 27,
+    "buffer_t": 12.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (12.0t)"
+    ]
+   },
+   {
+    "tick": 28,
+    "buffer_t": 14.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (14.0t)"
+    ]
+   },
+   {
+    "tick": 29,
+    "buffer_t": 16.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (16.0t)"
+    ]
+   },
+   {
+    "tick": 30,
+    "buffer_t": 18.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (18.0t)"
+    ]
+   },
+   {
+    "tick": 31,
+    "buffer_t": 20.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (20.0t)"
+    ]
+   },
+   {
+    "tick": 32,
+    "buffer_t": 22.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (22.0t)"
+    ]
+   },
+   {
+    "tick": 33,
+    "buffer_t": 24.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (24.0t)"
+    ]
+   },
+   {
+    "tick": 34,
+    "buffer_t": 26.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (26.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 35,
+    "buffer_t": 28.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (28.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 36,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (30.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 37,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 38,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 39,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 40,
+    "buffer_t": 10.0,
+    "drp_tripped": false,
+    "heat": "charged",
+    "flags": {
+     "full": false,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "EAF heat at tick 40: 20.0t taken (lots M11,M12,M13,M14,M15,M27,M28,M29,M30,M31)"
+    ]
+   },
+   {
+    "tick": 41,
+    "buffer_t": 12.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (12.0t)"
+    ]
+   },
+   {
+    "tick": 42,
+    "buffer_t": 14.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (14.0t)"
+    ]
+   },
+   {
+    "tick": 43,
+    "buffer_t": 16.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (16.0t)"
+    ]
+   },
+   {
+    "tick": 44,
+    "buffer_t": 18.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (18.0t)"
+    ]
+   },
+   {
+    "tick": 45,
+    "buffer_t": 18.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP TRIP fires at tick 45 (draw 0.1720 < p 0.3), halted 6 ticks",
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 46,
+    "buffer_t": 18.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 47,
+    "buffer_t": 18.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 48,
+    "buffer_t": 18.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 49,
+    "buffer_t": 18.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 50,
+    "buffer_t": 18.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 51,
+    "buffer_t": 18.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)"
+    ]
+   },
+   {
+    "tick": 52,
+    "buffer_t": 20.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (20.0t)"
+    ]
+   },
+   {
+    "tick": 53,
+    "buffer_t": 22.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (22.0t)"
+    ]
+   },
+   {
+    "tick": 54,
+    "buffer_t": 24.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (24.0t)"
+    ]
+   },
+   {
+    "tick": 55,
+    "buffer_t": 26.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (26.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 56,
+    "buffer_t": 28.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (28.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 57,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (30.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 58,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 59,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 60,
+    "buffer_t": 10.0,
+    "drp_tripped": false,
+    "heat": "charged",
+    "flags": {
+     "full": false,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "EAF heat at tick 60: 20.0t taken (lots M32,M33,M34,M35,M36,M41,M42,M43,M44,M52)"
+    ]
+   },
+   {
+    "tick": 61,
+    "buffer_t": 12.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (12.0t)"
+    ]
+   },
+   {
+    "tick": 62,
+    "buffer_t": 14.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (14.0t)"
+    ]
+   },
+   {
+    "tick": 63,
+    "buffer_t": 16.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (16.0t)"
+    ]
+   },
+   {
+    "tick": 64,
+    "buffer_t": 18.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (18.0t)"
+    ]
+   },
+   {
+    "tick": 65,
+    "buffer_t": 20.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (20.0t)"
+    ]
+   },
+   {
+    "tick": 66,
+    "buffer_t": 22.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (22.0t)"
+    ]
+   },
+   {
+    "tick": 67,
+    "buffer_t": 24.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (24.0t)"
+    ]
+   },
+   {
+    "tick": 68,
+    "buffer_t": 26.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (26.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 69,
+    "buffer_t": 28.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (28.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 70,
+    "buffer_t": 28.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP TRIP fires at tick 70 (draw 0.0712 < p 0.3), halted 6 ticks",
+     "DRP halted (trip)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 71,
+    "buffer_t": 28.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 72,
+    "buffer_t": 28.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 73,
+    "buffer_t": 28.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 74,
+    "buffer_t": 28.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 75,
+    "buffer_t": 28.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 76,
+    "buffer_t": 28.0,
+    "drp_tripped": true,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP halted (trip)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 77,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (30.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 78,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 79,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 80,
+    "buffer_t": 10.0,
+    "drp_tripped": false,
+    "heat": "charged",
+    "flags": {
+     "full": false,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "EAF heat at tick 80: 20.0t taken (lots M53,M54,M55,M56,M57,M61,M62,M63,M64,M65)"
+    ]
+   },
+   {
+    "tick": 81,
+    "buffer_t": 12.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (12.0t)"
+    ]
+   },
+   {
+    "tick": 82,
+    "buffer_t": 14.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (14.0t)"
+    ]
+   },
+   {
+    "tick": 83,
+    "buffer_t": 16.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (16.0t)"
+    ]
+   },
+   {
+    "tick": 84,
+    "buffer_t": 18.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (18.0t)"
+    ]
+   },
+   {
+    "tick": 85,
+    "buffer_t": 20.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (20.0t)"
+    ]
+   },
+   {
+    "tick": 86,
+    "buffer_t": 22.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (22.0t)"
+    ]
+   },
+   {
+    "tick": 87,
+    "buffer_t": 24.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (24.0t)"
+    ]
+   },
+   {
+    "tick": 88,
+    "buffer_t": 26.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (26.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 89,
+    "buffer_t": 28.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (28.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 90,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (30.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 91,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 92,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 93,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 94,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 95,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 96,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 97,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 98,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 99,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 100,
+    "buffer_t": 10.0,
+    "drp_tripped": false,
+    "heat": "charged",
+    "flags": {
+     "full": false,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "EAF heat at tick 100: 20.0t taken (lots M66,M67,M68,M69,M77,M81,M82,M83,M84,M85)"
+    ]
+   },
+   {
+    "tick": 101,
+    "buffer_t": 12.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (12.0t)"
+    ]
+   },
+   {
+    "tick": 102,
+    "buffer_t": 14.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (14.0t)"
+    ]
+   },
+   {
+    "tick": 103,
+    "buffer_t": 16.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (16.0t)"
+    ]
+   },
+   {
+    "tick": 104,
+    "buffer_t": 18.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (18.0t)"
+    ]
+   },
+   {
+    "tick": 105,
+    "buffer_t": 20.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (20.0t)"
+    ]
+   },
+   {
+    "tick": 106,
+    "buffer_t": 22.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (22.0t)"
+    ]
+   },
+   {
+    "tick": 107,
+    "buffer_t": 24.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": false,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (24.0t)"
+    ]
+   },
+   {
+    "tick": 108,
+    "buffer_t": 26.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (26.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 109,
+    "buffer_t": 28.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (28.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 110,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": false,
+     "starved": false
+    },
+    "events": [
+     "DRP discharge 2.0t -> buffer (30.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 111,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 112,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 113,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 114,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 115,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 116,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 117,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 118,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 119,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   },
+   {
+    "tick": 120,
+    "buffer_t": 30.0,
+    "drp_tripped": false,
+    "heat": null,
+    "flags": {
+     "full": true,
+     "blocked": true,
+     "starved": false
+    },
+    "events": [
+     "buffer FULL: discharge refused 2.0t (room 0.0t)",
+     "buffer state: FULL (>= 25.0t)"
+    ]
+   }
+  ],
+  "win": true,
+  "summary": {
+   "win": true,
+   "fill_ticks": [
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    55,
+    56,
+    57,
+    58,
+    59,
+    68,
+    69,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    108,
+    109,
+    110,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120
+   ],
+   "blocked_ticks": [
+    16,
+    17,
+    18,
+    19,
+    37,
+    38,
+    39,
+    40,
+    58,
+    59,
+    60,
+    78,
+    79,
+    80,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    111,
+    112,
+    113,
+    114,
+    115,
+    116,
+    117,
+    118,
+    119,
+    120
+   ],
+   "starve_ticks": [],
+   "trip_fired_ticks": [
+    20,
+    45,
+    70
+   ],
+   "heats": {
+    "H20": [
+     "charged",
+     null
+    ],
+    "H40": [
+     "charged",
+     null
+    ],
+    "H60": [
+     "charged",
+     null
+    ],
+    "H80": [
+     "charged",
+     null
+    ],
+    "H100": [
+     "charged",
+     null
+    ]
+   }
+  }
+ },
+ "plan_overdraw_control": {
+  "win": false,
+  "causes": [
+   "plan_overdraw"
+  ],
+  "heat_statuses": {
+   "H20": [
+    "skipped",
+    "plan_overdraw"
+   ],
+   "H30": [
+    "skipped",
+    "plan_overdraw"
+   ],
+   "H40": [
+    "skipped",
+    "plan_overdraw"
+   ],
+   "H50": [
+    "skipped",
+    "plan_overdraw"
+   ],
+   "H60": [
+    "skipped",
+    "plan_overdraw"
+   ],
+   "H70": [
+    "skipped",
+    "plan_overdraw"
+   ],
+   "H80": [
+    "skipped",
+    "plan_overdraw"
+   ],
+   "H90": [
+    "skipped",
+    "plan_overdraw"
+   ],
+   "H100": [
+    "skipped",
+    "plan_overdraw"
+   ],
+   "H110": [
+    "skipped",
+    "plan_overdraw"
+   ],
+   "H120": [
+    "skipped",
+    "plan_overdraw"
+   ]
+  }
+ },
+ "xorshift_vector_seed1": [
+  6.295018830870981e-05,
+  0.01574742817686578,
+  0.6164041025602268
+ ]
+}

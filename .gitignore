@@ -1,0 +1,43 @@
+# Godot editor cache — never commit
+godot/.godot/
+godot/scratch_run.log
+.gitignore: scratch logs
+
+# Hermes scratch & junk
+.cache/
+cache/
+mirror/__pycache__/
+**/__pycache__/
+mirror/probe_*.py
+mirror/scratch_*.log
+mirror/*.log
+godot/scratch_*.log
+fixtures/**/.hermes-tmp*
+*.odt
+
+# web deps + scratch artifacts (Phase 1 wrap-up, 2026-10-18)
+web/node_modules/
+mirror/scratch_s2/
+web/src/hub/dist/
+assets_incoming/
+scripts/watchdog.py
+web/src/ports/slice1/browser/dist/
+
+# fullplant build junk + web tmp scratch (cleanup pass 2026-11-04)
+web/src/ports/fullplant/browser/dist/
+web/tmp/
+
+# stray per-port node_modules (probe artifacts)
+web/src/ports/**/node_modules/
+
+# digital-twin launcher runtime logs (launcher writes these fresh each run)
+twin_*.log
+
+# Godot editor binary — never distribute in-repo (download from godotengine.org)
+godot/bin/
+
+# archived out of GitHub repo (option A slim rebuild, 2026-11-18) — kept on disk
+assets_incoming/
+godot/
+content/
+docs/archive/

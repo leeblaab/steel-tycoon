@@ -1,0 +1,558 @@
+{
+  "fixture_id": "d2_econ_30days_seed42",
+  "schema_version": 1,
+  "domain": "economics_domain2",
+  "prng": "xorshift32",
+  "seed": 42,
+  "asset_order": [
+    "eaf",
+    "drp",
+    "cc",
+    "bar_mill",
+    "wire_rod_mill",
+    "crane"
+  ],
+  "initial_state": {
+    "day": 30,
+    "sales_index": 1.0,
+    "orders": [],
+    "fulfilled_t": 13100.0,
+    "revenue_usd": 8255255.57172656,
+    "late_penalty_usd": 142875.0,
+    "unsold_t": 0.0,
+    "downgrades": {
+      "prime": 30,
+      "secondary": 4,
+      "prompt": 2
+    },
+    "dispatched_t": 13100.0,
+    "utilities_usd": 58950.0,
+    "production_t": {
+      "dispatch": 13100.0
+    },
+    "generator_state": 42
+  },
+  "actions": [
+    {
+      "tick": 0,
+      "type": "add_order",
+      "grade": "B500B",
+      "tonnage": 5000,
+      "due_day": 10,
+      "mode": "forward"
+    },
+    {
+      "tick": 0,
+      "type": "add_order",
+      "grade": "SG-2_special",
+      "tonnage": 2000,
+      "due_day": 15,
+      "mode": "spot"
+    },
+    {
+      "tick": 0,
+      "type": "add_order",
+      "grade": "CQ_high_strength",
+      "tonnage": 3000,
+      "due_day": 12,
+      "mode": "spot"
+    },
+    {
+      "tick": 1,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 1,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 2,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 2,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 3,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 3,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 4,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 4,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 5,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 5,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 6,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 6,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 7,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 7,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 7,
+      "type": "dispatch",
+      "grade": "CQ_high_strength",
+      "tonnes": 200,
+      "cu": 0.13,
+      "sn": 0.03
+    },
+    {
+      "tick": 8,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 8,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 9,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 9,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 10,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 10,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 11,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 11,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 11,
+      "type": "dispatch",
+      "grade": "SG-2_special",
+      "tonnes": 150,
+      "cu": 0.3,
+      "sn": 0.06
+    },
+    {
+      "tick": 12,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 12,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 13,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 13,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 14,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 14,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 14,
+      "type": "dispatch",
+      "grade": "CQ_high_strength",
+      "tonnes": 200,
+      "cu": 0.13,
+      "sn": 0.03
+    },
+    {
+      "tick": 15,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 15,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 16,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 16,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 17,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 17,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 18,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 18,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 19,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 19,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 20,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 20,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 21,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 21,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 21,
+      "type": "dispatch",
+      "grade": "CQ_high_strength",
+      "tonnes": 200,
+      "cu": 0.13,
+      "sn": 0.03
+    },
+    {
+      "tick": 22,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 22,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 22,
+      "type": "dispatch",
+      "grade": "SG-2_special",
+      "tonnes": 150,
+      "cu": 0.3,
+      "sn": 0.06
+    },
+    {
+      "tick": 23,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 23,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 24,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 24,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 25,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 25,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 26,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 26,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 27,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 27,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 28,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 28,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 28,
+      "type": "dispatch",
+      "grade": "CQ_high_strength",
+      "tonnes": 200,
+      "cu": 0.13,
+      "sn": 0.03
+    },
+    {
+      "tick": 29,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 29,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    },
+    {
+      "tick": 30,
+      "type": "step_index",
+      "draws": 2
+    },
+    {
+      "tick": 30,
+      "type": "dispatch",
+      "grade": "B500B",
+      "tonnes": 400,
+      "cu": 0.1225,
+      "sn": 0.0245
+    }
+  ],
+  "tick_order": [
+    "sales_index_step",
+    "dispatch"
+  ],
+  "cadence_boundary": "day increments once per tick (1 tick = 1 day in this domain fixture)",
+  "tick_count": 30,
+  "tolerance": {
+    "usd": 0.01,
+    "tonnes": 1e-06,
+    "categorical": "exact"
+  },
+  "expected_outputs": {
+    "day": 30,
+    "sales_index": 1.0,
+    "generator_state": 730922798,
+    "revenue_usd": 8255255.57172656,
+    "late_penalty_usd": 142875.0,
+    "fulfilled_t": 13100.0,
+    "unsold_t": 0.0,
+    "dispatched_t": 13100.0,
+    "utilities_usd": 58950.0,
+    "downgrades": {
+      "prime": 30,
+      "secondary": 4,
+      "prompt": 2
+    },
+    "orders": [
+      {
+        "id": 0,
+        "mode": "forward",
+        "status": "fulfilled",
+        "grade": "B500B",
+        "tonnage": 0,
+        "due_day": 10,
+        "sign_index": 1.0
+      },
+      {
+        "id": 1,
+        "mode": "spot",
+        "status": "open",
+        "grade": "SG-2_special",
+        "tonnage": 1700,
+        "due_day": 15,
+        "sign_index": 1.0
+      },
+      {
+        "id": 2,
+        "mode": "spot",
+        "status": "open",
+        "grade": "CQ_high_strength",
+        "tonnage": 2200,
+        "due_day": 12,
+        "sign_index": 1.0
+      }
+    ],
+    "balance_identity": true
+  },
+  "status": "active",
+  "notes": "Clean rebuild (2026-10-12): replay from fresh state, 3 orders, no continuation of the mirror's own baseline run. step_index consumes exactly 2 draws per call (uniform then random); uniform(a,b) = a + (b-a)*draw. Grade assignment reused from grade_pricing_mirror (config: content/prices/price_ladder_draft.json). Re-baselined under xorshift32 (legacy Mersenne walk superseded)."
+}

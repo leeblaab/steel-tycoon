@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "fixture_id": "s5_billet_rebar_dispatch_orders_seed11_120",
+  "domain": "slice5_product_flow",
+  "status": "proposed",
+  "note": "Slice 5 scenario: billet yard -> rebar mill (ONE active branch; the wire-rod branch declared in content/nodes/conveyors_draft.json stays inactive in v1) -> product yard -> external dispatch with orders. Same logistics primitives as Slice 1 (arrival cadence, single-resource non-preemptive cycle, capacity-refusal recording, per-tick material-balance identity) — different inventory objects, no shared table with Slice 1. Contracts reused as-is from fixtures/slice2/s2_scrap_charge_scenario_seed11_120.json 'contracts' (crane_task, prepared_charge); nothing redesigned. Product inventory extends the approved scrap_inventory contract with product-only fields (product_grade, order_id, ready_tick), flagged as an extension, not a redesign. Deterministic scripted scenario, no RNG in the rule path (same shape as the Slice 2/4 mirrors); seed kept for fixture-family continuity. Expected outputs are derived by the mirror run (mirror = single source of truth); the fixture asserts invariants (balance closure every tick, event ticks, key-tick snapshots), not hand-derived intermediates.",
+  "provenance_labels": {
+    "source-backed": "may appear in player-facing info-cards as industry fact",
+    "engineering-estimate": "typical published range, not universal",
+    "game-balance": "never presented as industry fact"
+  },
+  "contracts": "see fixtures/slice2/s2_scrap_charge_scenario_seed11_120.json 'contracts' — crane_task and prepared_charge reused unchanged; product inventory extends scrap_inventory fields (product_grade, order_id, ready_tick) as a flagged v1 extension",
+  "logistics_primitives_shared_with_slice1": [
+    "single shared resource, non-preemptive cycle (crane here = Slice 1 berth crane shape)",
+    "capacity refusal recorded as an event, never silently dropped",
+    "material-balance identity asserted every tick, every tonne counted once at entry",
+    "pure tick: state in -> new state out, never mutates the original"
+  ],
+  "scenario": {
+    "seed": 11,
+    "ticks": 120,
+    "branch_note": "one active branch only: billet yard -> rebar mill. conv_billet_wr (wire rod) is declared in content but inactive in v1.",
+    "billet_yard": {
+      "initial_billet_t": 100.0,
+      "provenance": "game-balance",
+      "note": "opening stock = Slice 4 mirror end state (115.8 t rounded to 100 t for a clean scenario)"
+    },
+    "billet_carrier": {
+      "batch_t_per_move": 10.0,
+      "move_ticks": 4,
+      "provenance": "game-balance",
+      "note": "batch-move shape mirrors the Slice 2 crane task (non-preemptive); content band conv_billet_rebar 60-100 tph is source-backed/engineering-estimate, the per-tick batch is game-balance"
+    },
+    "rebar_mill": {
+      "batch_t_per_move": 10.0,
+      "roll_ticks": 6,
+      "yield_loss_pct": 2.0,
+      "provenance": "game-balance",
+      "note": "rolling yield 98% is game-balance; mill consumes one billet batch per non-preemptive roll cycle, product enters the product yard at cycle completion"
+    },
+    "product_yard": {
+      "capacity_t": 60.0,
+      "provenance": "engineering-estimate",
+      "note": "yard capacity refusal recorded as an event (Slice 1 shape), never silently dropped"
+    },
+    "dispatch_crane": {
+      "batch_t_per_move": 10.0,
+      "move_ticks": 3,
+      "provenance": "game-balance",
+      "note": "single shared resource, non-preemptive — same crane rule as the Slice 2 crane_task contract"
+    },
+    "orders": [
+      {
+        "order_id": "O1",
+        "product_grade": "B500B",
+        "required_t": 30.0,
+        "deadline_tick": 60,
+        "provenance": "game-balance"
+      },
+      {
+        "order_id": "O2",
+        "product_grade": "B500B",
+        "required_t": 30.0,
+        "deadline_tick": 90,
+        "provenance": "game-balance"
+      },
+      {
+        "order_id": "O3",
+        "product_grade": "B500B",
+        "required_t": 30.0,
+        "deadline_tick": 120,
+        "provenance": "game-balance"
+      }
+    ],
+    "competing_task": {
+      "tick": 40,
+      "task_type": "reclaiming",
+      "note": "product-yard reorganization task enters the queue while O2 deadline approaches — crane contention pressure (same shape as the Slice 2 competing task)",
+      "provenance": "game-balance"
+    },
+    "win_condition": "3 orders dispatched in full before their deadlines, with material balance closed every tick",
+    "feasibility_check": "Winning sequence hand-derived from stage order before shipping (mirror run is the arbiter): stage order per tick = order-deadline check, competing-task enqueue, carrier move, mill roll, dispatch task enqueue (at tick 1 for each open order), dispatch crane. Carrier moves start ticks 1,5,...,45 (12 moves = 120 t billet); rolls complete at 7,13,...,73 (12 x 9.8 = 117.6 t product). Dispatch tasks are enqueued at tick 1 (product yard is empty at start — first move cannot start before first product). Crane runs FIFO by priority: dispatch move completions at 4,7,10,13,16,19,22,25,28,31,34,37,40,43,46,49,52,55,58,61,64,67,70,73,76,79,82,85,88,91,94,97,100,103,106,109,112,115,118,121 (the last lands past tick 120 — 39 completions inside the run). The competing reorganize task (priority 1, created tick 40) overtakes the FIFO dispatch queue and runs ticks 40-43, delaying the tick-40 dispatch start to tick 44. O1 (30 t): completions at 4,7,10 = 30 t -> completed at tick 10 < deadline 60. O2 (30 t): completions at 13,16,19,22 = 39.2 t (whole-batch dispatch, no partial-batch splitting in v1) -> completed at tick 22 < 90. O3 (30 t): completions at 25,28,31,34 = 39.2 t -> completed at tick 34 < 120. Total dispatched inside the run = 39 moves x 9.8 t = 382.2 t. Product-yard capacity (60 t) is never binding here: max product-yard stock is 49 t at tick 72 (117.6 produced - 68.6 dispatched), so no refusal fires in the baseline — the capacity rule is proven by negative test N3, not by the baseline. Reachability check (standing rule): the contention block can only fire because the dispatch drain (3 ticks/move) is slower than the mill feed (4 ticks/move) and the yard has stock at tick 40 — verified by mirror run.",
+    "dispatch_rule_note": "v1 dispatch rule is dispatch = min(stock, batch_t_per_move) — whole-batch moves, no partial-batch splitting. An order completes when cumulative dispatched_t >= required_t. A test that asserts 'backlog clears below required_t' contradicts this contract; expected values are derived from the contract arithmetic, not the narrative."
+  },
+  "expected_outputs": {
+    "note": "RE-DERIVED 2026-10-17 from the fresh mirror run (Option A decision: lazy dispatch rule is canonical — dispatch = min(stock, batch) with lazy enqueue per crane_task contract; scenario values untouched). The previous block was hand-derived from a different config (120 t opening billet, pre-enqueue dispatch at tick 1, 4-tick back-to-back carrier cadence) that contradicts this fixture's own scenario: initial_billet_t = 100 -> 10 carrier moves max, first product exists only at tick 11, non-preemptive cycles re-check next tick (5-tick carrier cadence). Mirror = single source of truth.",
+    "events": {
+      "carrier_move_starts": [
+        1,
+        6,
+        11,
+        16,
+        21,
+        26,
+        31,
+        36,
+        41,
+        46
+      ],
+      "mill_roll_completions": [
+        11,
+        18,
+        25,
+        32,
+        39,
+        46,
+        53,
+        60,
+        67,
+        74
+      ],
+      "dispatch_move_starts": [
+        11,
+        18,
+        25,
+        32,
+        39,
+        46,
+        53,
+        60,
+        68,
+        74
+      ],
+      "competing_task_start": 40,
+      "order_completions": {
+        "O1": 35,
+        "O2": 63
+      },
+      "o3_note": "O3 partial 19.6/30 t at tick 120 — stock-limited, not deadline-limited: opening billet 100 t yields 98 t product total; after O1+O2 consume whole batches (39.2+39.2), only 19.6 t reaches O3. Last dispatch completes at tick 74 < deadline 120, so the pipeline could serve O3 if opening stock covered demand (>= ~110 t)."
+    },
+    "key_ticks": {
+      "43": {
+        "crane_busy_task_type": null,
+        "product_yard_t": 0.0,
+        "dispatched_t": 49.0
+      },
+      "72": {
+        "crane_busy_task_type": null,
+        "product_yard_t": 0.0,
+        "dispatched_t": 88.2
+      },
+      "120": {
+        "billet_yard_t": 0.0,
+        "product_yard_t": 0.0,
+        "dispatched_t": 98.0,
+        "mill_in_process_t": 0.0
+      }
+    },
+    "material_balance": {
+      "balance_error_at_end": 0.0,
+      "tolerance": 1e-06
+    },
+    "counters_at_tick_120": {
+      "carrier_moves_completed": 10,
+      "rolls_completed": 10,
+      "dispatch_moves_completed": 10,
+      "dispatch_moves_blocked": 63,
+      "dispatch_moves_blocked_empty": 63,
+      "crane_wait_ticks": 0,
+      "mill_wait_ticks": 0,
+      "mill_starved_ticks": 0,
+      "product_yard_refusals": 0,
+      "yield_loss_t": 2.0,
+      "dispatched_t_total": 98.0,
+      "revenue_usd": 62230.0,
+      "revenue_note": "dispatched_t x price_mid 635.0 of content/prices/price_ladder_draft.json grade B500B (sme_pending band, midpoint convention stated explicitly); revenue fires on the actual dispatch outflow, not on arrival at the product yard"
+    },
+    "win": false,
+    "win_note": "DEMO-LEVEL CLOSED: O1 completed @35 (<60) and O2 completed @63 (<90) with balance closed every tick; O3 misses ONLY because opening stock (100 t billet -> 98 t product) cannot cover 90 t demand plus whole-batch pipeline losses. Known limitation, documented; scenario-data fix (opening stock or order sizes) deferred to the later tuning pass per Yasser's decision.",
+    "negative_controls": {
+      "no_billet_stock": {
+        "rolls_completed": 0,
+        "dispatch_moves_completed": 0,
+        "balance_closed": true,
+        "note": "no fabricated product; blocked-attempt counters are NOT inventory terms (asserted separately from the balance)"
+      },
+      "crane_never_releases": {
+        "dispatch_moves_completed": 0,
+        "diverges_from_healthy": true,
+        "weakness_note": "control PASSES on completion divergence but crane_wait_ticks stays 0 under lazy enqueue — a stuck crane never re-attempts against an empty yard, so the wait counter cannot fire. Documented as a known limitation; control validity rests on the completion divergence."
+      },
+      "capacity_refusal_reachability": {
+        "requires": "product_yard capacity < stock accumulation at some tick",
+        "fires_baseline": false,
+        "control_note": "under lazy dispatch the drain matches production cadence exactly (3-tick move completes before the next 7-tick roll lands), so product_yard peak is a single 9.8t batch and capacity 60 t is unreachable — baseline asserts refusals == 0. The capacity-40 control as previously scripted does NOT fire (its arithmetic assumed the old pre-enqueue backlog narrative). Reachability proven separately: capacity 5 t -> 10 refusals at roll-completion ticks [11,18,...,74] with balance closed. Control re-tuning deferred to the later pass."
+      },
+      "double_count_control": {
+        "healthy_residual": 0.0,
+        "control_note": "the seam (yard term counted twice) can only show a residual when product is resident in the yard at the measurement tick; under lazy dispatch the yard drains to 0 by tick 120, so the control run must give the crane a slower move (e.g. dispatch_crane.move_ticks=10 -> yard 8.4 t resident) for the broken rule to diverge (-8.4 residual). Verified with that variant; baseline-form control is weak. Documented."
+      }
+    }
+  }
+}

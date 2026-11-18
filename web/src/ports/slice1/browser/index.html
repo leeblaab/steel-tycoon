@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SteelX — Slice 1 (Jetty → Conveyor → Yard)</title>
+  <style>
+    :root { color-scheme: dark; }
+    html, body { margin: 0; height: 100%; background: #101418; color: #e6e9ee; font-family: system-ui, sans-serif; }
+    #root { display: flex; height: 100vh; }
+    #scene { flex: 1; position: relative; }
+    #panel { width: 340px; padding: 14px; border-left: 1px solid #2a3038; overflow-y: auto; font-size: 13px; }
+    h1 { font-size: 15px; margin: 0 0 10px; }
+    h2 { font-size: 13px; margin: 14px 0 6px; color: #8fb3d9; }
+    .row { display: flex; gap: 8px; margin-bottom: 8px; }
+    button { background: #2a3038; color: #e6e9ee; border: 1px solid #3a424d; border-radius: 6px; padding: 6px 12px; cursor: pointer; }
+    button.primary { background: #1f4d73; border-color: #2f6da0; }
+    button.danger { background: #7a3030; border-color: #9a4040; }
+    button:disabled { opacity: .5; cursor: not-allowed; }
+    .stat { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid #232830; }
+    .stat b { font-weight: 600; }
+    .bar { height: 10px; background: #232830; border-radius: 4px; overflow: hidden; margin: 4px 0 8px; }
+    .bar > div { height: 100%; background: #3f7fbf; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px; margin: 2px 4px 2px 0; }
+    .badge.on { background: #7a3030; color: #ffd9d9; }
+    .badge.off { background: #232830; color: #8b93a0; }
+    .eventlog { max-height: 160px; overflow-y: auto; font-family: ui-monospace, monospace; font-size: 12px; }
+    .eventlog div { padding: 2px 0; }
+    .learn { background: #17202a; border: 1px solid #2a3038; border-radius: 8px; padding: 10px; line-height: 1.45; }
+    .hint { color: #8b93a0; font-size: 12px; }
+    #overlay { position: absolute; left: 12px; top: 12px; background: rgba(16,20,24,.85); border: 1px solid #2a3038; border-radius: 8px; padding: 10px 12px; font-size: 12px; max-width: 300px; }
+    #overlay .big { font-size: 14px; font-weight: 600; }
+    .flow { color: #8fb3d9; }
+    .blocked { color: #e07070; }
+    #labels { position: absolute; inset: 0; pointer-events: none; }
+    #viewctl { position: absolute; right: 12px; bottom: 12px; display: flex; flex-direction: column; gap: 6px; align-items: flex-end; }
+    #viewctl button { background: #2a3038; color: #e6e9ee; border: 1px solid #3a424d; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 13px; }
+    #viewctl .hint { color: #8b93a0; font-size: 11px; background: rgba(16,20,24,.7); border-radius: 6px; padding: 3px 8px; }
+    .blabel { position: absolute; transform: translate(-50%, -100%); background: rgba(16,20,24,.85); border: 1px solid #2a3038; border-radius: 6px; padding: 4px 10px; font-size: 14px; font-weight: 600; color: #cfd6e0; pointer-events: none; white-space: nowrap; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/main.tsx"></script>
+</body>
+</html>

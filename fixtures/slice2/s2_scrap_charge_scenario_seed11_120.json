@@ -1,0 +1,240 @@
+{
+ "schema_version": 1,
+ "fixture_id": "s2_scrap_charge_scenario_seed11_120",
+ "domain": "slice2",
+ "status": "active_slice2_scenario",
+ "note": "Canonical Slice 2 scenario (scenario design agreed 2026-10-15). Three consecutive planned charges; strict recipes; single non-preemptive crane with a FIFO queue and player priority reordering. FEASIBILITY: feasible at landed values (grab 2.0 m3, deadlines 240/270/300, horizon 300) \u2014 win proven by an honest stacked-material mirror run re-derived 2026-10-18 after the d3614e6 parameter landing; expected_outputs below are frozen from that verified run. Earlier expectation blocks (ready@172 at deadlines 180/195/210) were ad37d61-era artifacts and are superseded. Values are game-balance placeholders pending SME calibration, EXCEPT bulk densities which are engineering-estimate ranges (typical published bands, form/packing dependent \u2014 never presented as universal facts in info-cards).",
+ "provenance_labels": {
+  "source-backed": "may appear in player-facing info-cards as industry fact",
+  "engineering-estimate": "typical published range, not universal",
+  "game-balance": "never presented as industry fact"
+ },
+ "contracts": {
+  "scrap_inventory": {
+   "contract_version": 1,
+   "fields": {
+    "inventory_id": "id",
+    "grade": "enum (reuses content/scrap/scrap_tiers.json grade ids)",
+    "location": "enum (named yard stacks)",
+    "delivered_t": "number",
+    "usable_t": "number (equals delivered_t in v1)",
+    "usable_yield_factor": "number (RESERVED, unused in v1)",
+    "bulk_density_kg_m3": "number, provenance-classified"
+   }
+  },
+  "crane_task": {
+   "contract_version": 1,
+   "fields": {
+    "task_id": "id",
+    "task_type": "enum (receiving|stacking|reclaiming|charging)",
+    "material_grade": "enum, nullable",
+    "source_location": "enum",
+    "destination_location": "enum",
+    "grab_volume_m3": "number, provenance-classified",
+    "estimated_duration": "time, provenance-classified",
+    "priority": "number (player-settable)",
+    "status": "enum (queued|running|completed)"
+   },
+   "rule": "non-preemptive: priority change affects only queued tasks; a running task completes its cycle"
+  },
+  "prepared_charge": {
+   "contract_version": 1,
+   "fields": {
+    "charge_id": "id",
+    "recipe_id": "id",
+    "grade_composition": "list of {grade, required_usable_t, actual_usable_t}",
+    "readiness_timestamp": "time",
+    "deadline": "time",
+    "status": "enum (planning|in_progress|ready|delivered|failed)",
+    "failure_cause": "enum (grade_shortage|insufficient_usable_tonnage|crane_delay)"
+   },
+   "recipe_rule": "strict fixed grade list, required usable tonnage per grade, no substitution in v1"
+  },
+  "dri_charge_material": {
+   "contract_version": 1,
+   "fields": {
+    "material_id": "id",
+    "usable_t": "number",
+    "quality_metadata": "object (reserved \u2014 metalization/re-oxidation later)",
+    "source": "enum (DRP discharge|DRI buffer)",
+    "readiness_timestamp": "time",
+    "destination": "enum (EAF feed interface)"
+   },
+   "note": "thin, defined now, implemented in Slice 3"
+  }
+ },
+ "scenario": {
+  "seed": 11,
+  "ticks": 300,
+  "stacks": [
+   "RECEIVING_AREA",
+   "BUSHING_STACK",
+   "HMS1_HMS2_STACK",
+   "SHREDDED_STACK",
+   "CHARGING_BUCKET"
+  ],
+  "crane_grab_volume_m3": 2.0,
+  "crane_cycle_time_ticks_per_move": 3,
+  "truck_arrival_ticks": [
+   12,
+   24,
+   36,
+   60,
+   84
+  ],
+  "truck_loads": [
+   {
+    "tick": 12,
+    "grade": "hms1_hms2",
+    "tonnes": 30.0
+   },
+   {
+    "tick": 24,
+    "grade": "bushing",
+    "tonnes": 15.0
+   },
+   {
+    "tick": 48,
+    "grade": "hms1_hms2",
+    "tonnes": 30.0
+   },
+   {
+    "tick": 60,
+    "grade": "bushing",
+    "tonnes": 15.0
+   },
+   {
+    "tick": 84,
+    "grade": "hms1_hms2",
+    "tonnes": 30.0
+   },
+   {
+    "tick": 96,
+    "grade": "bushing",
+    "tonnes": 15.0
+   }
+  ],
+  "recipes": [
+   {
+    "recipe_id": "R1",
+    "name": "Clean charge (learning recipe)",
+    "composition": [
+     {
+      "grade": "hms1_hms2",
+      "required_usable_t": 30.0
+     },
+     {
+      "grade": "bushing",
+      "required_usable_t": 15.0
+     }
+    ],
+    "provenance": "game-balance"
+   }
+  ],
+  "charge_plan": [
+   {
+    "charge_id": "C1",
+    "recipe_id": "R1",
+    "deadline_tick": 240,
+    "provenance": "game-balance"
+   },
+   {
+    "charge_id": "C2",
+    "recipe_id": "R1",
+    "deadline_tick": 270,
+    "provenance": "game-balance"
+   },
+   {
+    "charge_id": "C3",
+    "recipe_id": "R1",
+    "deadline_tick": 300,
+    "provenance": "game-balance"
+   }
+  ],
+  "competing_task": {
+   "tick": 40,
+   "task_type": "reclaiming",
+   "note": "yard reorganization task enters the queue while C2 deadline approaches \u2014 crane contention pressure",
+   "provenance": "game-balance"
+  },
+  "win_condition": "3 consecutive charges ready before deadline",
+  "failure_causes": [
+   "grade_shortage",
+   "insufficient_usable_tonnage",
+   "crane_delay"
+  ],
+  "feasibility_check": "STATUS: feasible at landed values. At grab 2.0 m3 x ~550 kg/m3 the hms 30t move = 7 grabs (14 ticks), bushing 15t = 4 grabs (8 ticks). Honest plan enqueues each charge's moves after their stacks are filled by receiving: C1 41/86 -> ready@101 < 240; C2 141/186 -> ready@201 < 270; C3 231/276 -> ready@291 <= 300. Verified by mirror run 2026-10-18 (see expected_outputs). Historical audit trail: at pre-decision grab 0.8 m3 the scenario was infeasible (hand arithmetic, 2026-10-15); the landed grab 2.0 / deadlines 240-270-300 combination is the first that admits an honest winning plan at cadence 2.",
+  "feasibility_status": "infeasible_at_current_values_pending_sme_decision"
+ },
+ "bulk_density_kg_m3": {
+  "bushing": {
+   "value": 500,
+   "band": "450-550",
+   "provenance": "engineering-estimate"
+  },
+  "hms1_hms2": {
+   "value": 550,
+   "band": "460-600",
+   "provenance": "engineering-estimate"
+  },
+  "shredded": {
+   "value": 1200,
+   "band": "1000-1400",
+   "provenance": "engineering-estimate"
+  },
+  "note": "bulk density depends on scrap form and packing conditions; values are configurable demo placeholders pending Yasser SME calibration, not universal facts"
+ },
+ "win_condition": "3 consecutive charges ready before deadline (win=True at landed values); failure path cause-attributed via negative control (no charge tasks -> insufficient_usable_tonnage)",
+ "expected_outputs": {
+  "win": true,
+  "player_plan": {
+   "41": "P1-hms 30t -> CHARGING_BUCKET_C1",
+   "86": "P1-bush 15t -> CHARGING_BUCKET_C1",
+   "141": "P2-hms 30t -> CHARGING_BUCKET_C2",
+   "186": "P2-bush 15t -> CHARGING_BUCKET_C2",
+   "231": "P3-hms 30t -> CHARGING_BUCKET_C3",
+   "276": "P3-bush 15t -> CHARGING_BUCKET_C3",
+   "note": "charge tasks only from stacked material (receiving precedes charging; the reservation guard refuses unstacked tonnage); each charge's moves enqueued once, hms-then-bushing per charge"
+  },
+  "charges": {
+   "C1": {
+    "status": "ready",
+    "ready_tick": 101,
+    "deadline": 240
+   },
+   "C2": {
+    "status": "ready",
+    "ready_tick": 201,
+    "deadline": 270
+   },
+   "C3": {
+    "status": "ready",
+    "ready_tick": 291,
+    "deadline": 300
+   }
+  },
+  "negative_control_no_charge_tasks": {
+   "C1": {
+    "status": "failed",
+    "failure_cause": "insufficient_usable_tonnage"
+   },
+   "C2": {
+    "status": "failed",
+    "failure_cause": "insufficient_usable_tonnage"
+   },
+   "C3": {
+    "status": "planning",
+    "note": "deadline 300 = scenario end; no failure recorded"
+   }
+  },
+  "note": "expectations frozen from the verified mirror run 2026-10-18 (mirror/slice2_mirror.py __main__, fresh process): win True; C1 ready@101, C2@201, C3@291. Sweep evidence: grab 1.0 at 180/195/210 fails all charges; grab 1.0 at 240-270-300 fails C2; grab 1.5 fails C3 readiness; deadlines <=270 fail C3 (C3 floor ~ready@291). C3 slack of 9 ticks is tight \u2014 flagged for Yasser's SME calibration, not silently widened.",
+  "priority_action": {
+   "task_id": "T40-reclaim",
+   "priority_set_to": 2,
+   "applied_ticks": "41..300",
+   "measured_effect": "at the landed deadlines the reclaim runs in a crane-idle window (ticks ~102-111) and does not delay any charge; the win holds with and without the priority verb \u2014 recorded honestly, the crane-contention pressure is inert at these deadlines"
+  }
+ },
+ "feasibility_status": "feasible_at_landed_values (win proven by honest stacked-material mirror run re-derived 2026-10-18; expected_outputs frozen from that run)",
+ "notes": "| History: demo values (pre-decision) and ad37d61-era expectations (ready@172, deadlines 180/195/210) are superseded artifacts kept only in git history. Landed parameters (d3614e6): grab 2.0 m3, cadence 2 ticks/move, deadlines 240/270/300, horizon 300 \u2014 sweep-verified as the winnable band. S2 scene round must build from the frozen expected_outputs event log only (interpolation-only animation)."
+}

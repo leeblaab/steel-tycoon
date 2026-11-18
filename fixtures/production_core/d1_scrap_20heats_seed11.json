@@ -1,0 +1,300 @@
+{
+  "fixture_id": "d1_scrap_20heats_seed11",
+  "schema_version": 1,
+  "domain": "production_core",
+  "prng": "xorshift32",
+  "seed": 11,
+  "asset_order": [
+    "eaf",
+    "drp",
+    "cc",
+    "bar_mill",
+    "wire_rod_mill",
+    "crane"
+  ],
+  "initial_state": {
+    "tick": 0,
+    "purchased_t": {
+      "bushing": 0.0,
+      "hms1_hms2": 0.0,
+      "shredded": 0.0
+    },
+    "yard_stock_t": 0.0,
+    "handling_loss_t": 0.0,
+    "yield_loss_t": 0.0,
+    "melted_t": 0.0,
+    "ttt_hours_accum": 0.0,
+    "ttt_runs": 0,
+    "spend_usd": 0.0,
+    "condition": 100.0,
+    "crew_factor": 1.0,
+    "generator_state": 11
+  },
+  "actions": [
+    {
+      "tick": 1,
+      "charge_cells": [
+        [
+          "hms1_hms2",
+          "hms",
+          40.0
+        ]
+      ]
+    },
+    {
+      "tick": 2,
+      "charge_cells": [
+        [
+          "hms1_hms2",
+          "plate",
+          40.0
+        ]
+      ]
+    },
+    {
+      "tick": 3,
+      "charge_cells": [
+        [
+          "shredded",
+          "light",
+          40.0
+        ]
+      ]
+    },
+    {
+      "tick": 4,
+      "charge_cells": [
+        [
+          "bushing",
+          "plate",
+          20.0
+        ],
+        [
+          "hms1_hms2",
+          "hms",
+          20.0
+        ]
+      ]
+    },
+    {
+      "tick": 5,
+      "charge_cells": [
+        [
+          "hms1_hms2",
+          "hms",
+          40.0
+        ]
+      ]
+    },
+    {
+      "tick": 6,
+      "charge_cells": [
+        [
+          "hms1_hms2",
+          "plate",
+          40.0
+        ]
+      ]
+    },
+    {
+      "tick": 7,
+      "charge_cells": [
+        [
+          "shredded",
+          "light",
+          40.0
+        ]
+      ]
+    },
+    {
+      "tick": 8,
+      "charge_cells": [
+        [
+          "bushing",
+          "plate",
+          20.0
+        ],
+        [
+          "hms1_hms2",
+          "hms",
+          20.0
+        ]
+      ]
+    },
+    {
+      "tick": 9,
+      "charge_cells": [
+        [
+          "hms1_hms2",
+          "hms",
+          40.0
+        ]
+      ]
+    },
+    {
+      "tick": 10,
+      "charge_cells": [
+        [
+          "hms1_hms2",
+          "plate",
+          40.0
+        ]
+      ]
+    },
+    {
+      "tick": 11,
+      "charge_cells": [
+        [
+          "shredded",
+          "light",
+          40.0
+        ]
+      ]
+    },
+    {
+      "tick": 12,
+      "charge_cells": [
+        [
+          "bushing",
+          "plate",
+          20.0
+        ],
+        [
+          "hms1_hms2",
+          "hms",
+          20.0
+        ]
+      ]
+    },
+    {
+      "tick": 13,
+      "charge_cells": [
+        [
+          "hms1_hms2",
+          "hms",
+          40.0
+        ]
+      ]
+    },
+    {
+      "tick": 14,
+      "charge_cells": [
+        [
+          "hms1_hms2",
+          "plate",
+          40.0
+        ]
+      ]
+    },
+    {
+      "tick": 15,
+      "charge_cells": [
+        [
+          "shredded",
+          "light",
+          40.0
+        ]
+      ]
+    },
+    {
+      "tick": 16,
+      "charge_cells": [
+        [
+          "bushing",
+          "plate",
+          20.0
+        ],
+        [
+          "hms1_hms2",
+          "hms",
+          20.0
+        ]
+      ]
+    },
+    {
+      "tick": 17,
+      "charge_cells": [
+        [
+          "hms1_hms2",
+          "hms",
+          40.0
+        ]
+      ]
+    },
+    {
+      "tick": 18,
+      "charge_cells": [
+        [
+          "hms1_hms2",
+          "plate",
+          40.0
+        ]
+      ]
+    },
+    {
+      "tick": 19,
+      "charge_cells": [
+        [
+          "shredded",
+          "light",
+          40.0
+        ]
+      ]
+    },
+    {
+      "tick": 20,
+      "charge_cells": [
+        [
+          "bushing",
+          "plate",
+          20.0
+        ],
+        [
+          "hms1_hms2",
+          "hms",
+          20.0
+        ]
+      ]
+    }
+  ],
+  "tick_order": [
+    "tick_increment",
+    "condition_evolution",
+    "crew_factor",
+    "purchase_to_yard",
+    "charge_from_yard",
+    "handling_loss_by_size",
+    "yield_loss_by_grade",
+    "melt",
+    "tap_to_tap",
+    "generator_advance"
+  ],
+  "cadence_boundary": "1 tick = 1 heat; no day cadence in Domain 1",
+  "tick_count": 20,
+  "tolerance": {
+    "usd": 0.01,
+    "tonnes": 1e-06,
+    "categorical": "exact"
+  },
+  "expected_outputs": {
+    "tick": 20,
+    "generator_state": 2632950184,
+    "purchased_t": {
+      "bushing": 100.0,
+      "hms1_hms2": 500.0,
+      "shredded": 200.0
+    },
+    "yard_stock_t": 0.0,
+    "handling_loss_t": 12.5,
+    "yield_loss_t": 44.00000000000001,
+    "melted_t": 743.4999999999998,
+    "ttt_hours_accum": 18.764374999999998,
+    "ttt_runs": 20,
+    "spend_usd": 246000.0,
+    "condition": 90.0,
+    "crew_factor": 1.0,
+    "balance_error": 2.2737367544323206e-13
+  },
+  "status": "active",
+  "notes": "REBUILT CLEAN 2026-10-12 (Yasser GO): prior D1 expected_outputs came from the mirror's import-time baseline run (20 heats) continued by the fixture loop \u2014 40 heats recorded against 20 actions/tick_count, generator_state 120 draws. This fixture runs 20 ticks from a fresh state; generator advanced 6 draws/tick in fixed asset order (canonical contract, no rule consumes the draws in D1). Prior failing run preserved in git history (commit af568c4, DIVERGENCE_REPORT.md). Draw mapping: uniform(a,b) = a + (b-a)*draw after one xorshift32 step."
+}

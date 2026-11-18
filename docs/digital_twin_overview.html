@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Steel Process Digital Twin — Structure &amp; Logic</title>
+<style>
+  @page { size: A4; margin: 13mm 12mm; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", Arial, sans-serif; color: #1a2330; margin: 0; font-size: 10.5px; line-height: 1.45; }
+  .page { page-break-after: always; overflow: hidden; max-height: 276mm; }
+  @media print { .page { max-height: none; overflow: visible; } }
+  .page:last-child { page-break-after: auto; }
+  h1 { font-size: 21px; margin: 0 0 2px; color: #0d2a4a; }
+  .sub { color: #5a6b80; font-size: 11px; margin-bottom: 10px; }
+  h2 { font-size: 12.5px; color: #0d2a4a; border-bottom: 2px solid #c8562c; padding-bottom: 2px; margin: 9px 0 5px; }
+  h3 { font-size: 11px; margin: 8px 0 3px; color: #24425f; }
+  p { margin: 3px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 5px 0; font-size: 9.5px; }
+  th { background: #0d2a4a; color: #fff; text-align: left; padding: 3px 6px; }
+  td { border: 1px solid #cfd8e3; padding: 3px 6px; vertical-align: top; }
+  tr:nth-child(even) td { background: #f2f6fa; }
+  code, pre { font-family: Consolas, monospace; font-size: 9px; background: #eef2f7; }
+  pre { padding: 6px 8px; border-left: 3px solid #c8562c; white-space: pre-wrap; margin: 4px 0; }
+  .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; margin: 8px 0; }
+  .node { background: #0d2a4a; color: #fff; border-radius: 4px; padding: 5px 7px; font-size: 9px; text-align: center; min-width: 62px; }
+  .node small { display: block; color: #9fc0e8; font-size: 7.5px; }
+  .arrow { color: #c8562c; font-weight: bold; font-size: 13px; padding: 0 1px; }
+  .band { background: #f2f6fa; border: 1px solid #cfd8e3; border-radius: 4px; padding: 6px 8px; margin: 5px 0; }
+  .cols { display: flex; gap: 12px; }
+  .cols > div { flex: 1; }
+  .tag { display: inline-block; background: #c8562c; color: #fff; border-radius: 3px; padding: 1px 6px; font-size: 8.5px; margin-right: 4px; }
+  ul { margin: 3px 0 3px 16px; padding: 0; }
+  li { margin: 2px 0; }
+  .foot { color: #7a8798; font-size: 8.5px; margin-top: 6px; border-top: 1px solid #cfd8e3; padding-top: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ============ PAGE 1 : STRUCTURE & FLOW GRAPH ============ -->
+<div class="page">
+  <h1>Steel Process Digital Twin</h1>
+  <div class="sub">Structure, process logic, calculations &amp; KPIs — DRI–EAF long-products steelworks · Nov 2026</div>
+
+  <h2>1 · The process line (one flow graph, one tick authority)</h2>
+  <div class="flow">
+    <div class="node">Berth<small>ship 2–4 d cadence</small></div><span class="arrow">→</span>
+    <div class="node">Yards<small>ore · scrap · buffers</small></div><span class="arrow">→</span>
+    <div class="node">DRP<small>shaft furnace, continuous</small></div><span class="arrow">→</span>
+    <div class="node">DRI buffer<small>decouples rhythms</small></div><span class="arrow">→</span>
+    <div class="node">EAF<small>batch · heat object</small></div><span class="arrow">→</span>
+    <div class="node">LF<small>grade to spec</small></div><span class="arrow">→</span>
+    <div class="node">CCM<small>the metronome</small></div><span class="arrow">→</span>
+    <div class="node">Billet yard<small>days of cover</small></div><span class="arrow">→</span>
+    <div class="node">Rebar mill<small>changeover · rolls</small></div><span class="arrow">→</span>
+    <div class="node">FG yard → Dispatch<small>revenue here only</small></div>
+  </div>
+  <p><b>Engine:</b> deterministic tick = 1 plant-hour (12 s real). Nodes processed in topological order each tick. The UI is a pure read-out of sim state — every number on the 3D scene comes from the simulation, never painted on. Headless test runs execute the identical logic.</p>
+
+  <h2>2 · Five process slices + cross-cutting domains</h2>
+  <table>
+    <tr><th>Slice</th><th>Zone</th><th>Owns</th></tr>
+    <tr><td><b>S1</b></td><td>Berth &amp; receiving</td><td>Berth, unloader 500–1000 t/h, ship cadence, stockyard kt, scrap yards, handling</td></tr>
+    <tr><td><b>S2</b></td><td>Scrap prep &amp; transport</td><td>Shared cranes, cycle time, queue priority, charge prep — handling as throughput limiter</td></tr>
+    <tr><td><b>S3</b></td><td>Reduction</td><td>DRP 500k–2.5M t/yr band, ramp %/tick, DRI buffer kt, gas $/t DRI</td></tr>
+    <tr><td><b>S4</b></td><td>Meltshop &amp; casting</td><td>EAF (t/charge, tap-to-tap, kWh/t, lining cycles) · LF (treatment, alloy $ by grade) · CCM (strand speed, break-out vs speed, caster_wait)</td></tr>
+    <tr><td><b>S5</b></td><td>Rolling &amp; dispatch</td><td>Mill line speed, changeover ticks, roll life t-rolled, order book: qty · deadline · price · penalty</td></tr>
+  </table>
+  <div class="band"><span class="tag">Economics</span>cash wallet · CAPEX on build · OPEX per machine-tick · order revenue &amp; penalties &nbsp;&nbsp;<span class="tag">Sustainability</span>energy kWh/t plant-wide · CO₂ t/yr &nbsp;&nbsp;<span class="tag">Operations</span>lifecycle not_built → built → operational · construction ticks · save/load</div>
+
+  <h2>3 · Links between slices — where plant behavior emerges</h2>
+  <ul>
+    <li><b>Handoff rule (every link, every tick):</b> available = min(upstream output, buffer stock); actual = min(capacity, available); the difference accumulates as a queue on the link.</li>
+    <li><b>Congestion propagates upstream:</b> queue &gt; buffer_max → upstream hard-capped to downstream capacity + congestion flag. A jammed conveyor throttles the unloader three stages back.</li>
+    <li><b>Buffers decouple rhythms:</b> DRP continuous vs EAF batch — the DRI buffer exists so the furnace never starves; billet yard sold to the manager as <i>days of casting cover</i>.</li>
+    <li><b>Governing constraint (SME rule):</b> the caster caps the whole meltshop regardless of furnace power.</li>
+    <li><b>The heat is the only discrete object crossing boundaries:</b> {size, DRI share, Cu/Sn tramp, grade, status}. Chemistry rides the graph from blend to product — quality is carried, not asserted at the end.</li>
+  </ul>
+
+</div>
+
+<!-- ============ PAGE 2 : CALCULATIONS, KPIs, ASSETS ============ -->
+<div class="page">
+  <h2>4 · Mass balance — the contract</h2>
+  <p>Every stage: <b>Inputs = Products + By-products + Losses + ΔInventory</b>, with named accumulators matching a real mill balance sheet.</p>
+  <table>
+    <tr><th>Stage</th><th>Loss accumulator</th></tr>
+    <tr><td>DRP</td><td>dust/fines + unreduced FeO → yield_loss</td></tr>
+    <tr><td>EAF</td><td>physical handling loss (separate, SME rule) + oxidation/melt yield loss</td></tr>
+    <tr><td>CCM / mills</td><td>scale + crop/cobble → yield_loss · yield chain: EAF yield → CCM 96–98% → mill yield</td></tr>
+    <tr><td>Exit</td><td>sold (dispatch) · dumped (100% loss). Slag/dust live as losses until sustainability converts them to products.</td></tr>
+  </table>
+  <p>Regression gate: material-balance error asserted at <b>0.0000 t</b> (tolerance 1e-6/accumulator — float noise only). Python mirror + TypeScript port in parity tests: two independent implementations must agree on every tick.</p>
+
+  <h2>5 · Throughput, bottleneck &amp; cost math (per node, per tick)</h2>
+  <pre>available   = min(upstream_output_tph, buffer_remaining)
+actual      = min(capacity_tph, available)
+queue      += upstream_output − actual
+bottleneck  : capacity_tph &lt; upstream_output_tph
+hard cap    : queue &gt; buffer_max → throttle upstream + congestion flag
+
+opex(N)     = actual_throughput × opex_per_t × energy_multiplier
+energy_mult(EAF) = 1 + hold_pct/100 + aging_pct/100
+   hold  : tiered by ladle hours held (float-safe lookup)
+   aging : DRI stockpile age &gt; 30 days
+revenue     : dispatch outflow × grade price ladder — buffers cannot hide a money problem</pre>
+
+  <h2>6 · KPIs the twin tracks live</h2>
+  <div class="cols">
+    <div>
+      <h3>Per node</h3>
+      <ul><li>throughput vs nameplate t/h</li><li>queue depth, congestion ticks</li><li>utilization, opex $/t at node</li><li>upgrade offers appear only when the bottleneck fires</li></ul>
+      <h3>Plant end-to-end</h3>
+      <ul><li>t finished / campaign day · overall yield %</li><li>kWh/t · CO₂ t/yr · cash margin</li><li>avoidable-downtime exposure</li></ul>
+    </div>
+    <div>
+      <h3>Meltshop</h3>
+      <ul><li>tap-to-tap time · ladle hold tiers</li><li>furnace-wait vs caster-wait</li><li>heats to spec · lining cycles left</li></ul>
+      <h3>Rolling &amp; dispatch</h3>
+      <ul><li>changeover count/time · roll life consumed</li><li>order on-time % · penalties incurred</li></ul>
+    </div>
+  </div>
+
+  <h2>7 · Shutdowns, maintenance &amp; asset layer (data modeled today)</h2>
+  <table>
+    <tr><th>Concept</th><th>Field</th><th>Twin behavior</th></tr>
+    <tr><td>EAF lining life</td><td>cycles → refurbishment</td><td>wear warning → planned shutdown window vs rare signalled breakdown</td></tr>
+    <tr><td>Roll life</td><td>t rolled → change</td><td>planned change vs wear-out → defects &amp; downgrades</td></tr>
+    <tr><td>Changeover</td><td>ticks between families</td><td>the scheduling lever — mill money is in changeover planning</td></tr>
+    <tr><td>Health decay</td><td>per machine</td><td>planned-vs-unplanned downtime tradeoff; breakdowns rare, signalled, recoverable</td></tr>
+  </table>
+  <p>Downtime is priced before it is managed: hold, aging and delivery penalties are live now, so maintenance decisions land on a real cost signal. <i>"Efficiency upgrades are maintenance you get paid for."</i></p>
+
+  <h2>8 · Learning layer &amp; campaign</h2>
+  <p>Every machine carries schema-validated info cards with real engineering bands → codex (the learning layer). Workflow: industry sources (worldsteel, GAST, vendor refs) → plausible ranges flagged <code>sme_pending</code> → SME review (16 yrs mill ops: DRP, rolling mills, ISO 9001/14001/45001, CMMS/TPM) → calibrated. No invented precision, ever.</p>
+  <p>Campaign teaches five industrial problems in order: <b>Flow → Bottlenecks → Buffers → Quality &amp; Sync → End-to-end performance</b>, each via quest (situation · goal · decision · consequence · debrief).</p>
+
+  <h2>9 · Status &amp; roadmap</h2>
+  <table style="font-size:9px">
+    <tr><th>Running today</th><td>Integrated full-plant play home (guided S1 build + Level-1 quests) · all five slice scenes live · economics &amp; sustainability ports wired · 42 test files / 197 tests incl. Python↔TS parity</td></tr>
+    <tr><th>Active phase</th><td>One authoritative simulation over the shared world (single tick authority) · S2 sim build · 5-slice campaign persistence</td></tr>
+    <tr><th>Next layers</th><td>Maintenance/TPM interactivity (data already modeled) · energy upgrade axis + time-of-use tariffs · drill-in mill internals · slag/dust from losses to revenue · mobile packaging</td></tr>
+  </table>
+
+</div>
+
+<div class="page" id="p3fill">
+  <h2 style="margin-top:0">Appendix · Demo runbook (today)</h2>
+  <table>
+    <tr><th>1</th><td>Double-click <code>start_digital_twin.bat</code> in C:\AI_Lab\SteelX — six browser tabs open automatically.</td></tr>
+    <tr><th>2</th><td><b>:5178 Full-plant map</b> — the play home: guided S1 build, quests, live plant KPIs. Start the demo here.</td></tr>
+    <tr><th>3</th><td><b>:5173 S1 Berth &amp; yards · :5174 S2 Scrap prep · :5176 S3 DRP · :5175 S4 Meltshop · :5179 S5 Rolling &amp; dispatch</b> — walk the slices in order; each shows its own machines, queues and KPI panels.</td></tr>
+    <tr><th>4</th><td>If a port is busy from an earlier session, close those windows first (or reboot) and re-run the launcher.</td></tr>
+  </table>
+  <p style="color:#5a6b80">All six run offline on this machine — no internet needed. Simulation logic is identical headless and rendered (parity-tested), so what you see on screen is the twin, not a skin over it.</p>
+  <div class="foot">Industrial values: plausible industry bands (worldsteel, GAST, vendor refs), SME-calibrated as ranges — not invented precision. Prepared for R&amp;D / Digital Projects review, Nov 2026.</div>
+</div>
+
+</body>
+</html>

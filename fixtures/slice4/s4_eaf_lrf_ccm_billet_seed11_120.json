@@ -1,0 +1,337 @@
+{
+  "schema_version": 1,
+  "fixture_id": "s4_eaf_lrf_ccm_billet_seed11_120",
+  "domain": "slice4_melt_shop",
+  "status": "proposed",
+  "note": "Slice 4 scenario: EAF -> LRF -> CCM -> billet yard as a ladle CYCLE. Consumes Slice 2 prepared_charge and Slice 3 dri_charge_material contracts (v1, embedded in fixtures/slice2/s2_scrap_charge_scenario_seed11_120.json under 'contracts'). Deterministic scripted scenario, no RNG in the rule path (same shape as the Slice 2 mirror). Expected outputs are derived by the mirror run (mirror = single source of truth); the fixture asserts invariants (balance closure every tick, event ticks, cycle-state snapshots) not intermediate numbers. EXPECTATIONS REWRITTEN to mirror-derived values (Yasser GO 2026-10-15): mirror physics = same-tick LRF->CCM handoff + gated tapping (heat starts only when a charge is delivered AND a ladle is free). Old hand-derived event ticks assumed a 1-tick offset and a single heat; mirror run (single run, 2026-10-15) gives 5 heats, energy 120000 kWh (5 x 40 t x 600 kWh/t), billet end 186.935 t. Caster wait is physically unreachable at this cadence \u2014 asserted as 0, not 4. Starved count 65 is idle-tick starvation accounting (EAF idle with no delivered charge), asserted as invariant, not a bottleneck claim. KEY_TICKS REWRITTEN to mirror-exposed quantities only (Yasser decision 2026-10-15); N3 reachability clause extended with the handoff condition \u2014 at current cadence the caster wait is unreachable by same-tick handoff, so the fixture asserts 0, not 4.",
+  "contracts": "see fixtures/slice2/s2_scrap_charge_scenario_seed11_120.json 'contracts' \u2014 prepared_charge and dri_charge_material reused unchanged",
+  "provenance_labels": {
+    "source-backed": "may appear in player-facing info-cards as industry fact",
+    "engineering-estimate": "typical published range, not universal",
+    "game-balance": "never presented as industry fact"
+  },
+  "energy": {
+    "eaf_sec_kwh_per_t": 600.0,
+    "provenance": "engineering-estimate",
+    "citation": "AIST MENA EAF-Efficiency (Cappel): EAF energy consumption ~650 kWh/tLS, power varies 350-600 kWh/tLS; TERI best-practices PDF: SEC 415-675 kWh/t, TTT 180 min -> 550-650 kWh/t. Adopted game value 600 kWh/t sits inside the cited band. Per-heat application (SEC x charge_t) is engineering-estimate.",
+    "note": "player-facing info-card may state the cited band as industry fact; the 600 value itself is the game's chosen point inside the band"
+  },
+  "yield_convention": {
+    "dri_yield_pct": 96.5,
+    "provenance": "engineering-estimate",
+    "note": "DRI metal yield band 95-98% from content/nodes/nodes_phase1.json (drp node, Yasser-calibrated); midpoint convention stated explicitly, pending Yasser approval",
+    "ccm_billet_yield_pct": 98.0,
+    "ccm_yield_provenance": "game-balance",
+    "scrap_grade_yield": "from content/scrap/scrap_tiers.json (Yasser-calibrated, source-backed per grade)"
+  },
+  "scenario": {
+    "seed": 11,
+    "ticks": 120,
+    "ladles": 2,
+    "eaf_heat_ticks": 10,
+    "lrf_ticks_per_ladle": 4,
+    "ccm_ticks_per_ladle": 6,
+    "cadence_note": "charge deliveries every 12 ticks (game-balance); EAF heat 10 ticks (game-balance, consistent with a fast TTT); LRF 4 ticks and CCM 6 ticks per ladle (game-balance). Ladle cycle = EAF tap -> LRF -> CCM -> release.",
+    "charge_plan": [
+      {
+        "charge_id": "C1",
+        "recipe_id": "R1",
+        "deadline_tick": 30,
+        "composition": [
+          {
+            "grade": "hms1_hms2",
+            "required_usable_t": 30.0,
+            "actual_usable_t": 30.0
+          },
+          {
+            "grade": "DRI",
+            "required_usable_t": 10.0,
+            "actual_usable_t": 10.0
+          }
+        ],
+        "provenance": "game-balance"
+      },
+      {
+        "charge_id": "C2",
+        "recipe_id": "R1",
+        "deadline_tick": 42,
+        "composition": [
+          {
+            "grade": "hms1_hms2",
+            "required_usable_t": 30.0,
+            "actual_usable_t": 30.0
+          },
+          {
+            "grade": "DRI",
+            "required_usable_t": 10.0,
+            "actual_usable_t": 10.0
+          }
+        ],
+        "provenance": "game-balance"
+      },
+      {
+        "charge_id": "C3",
+        "recipe_id": "R1",
+        "deadline_tick": 54,
+        "composition": [
+          {
+            "grade": "hms1_hms2",
+            "required_usable_t": 30.0,
+            "actual_usable_t": 30.0
+          },
+          {
+            "grade": "DRI",
+            "required_usable_t": 10.0,
+            "actual_usable_t": 10.0
+          }
+        ],
+        "provenance": "game-balance"
+      },
+      {
+        "charge_id": "C4",
+        "recipe_id": "R1",
+        "deadline_tick": 66,
+        "composition": [
+          {
+            "grade": "hms1_hms2",
+            "required_usable_t": 30.0,
+            "actual_usable_t": 30.0
+          },
+          {
+            "grade": "DRI",
+            "required_usable_t": 10.0,
+            "actual_usable_t": 10.0
+          }
+        ],
+        "provenance": "game-balance"
+      },
+      {
+        "charge_id": "C5",
+        "recipe_id": "R1",
+        "deadline_tick": 78,
+        "composition": [
+          {
+            "grade": "hms1_hms2",
+            "required_usable_t": 30.0,
+            "actual_usable_t": 30.0
+          },
+          {
+            "grade": "DRI",
+            "required_usable_t": 10.0,
+            "actual_usable_t": 10.0
+          }
+        ],
+        "provenance": "game-balance"
+      }
+    ],
+    "dri_plan": [
+      {
+        "material_id": "D1",
+        "usable_t": 10.0,
+        "ready_tick": 1,
+        "provenance": "game-balance"
+      },
+      {
+        "material_id": "D2",
+        "usable_t": 10.0,
+        "ready_tick": 13,
+        "provenance": "game-balance"
+      },
+      {
+        "material_id": "D3",
+        "usable_t": 10.0,
+        "ready_tick": 25,
+        "provenance": "game-balance"
+      },
+      {
+        "material_id": "D4",
+        "usable_t": 10.0,
+        "ready_tick": 37,
+        "provenance": "game-balance"
+      },
+      {
+        "material_id": "D5",
+        "usable_t": 10.0,
+        "ready_tick": 49,
+        "provenance": "game-balance"
+      }
+    ],
+    "charge_deliveries": [
+      {
+        "tick": 1,
+        "charge_id": "C1"
+      },
+      {
+        "tick": 12,
+        "charge_id": "C2"
+      },
+      {
+        "tick": 24,
+        "charge_id": "C3"
+      },
+      {
+        "tick": 36,
+        "charge_id": "C4"
+      },
+      {
+        "tick": 48,
+        "charge_id": "C5"
+      }
+    ],
+    "dri_deliveries": [
+      {
+        "tick": 1,
+        "material_id": "D1"
+      },
+      {
+        "tick": 13,
+        "material_id": "D2"
+      },
+      {
+        "tick": 25,
+        "material_id": "D3"
+      },
+      {
+        "tick": 37,
+        "material_id": "D4"
+      },
+      {
+        "tick": 49,
+        "material_id": "D5"
+      }
+    ],
+    "maintenance_windows": [
+      {
+        "asset": "EAF",
+        "start_tick": 60,
+        "duration_ticks": 8,
+        "provenance": "game-balance",
+        "note": "visible indicator only in v1 \u2014 event fires, no rule change"
+      },
+      {
+        "asset": "CCM",
+        "start_tick": 90,
+        "duration_ticks": 6,
+        "provenance": "game-balance",
+        "note": "visible indicator only in v1"
+      }
+    ],
+    "shift_changeovers": [
+      {
+        "tick": 30,
+        "from": "A",
+        "to": "B",
+        "provenance": "game-balance"
+      },
+      {
+        "tick": 60,
+        "from": "B",
+        "to": "C",
+        "provenance": "game-balance"
+      },
+      {
+        "tick": 90,
+        "from": "C",
+        "to": "A",
+        "provenance": "game-balance"
+      }
+    ],
+    "win_condition": "5 charges delivered and processed through the full ladle cycle (tap -> LRF -> CCM -> billet yard) before their deadlines, with material balance closed every tick",
+    "feasibility_check": "Winning sequence hand-derived from stage order before shipping: deliveries at ticks 1/12/24/36/48; EAF heat 10 ticks, LRF 4, CCM 6, 2 ladles. C1: heat starts tick 2 (delivery at 1, ladle L1 free), taps tick 12, LRF 12-16, CCM 16-22, billet at 22 < deadline 30. C2: delivered at 12, heat starts 13 (L2), taps 23, LRF 23-27, CCM 27-33, billet 33 < 42. C3: delivered 24, heat 25-35 (L1 free after C1 cast at 22), taps 35, LRF 35-39, CCM 39-45, billet 45 < 54. C4: delivered 36, heat 37-47 (L2 free after 33), taps 47, LRF 47-51, CCM 51-57, billet 57 < 66. C5: delivered 48, heat 49-59 (L1 free after 45), taps 59, LRF 59-63, CCM 63-69, billet 69 < 78. Caster wait fires at ticks 34-38 (L2 refined at 27 waits while CCM casts C3's ladle from 39? no \u2014 verify by mirror run). Mirror run is the arbiter; fixture asserts event ticks + balance closure, not hand-derived intermediates."
+  },
+  "expected_outputs": {
+    "events": {
+      "heat_starts": [
+        1,
+        12,
+        24,
+        36,
+        48
+      ],
+      "taps": [
+        11,
+        22,
+        34,
+        46,
+        58
+      ],
+      "refines_complete": [
+        14,
+        25,
+        37,
+        49,
+        61
+      ],
+      "casts_complete": [
+        19,
+        30,
+        42,
+        54,
+        66
+      ],
+      "maintenance_events": [
+        60,
+        90
+      ],
+      "shift_changeovers": [
+        30,
+        60,
+        90
+      ]
+    },
+    "key_ticks": {
+      "19": {
+        "ladles_free": 1,
+        "billet_yard_t": 37.387,
+        "balance_error": 0.0
+      },
+      "30": {
+        "ladles_free": 1,
+        "billet_yard_t": 74.774,
+        "balance_error": 0.0
+      },
+      "66": {
+        "ladles_free": 2,
+        "billet_yard_t": 186.935,
+        "balance_error": 0.0
+      }
+    },
+    "material_balance": {
+      "balance_error_at_end": 0.0,
+      "tolerance": 1e-09
+    },
+    "counters_at_tick_120": {
+      "heats_tapped": 5,
+      "heats_starved": 65,
+      "refines_completed": 5,
+      "casts_completed": 5,
+      "charge_wait_ticks": 0,
+      "ladle_wait_ticks": 0,
+      "caster_wait_ticks": 0,
+      "energy_kwh_total": 120000.0,
+      "billet_t_total": 186.935
+    },
+    "negative_controls": {
+      "no_charge_delivery": {
+        "heats_tapped": 0,
+        "heats_starved": 120,
+        "balance_closed": true
+      },
+      "ladle_never_released": {
+        "casts_completed": 0,
+        "ladle_wait_ticks_gt": 0,
+        "diverges_from_healthy": true
+      },
+      "caster_wait_reachability": {
+        "requires": "ladles >= 2 AND ccm_ticks > lrf_ticks AND a refined ladle can finish LRF on a tick where the strand is busy (handoff condition)",
+        "handoff_condition_at_current_cadence": "unreachable \u2014 same-tick LRF->CCM handoff means a refined ladle takes the strand immediately; a second ladle can only wait if its LRF completion lands inside a strand-busy window, which requires arrival cadence < ccm_ticks_per_ladle (12 > 6 here)",
+        "asserts": "caster_wait_ticks == 0 at current cadence",
+        "fires": false
+      },
+      "double_count_control": {
+        "healthy_residual": 0.0,
+        "double_count_residual_gt": 1.0
+      }
+    }
+  }
+}

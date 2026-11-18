@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "fixture_id": "s3_dri_buffer_scenario_seed11_120",
+  "domain": "slice3",
+  "status": "active_slice3_scenario",
+  "note": "Canonical Slice 3 scenario: DRP (continuous supply) -> DRI buffer -> EAF batch demand. Two negative scenarios prove both buffer states: STARVE (supply < demand, heat skipped) and FILL (supply > demand, discharge refused at capacity). Values are game-balance placeholders pending SME calibration. quality_metadata stays RESERVED (metalization fixed at v1; re-oxidation-over-age simulated later \u2014 age interface defined now via readiness_timestamp/discharge_tick). Contract reused as-is from fixtures/slice2/s2_scrap_charge_scenario_seed11_120.json 'contracts.dri_charge_material' \u2014 not redesigned. Convergence rule: this is a parallel feed converging at the EAF (Slice 4); interface defined here, Slice 4 not redesigned. PARAMETER CHANGE APPLIED (Yasser GO 2026-10-15): heat_plan cadence 10 ticks so demand (2.0 t/tick) exceeds supply (2.0 t/tick); expectations re-derived from mirror run (single run, 2026-10-15). PARAMETER CHANGE APPLIED (Yasser GO 2026-10-15): heat_plan cadence 10 ticks so demand (2.0 t/tick) exceeds supply (2.0 t/tick) at the 20 t heat; expectations re-derived from the single mirror run (2026-10-15), not hand-written.",
+  "provenance_labels": {
+    "source-backed": "may appear in player-facing info-cards as industry fact",
+    "engineering-estimate": "typical published range, not universal",
+    "game-balance": "never presented as industry fact"
+  },
+  "contracts": {
+    "dri_charge_material": {
+      "contract_version": 1,
+      "fields": {
+        "material_id": "id",
+        "usable_t": "number",
+        "quality_metadata": "object (reserved \u2014 metalization/re-oxidation later)",
+        "source": "enum (DRP discharge|DRI buffer)",
+        "readiness_timestamp": "time",
+        "destination": "enum (EAF feed interface)"
+      },
+      "note": "thin, defined now, implemented in Slice 3"
+    }
+  },
+  "scenario": {
+    "seed": 11,
+    "ticks": 120,
+    "drp": {
+      "discharge_t_per_tick": 2.0,
+      "trip_probability": 0.3,
+      "trip_ticks": [
+        20,
+        45,
+        70
+      ],
+      "trip_duration_ticks": 6
+    },
+    "buffer": {
+      "capacity_t": 30.0,
+      "fill_state_threshold_t": 25.0,
+      "starve_threshold_t": 10.0
+    },
+    "eaf": {
+      "charge_t": 20.0,
+      "heat_plan": [
+        20,
+        30,
+        40,
+        50,
+        60,
+        70,
+        80,
+        90,
+        100,
+        110,
+        120
+      ]
+    },
+    "provenance": {
+      "discharge_t_per_tick": "game-balance",
+      "trip_probability": "game-balance",
+      "trip_ticks": "game-balance",
+      "trip_duration_ticks": "game-balance",
+      "capacity_t": "engineering-estimate",
+      "fill_state_threshold_t": "game-balance",
+      "starve_threshold_t": "game-balance",
+      "charge_t": "game-balance",
+      "heat_plan": "game-balance"
+    }
+  },
+  "expected_outputs": {
+    "win": false,
+    "fill_state_ticks": [
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      55,
+      56,
+      57,
+      58,
+      59,
+      68,
+      69,
+      85,
+      86,
+      87,
+      88,
+      89,
+      98,
+      99,
+      108,
+      109,
+      118,
+      119
+    ],
+    "blocked_ticks": [
+      16,
+      17,
+      18,
+      19,
+      37,
+      38,
+      39,
+      40,
+      58,
+      59,
+      60,
+      88,
+      89,
+      90
+    ],
+    "starve_ticks": [
+      30,
+      50,
+      80
+    ],
+    "trip_fired_ticks": [
+      20,
+      45,
+      70
+    ],
+    "heats": {
+      "H20": [
+        "charged",
+        null
+      ],
+      "H30": [
+        "skipped",
+        "buffer_starved"
+      ],
+      "H40": [
+        "charged",
+        null
+      ],
+      "H50": [
+        "skipped",
+        "buffer_starved"
+      ],
+      "H60": [
+        "charged",
+        null
+      ],
+      "H70": [
+        "charged",
+        null
+      ],
+      "H80": [
+        "skipped",
+        "buffer_starved"
+      ],
+      "H90": [
+        "charged",
+        null
+      ],
+      "H100": [
+        "charged",
+        null
+      ],
+      "H110": [
+        "charged",
+        null
+      ],
+      "H120": [
+        "charged",
+        null
+      ]
+    }
+  }
+}

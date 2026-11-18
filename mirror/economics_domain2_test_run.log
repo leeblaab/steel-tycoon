@@ -1,0 +1,54 @@
+SteelX Domain 2 (Economics) mirror — test run log
+Run: fresh Python process from disk, single execution (no re-runs):
+  cd C:/AI_LAB/SteelX && python mirror/economics_domain2_mirror.py
+Date: 2026-10-11 (Arabian Standard Time). Exit code: 0. Corrections made: 0 (first run green).
+
+BASELINE RUN (seed 42, 30 days, orders + spot sales + QC events):
+  sales index at day 30: 1.000
+  revenue: 8,337,016 USD | late penalties: 142,875 USD
+  fulfilled: 13,100 t | unsold inventory: 0 t
+  QC tiers: prime 30, secondary 4, prompt 2
+  orders: [(0,'forward','fulfilled'), (1,'spot','open'), (2,'spot','open')]
+  balance check: dispatched 13,100 t vs fulfilled+unsold 13,100 t (OK)
+  low-index day: 100 t held as inventory, not sold
+  utilities opex: 59,400.00 USD (config-driven, USD stream only)
+  KPI dispatch asset: {'kwh_t': 5.0, 'nm3_ng_t': 0.0, 'throughput_t': 13,200.0}
+  KPI zero-production asset (drp): None -> NA, not 0
+
+NEGATIVE TESTS (must fail as intended; PASS = rule fires):
+  PASS  low index -> tonnes stay as inventory (not sold)
+  PASS  late order -> penalty accrued
+  PASS  fails-all chemistry -> prompt (fallback price)
+  PASS  index stays inside band over 200 steps
+  PASS  forward prices at sign-time index (1.00), not dispatch-time (0.85)
+
+NEGATIVE CONTROLS (healthy vs deliberately-broken path must DIVERGE):
+  PASS  late-penalty control: healthy 9,525.00 USD vs broken 0.00 USD (rate neutralized)
+  PASS  penalty-cap control: healthy 12,700.00 USD (capped 10%) vs broken 38,100.00 USD (uncapped 30%)
+  PASS  QC-haircut control: healthy 60,720.00 USD vs broken 66,000.00 USD (haircut neutralized)
+  PASS  demand-gate control: healthy unsold 100 t vs broken 0 t (gate removed)
+  PASS  forward-pricing control: healthy 57,150.00 USD (sign_index 0.90) vs broken 63,500.00 USD (dispatch-time 1.00)
+  PASS  zero-production KPI control: healthy None/NA vs broken 0 (guard removed)
+  PASS  material-balance control: identity holds healthy, FAILS under injected double-count
+
+CONFIG VALIDATION (reject, never default):
+  PASS  rejected schema_version bump (2)
+  PASS  rejected missing field order_book.late_penalty_cap_pct
+  PASS  rejected negative utility cost (water_usd_t -2.5)
+  PASS  rejected out-of-range penalty cap (150%)
+  PASS  rejected malformed band (inverted lo>hi)
+  PASS  rejected non-numeric step ('0.02')
+  PASS  rejected duplicate stable ID (utilities assets)
+  PASS  healthy baseline doc validates clean (control for negative set)
+  PASS  end-to-end: corrupted copy of real file rejected with named error; real file on disk validates clean
+
+PARITY: loaded sales-index band/step == pre-extraction Yasser-approved values (PASS).
+Late penalty: config demo 1.5%/day cap 10% governs now; pre-extraction 2.0 was the [ASK YASSER] placeholder.
+
+FINAL RECONCILIATION (fresh state, same seed):
+  dispatched 13,100.0000 t = sold 13,100.0000 t + unsold 0.0000 t -> OK (tolerance 1e-6)
+  revenue 8,337,016.18 USD, penalties 142,875.00 USD, utilities 58,950.00 USD (USD streams only)
+  KPI dispatch: {'kwh_t': 5.0, 'nm3_ng_t': 0.0, 'throughput_t': 13,100.0}; KPI drp: None (NA)
+
+RNG CONTRACT NOTE: economics consumes only its own seeded sales-index walk (Random(42));
+no Domain 3 per-asset draws are consumed here.

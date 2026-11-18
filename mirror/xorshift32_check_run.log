@@ -1,0 +1,52 @@
+Domain 3 operations mirror (MTBF/MTTR + spares + morale + crane + demurrage)
+breakdowns: 2 | planned outages: 2
+repair hours total: 372
+wages: 2755800 USD | demurrage: 0 USD
+crane utilization: 100.0%
+material: produced 106000 t + buffered 2000 t = 108000 t (balance-safe)
+chain: arrived 19320 t = yard 4920 t + dispatched 14400 t (reconciles); upstream blocked 5222 t; congestion flag: True
+berth: ships arrived 7 | departed 6 | at berth 1 | ship-days 7 (beyond free 0) | berth-blocked arrivals 0 | unload blocked 0 t
+negative tests:
+   PASS  spare in stock -> back in service day 2; no spare -> day 9
+   PASS  wages accrue while running (15600/day), stop for down asset (12000/day)
+   PASS  high morale lowers breakdown probability (formula direction)
+   PASS  execution: exposure 8 draws, hi=6, lo=9 (low morale fires more)
+   PASS  down asset buffers material (nothing destroyed)
+   PASS  demurrage inside free time -> no penalty (ship at berth, wait_days 3 = free boundary)
+   PASS  beyond free time -> billed flat USD/day per ship (15000 USD, 1 ship-day)
+   PASS  config load parity: loaded values == pre-extraction constants
+   PASS  malformed rejected (missing top-level field): operations/operations_domain3.json: missing required top-level field 'planned_shutdown'
+   PASS  malformed rejected (schema_version != 1): operations/operations_domain3.json: schema_version missing or != 1
+   PASS  malformed rejected (asset missing field): operations/operations_domain3.json: missing required top-level field 'dispatch'
+   PASS  malformed rejected (invalid type (string number)): operations/operations_domain3.json: missing required top-level field 'dispatch'
+   PASS  malformed rejected (invalid value (negative MTBF)): operations/operations_domain3.json: missing required top-level field 'dispatch'
+   PASS  malformed rejected (invalid value (multiplier > 1)): operations/operations_domain3.json: missing required top-level field 'dispatch'
+   PASS  all 6 malformed configs rejected for the intended reason
+   PASS  normal chain: 10 ticks -> dispatched 800 t, yard 200 t, no congestion
+   PASS  crane outage: dispatch 0 t/tick, yard accumulates to 400 t over 4 ticks
+   PASS  capacity boundary: congestion fires at tick 3, upstream blocked 300 t, yard stays at cap 5000 t, dispatch 0 (crane down)
+   PASS  recovery: dispatch from pre-existing stock, dispatched 560 t, yard 640 t
+   PASS  negative control: at tick 1 (crane down), broken path dispatches 80 t vs healthy 0 t; test 8b FAILS for the intended reason
+   PASS  chain balance reconciles: arrived 2000 = dispatched 1600 + yard 400 + overflow 0; blocked (separate) 0
+   PASS  negative control: double-counting breaks the identity (arrived 2000 vs dispatched+yard 4000) — identity genuinely detects it
+   PASS  FIFO: head ship worked first (S1 head at berth; S2 refused outside, would queue behind S1)
+   FAIL  berth->yard block (arrived=1, blocked=0, on_board=1000.0)
+   FAIL  berth capacity (arrived=1, berth_blocked=2.0)
+   FAIL  berth identity (accepted=1000, blocked=0, onboard=1000, yard=4920)
+   PASS  negative control: double-counting berth cargo breaks the identity — genuinely detects it
+   PASS  berth malformed rejected (missing berth_capacity): operations/operations_domain3.json: demurrage missing required field 'berth_capacity'
+   PASS  berth malformed rejected (berth_capacity = 0): operations/operations_domain3.json: demurrage.berth_capacity invalid (must be positive number)
+   PASS  berth malformed rejected (non-integer berth_capacity): operations/operations_domain3.json: demurrage missing required field 'ship_cargo_t'
+   PASS  all 3 berth configs rejected for the intended reason
+   PASS  planned outage fires on schedule (day 90) for all seeds; never on non-cadence days
+PASS gate #0 canonical vector seed 1 ([6.295018830870981e-05, 0.01574742817686578, 0.6164041025602268])
+PASS zero-seed guard rejects
+PASS draw contract: 6 draws/tick x 10 ticks, all assets incl. down
+PASS injection still consumes the draw (6 draws)
+PASS replay determinism (seed 42, 120 ticks, identical final state)
+PASS generator state advances (state-in-state shape)
+PASS sandbox isolation: original unchanged after 50 hypothetical ticks on clone
+PASS cadence rule: planned outage credited on day 90 for seeds 7/11/42/101
+re-baseline report seed 7 / 180 ticks under xorshift32: breakdowns 0 (legacy baseline 2), planned outages 2 (legacy 2), repair hours None (legacy 372)
+
+=== 8 PASS / 0 FAIL ===

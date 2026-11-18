@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SteelX Hub — authoritative tick loop</title>
+  <style>
+    :root { color-scheme: dark; }
+    html, body { margin: 0; height: 100%; background: #101418; color: #e6e9ee; font-family: system-ui, sans-serif; }
+    button { background: #1b222b; color: #e6e9ee; border: 1px solid #2a3038; border-radius: 6px; padding: 6px 10px; cursor: pointer; }
+    button[data-active="true"] { background: #27425e; border-color: #4d7ca8; }
+    h1 { font-size: 17px; margin: 0 0 12px; }
+    h2 { font-size: 13px; margin: 12px 0 6px; color: #8fb3d9; }
+    .steelx-controls { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
+    .steelx-tickrate { color: #7a8593; font-size: 12px; }
+    .steelx-statbar { border: 1px solid #2a3038; border-radius: 8px; padding: 10px 12px; }
+    .steelx-stat { display: flex; justify-content: space-between; gap: 12px; padding: 3px 0; font-size: 13px; }
+    .steelx-stat b { color: #cfe3f7; }
+    .steelx-progress { margin: 6px 0; font-size: 12px; }
+    .steelx-progress-track { background: #1b222b; border-radius: 4px; height: 8px; overflow: hidden; }
+    .steelx-progress-fill { background: #4d7ca8; height: 100%; }
+    .steelx-badge { padding: 2px 8px; border-radius: 10px; font-size: 12px; }
+    .steelx-badge[data-tone="ok"] { background: #16351f; color: #7fd18f; }
+    .steelx-badge[data-tone="bad"] { background: #3a1414; color: #ef8b8b; }
+    .steelx-badge[data-tone="warn"] { background: #3a2f14; color: #e6c07b; }
+    .steelx-card { border: 1px solid #2a3038; border-radius: 8px; padding: 8px 10px; margin-bottom: 12px; font-size: 13px; }
+    .steelx-card-toggle { width: 100%; text-align: left; font-weight: 600; }
+    .steelx-card-body { padding: 8px 4px; line-height: 1.45; }
+    .steelx-card-source { color: #7a8593; font-size: 12px; }
+    .steelx-eventlog h2 { margin-top: 0; }
+    .steelx-eventrow { display: flex; gap: 8px; font-size: 12px; padding: 2px 0; border-bottom: 1px dashed #1d232c; }
+    .steelx-eventtick { color: #7a8593; min-width: 42px; }
+    .steelx-eventlog-empty { color: #7a8593; font-size: 12px; }
+    .steelx-cardpopup { position: fixed; inset: 0; background: rgba(0,0,0,.55); display: flex; align-items: center; justify-content: center; }
+    .steelx-cardpopup-inner { background: #171d24; border: 1px solid #2a3038; border-radius: 10px; padding: 16px; max-width: 480px; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="./main.tsx"></script>
+</body>
+</html>

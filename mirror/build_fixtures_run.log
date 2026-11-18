@@ -1,0 +1,215 @@
+scrap tiers + grade yield + size handling + tap-to-tap mirror (Yasser-calibrated)
+heat  0 cells [('hms1_hms2', 'hms', 40.0)] cond 99.5 -> TTT 52.8 min, melt 37.40 t
+heat  1 cells [('hms1_hms2', 'plate', 40.0)] cond 99.0 -> TTT 53.0 min, melt 37.60 t
+heat  2 cells [('shredded', 'light', 40.0)] cond 98.5 -> TTT 58.6 min, melt 35.80 t
+heat  3 cells [('bushing', 'plate', 20.0), ('hms1_hms2', 'hms', 20.0)] cond 98.0 -> TTT 52.2 min, melt 37.90 t
+heat 16 cells [('hms1_hms2', 'hms', 40.0)] cond 91.5 -> TTT 57.0 min, melt 37.40 t
+heat 17 cells [('hms1_hms2', 'plate', 40.0)] cond 91.0 -> TTT 57.2 min, melt 37.60 t
+heat 18 cells [('shredded', 'light', 40.0)] cond 90.5 -> TTT 63.2 min, melt 35.80 t
+heat 19 cells [('bushing', 'plate', 20.0), ('hms1_hms2', 'hms', 20.0)] cond 90.0 -> TTT 56.3 min, melt 37.90 t
+balance error: 0.0
+handling loss: 12.5 | yield loss: 44.0
+avg TTT: 56.29 min
+spend: 246000.0 USD
+wrote C:\AI_Lab\SteelX\fixtures\production_core\d1_scrap_20heats_seed11.json
+Domain 2 economics mirror (sales index + order book + forward/spot + QC)
+sales index at day 30: 1.000
+revenue: 8337016 USD | late penalties: 142875 USD
+fulfilled: 13100 t | unsold inventory: 0 t
+QC tiers: {'prime': 30, 'secondary': 4, 'prompt': 2}
+orders: [(0, 'forward', 'fulfilled'), (1, 'spot', 'open'), (2, 'spot', 'open')]
+balance check: dispatched 13100 t vs fulfilled+unsold 13100 t
+low-index day: unsold inventory now 100 t (100 t held, not sold)
+utilities opex: 59400.00 USD (config-driven, USD stream only)
+specific energy KPI (dispatch asset, live throughput): {'kwh_t': 5.0, 'nm3_ng_t': 0.0, 'throughput_t': 13200.0}
+specific energy KPI (zero-production asset drp): None -> None/NA, not 0
+negative tests:
+   PASS  low index -> tonnes stay as inventory (not sold)
+   PASS  late order -> penalty accrued
+   PASS  fails-all chemistry -> prompt (fallback price)
+   PASS  index stays inside band over 200 steps
+   PASS  forward prices at sign-time index (1.00), not dispatch-time (0.85)
+negative controls (rule deliberately broken -> assertion must FAIL):
+   PASS  late-penalty control: healthy 9525.00 USD vs broken 0.00 USD (rate neutralized -> divergence; rule assertion FAILS as intended)
+   PASS  penalty-cap control: healthy 12700.00 USD (capped at 10%) vs broken 38100.00 USD (uncapped 30%) -> divergence; cap assertion FAILS as intended
+   PASS  QC-haircut control: healthy 60720.00 USD vs broken 66000.00 USD (haircut neutralized -> divergence; assertion FAILS as intended)
+   PASS  demand-gate control: healthy unsold 100 t vs broken 0 t -> divergence; inventory assertion FAILS as intended
+   PASS  forward-pricing control: healthy 57150.00 USD (sign_index 0.90) vs broken 63500.00 USD (dispatch-time 1.00) -> divergence; assertion FAILS as intended
+   PASS  zero-production KPI control: healthy None/NA vs broken 0 -> divergence; NA assertion FAILS as intended
+   PASS  material-balance control: identity holds healthy, FAILS under double-count -> divergence; assertion FAILS as intended
+config validation negative tests (must fail as intended):
+   PASS  rejected (schema_version bump): economy/economics_domain2.json: schema_version missing or != 1
+   PASS  rejected (missing field (order_book.late_penalty_cap_pct)): economy/economics_domain2.json: order_book missing required field 'late_penalty_cap_pct'
+   PASS  rejected (negative value (negative utility cost)): economy/economics_domain2.json: utilities.assets[0].water_usd_t negative: -2.5
+   PASS  rejected (out-of-range (penalty cap 150%)): economy/economics_domain2.json: order_book.late_penalty_cap_pct out of range [0.0, 100.0]: 150.0
+   PASS  rejected (malformed (band inverted lo>hi)): economy/economics_domain2.json: sales_index.band inverted (lo>hi)
+   PASS  rejected (malformed (non-numeric step)): economy/economics_domain2.json: sales_index.step must be numeric, got '0.02'
+   PASS  rejected (duplicate stable ID (utilities assets)): economy/economics_domain2.json: utilities.assets duplicate stable IDs
+   PASS  healthy baseline doc validates clean (control for negative set)
+   end-to-end (corrupted real file, schema bump): economy/economics_domain2.json: schema_version missing or != 1
+   real file on disk validates clean: yes
+parity checks (loaded config vs pre-extraction constants):
+   PASS  sales-index band/step match pre-extraction Yasser-approved values
+   NOTE  late penalty loaded value is the recommended demo 1.5%/day cap 10% (config governs; pre-extraction 2.0 was the [ASK YASSER] placeholder — the config file is now the single source of truth, flagged sme_pending)
+final reconciliation:
+   dispatched 13100.0000 t = sold 13100.0000 t + unsold 0.0000 t -> OK
+   revenue 8337016.18 USD, penalties 142875.00 USD, utilities 58950.00 USD (USD streams only)
+   KPI dispatch: {'kwh_t': 5.0, 'nm3_ng_t': 0.0, 'throughput_t': 13100.0}; KPI drp (zero production): None
+wrote C:\AI_Lab\SteelX\fixtures\economics_domain2\d2_econ_30days_seed42.json
+Domain 4 sustainability mirror (by-products + carbon tax + green premium/RECs + energy recovery)
+config validation: PASS — live file validates (reject, never default)
+baseline (no green upgrade):
+  balance: inputs 18000.0000 = products 17619.0000 + byproducts 321.0000 + losses 60.0000 + dInv 0.0000 | exact error 0.0000000000 t
+  by-product tons: slag 240.0000, eaf_dust 36.0000, scale 45.0000, oxidation 60.0000
+  by-product net revenue: 6804.00 USD (gross 8115.00 - handling 1311.00)
+  emissions: 6030.0000 t CO2 | carbon tax: 180900.00 USD
+  green flag: True | bonus 2730945.00 | penalty 0.00 | premium 5461890.00 | REC 1365472.50
+  energy KPI: before 43800.0000 GJ -> after 37290.0000 GJ (recovered 6510.0000 GJ); phantom energy in material balance: 0.0000000000
+green-upgrade balance: inputs 18000.0000 = products 17619.0000 + byproducts 321.0000 + losses 60.0000 + dInv 0.0000 | exact error 0.0000000000 t
+  green upgrade: capex 2000000 USD; tax saved/tick 1380.00, bonus/tick 0.00, premium+REC/tick 227578.75 -> payback ~10.9 ticks (trade-off: capex now vs threshold bonus later)
+negative tests:
+   PASS  N1 double-count breaks balance — exact error -80.0000000000 t (expected -80.0000 from rule: 2 participating assets x 0.040 x 100 t x 10 ticks); healthy run error 0.0000000000
+   PASS  N2 out-of-range intensity rejected — validation errors: ['sustainability/sustainability_domain4.json: carbon.intensity_t_co2_per_t_steel.eaf out of industry-plausible range (0.6, 0.8)']
+   PASS  N3 negative yield fraction rejected — validation errors: ['sustainability/sustainability_domain4.json: byproduct_streams[0].yield_fraction_of_input_mass out of range (0.0, 0.1)']
+   PASS  N4 handling cost reduces net revenue — net 2268.00 < gross 2705.00; handling-ignored variant equals gross (divergence exists only when rule broken)
+   PASS  N5 energy never enters material balance — healthy error -0.0000000000; broken error -2170.0000000000
+   PASS  N6 premium threshold-gated — high-intensity scenario avg 0.7662 >= threshold 0.6 -> no flag/premium/REC, penalty 1365472.50; broken variant pays 352380.00 (divergence only when rule broken)
+   PASS  N7 missing field rejected — validation errors: ["sustainability/sustainability_domain4.json: green_premium missing required field 'rec_revenue_usd_per_t_steel'"]
+material-balance reconciliation:
+  exact error (unrounded): 0.0000000000 t — tolerance 1e-6 t per accumulator (foundations C); display-rounded 0.0000 is NOT the proof, the computed figure is.
+  green-upgrade run exact error: 0.0000000000 t
+  energy ledger kept separate: recovered 6510.0000 GJ never in material balance (phantom check 0.0000000000)
+tests:
+  N1 double-count breaks balance: PASS
+  N2 out-of-range intensity rejected: PASS
+  N3 negative yield fraction rejected: PASS
+  N4 handling cost reduces net revenue: PASS
+  N5 energy never enters material balance: PASS
+  N6 premium threshold-gated: PASS
+  N7 missing field rejected: PASS
+  baseline balance: PASS
+  config validation (live file): PASS
+wrote C:\AI_Lab\SteelX\fixtures\sustainability_domain4\d4_sustain_10ticks_seed101.json
+
+fixture expected values:
+D1: {
+ "tick": 40,
+ "generator_state": 2632950184,
+ "purchased_t": {
+  "bushing": 200.0,
+  "hms1_hms2": 1000.0,
+  "shredded": 400.0
+ },
+ "yard_stock_t": 0.0,
+ "handling_loss_t": 25.0,
+ "yield_loss_t": 88.00000000000001,
+ "melted_t": 1486.9999999999998,
+ "ttt_hours_accum": 37.83828124999998,
+ "ttt_runs": 40,
+ "spend_usd": 492000.0,
+ "condition": 95.0,
+ "crew_factor": 1.0,
+ "balance_error": 2.2737367544323206e-13
+}
+D2: {
+ "day": 30,
+ "sales_index": 1.0,
+ "generator_state": 730922798,
+ "revenue_usd": 16592271.755318869,
+ "late_penalty_usd": 285750.0,
+ "fulfilled_t": 26200.0,
+ "unsold_t": 0.0,
+ "dispatched_t": 26200.0,
+ "utilities_usd": 117900.0,
+ "downgrades": {
+  "prime": 60,
+  "secondary": 8,
+  "prompt": 4
+ },
+ "orders": [
+  {
+   "id": 0,
+   "mode": "forward",
+   "status": "fulfilled",
+   "grade": "B500B",
+   "tonnage": 0,
+   "due_day": 10,
+   "sign_index": 1.0
+  },
+  {
+   "id": 1,
+   "mode": "spot",
+   "status": "open",
+   "grade": "SG-2_special",
+   "tonnage": 1400,
+   "due_day": 15,
+   "sign_index": 1.0
+  },
+  {
+   "id": 2,
+   "mode": "spot",
+   "status": "open",
+   "grade": "CQ_high_strength",
+   "tonnage": 1400,
+   "due_day": 12,
+   "sign_index": 1.0
+  },
+  {
+   "id": 3,
+   "mode": "forward",
+   "status": "fulfilled",
+   "grade": "B500B",
+   "tonnage": 0,
+   "due_day": 10,
+   "sign_index": 1.0
+  },
+  {
+   "id": 4,
+   "mode": "spot",
+   "status": "open",
+   "grade": "SG-2_special",
+   "tonnage": 2000,
+   "due_day": 15,
+   "sign_index": 1.0
+  },
+  {
+   "id": 5,
+   "mode": "spot",
+   "status": "open",
+   "grade": "CQ_high_strength",
+   "tonnage": 3000,
+   "due_day": 12,
+   "sign_index": 1.0
+  }
+ ],
+ "balance_identity": true
+}
+D4: {
+ "tick": 10,
+ "generator_state": 2361109264,
+ "inputs_t": 6000.0,
+ "products_t": 5873.000000000001,
+ "byproducts_t": 107.00000000000001,
+ "losses_t": 20.0,
+ "inventory_delta_t": 0.0,
+ "byproduct_tons": {
+  "slag": 80.0,
+  "eaf_dust": 11.999999999999998,
+  "scale": 15.0,
+  "oxidation": 20.0
+ },
+ "byproduct_revenue_usd": 2705.0,
+ "byproduct_handling_cost_usd": 436.99999999999994,
+ "carbon_tax_usd": 60300.0,
+ "green_bonus_usd": 323015.0,
+ "green_penalty_usd": 0.0,
+ "green_premium_usd": 646030.0,
+ "rec_revenue_usd": 161507.5,
+ "emissions_t_co2": 2010.0,
+ "green_flag": true,
+ "energy_kpi_before_gj": 14600.0,
+ "energy_kpi_after_gj": 12430.0,
+ "recovered_energy_gj": 2170.0,
+ "phantom_energy_in_material_balance": 0.0,
+ "balance_error": -9.094947017729282e-13
+}

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SteelX — Full Plant Overview</title>
+    <style>
+      html, body { margin: 0; height: 100%; background: #10151c; overflow: hidden; font-family: system-ui, sans-serif; }
+      #root { height: 100%; }
+      #scene { position: absolute; inset: 0; }
+      .blabel { position: absolute; transform: translate(-50%, -100%); color: #cfd8e3; font-size: 12px; white-space: nowrap; pointer-events: none; text-shadow: 0 1px 3px #000; }
+      .zlabel { position: absolute; transform: translate(-50%, -100%); color: #8fa3b8; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; white-space: nowrap; pointer-events: none; text-shadow: 0 1px 3px #000; }
+      #hud { position: absolute; left: 12px; top: 10px; color: #cfd8e3; font-size: 13px; pointer-events: none; }
+      #hud small { color: #7d8ea0; }
+      /* Slice-style UI chrome (viewctl button + boxed labels) — same pattern as slice1/4 index.html */
+      #viewctl { position: absolute; right: 12px; bottom: 12px; display: flex; flex-direction: column; gap: 6px; align-items: flex-end; z-index: 5; }
+      #viewctl button { background: #2a3038; color: #e6e9ee; border: 1px solid #3a424d; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 13px; }
+      #viewctl .hint { color: #8b93a0; font-size: 11px; background: rgba(16,20,24,.7); border-radius: 6px; padding: 3px 8px; }
+      #viewnav { position: absolute; left: 12px; bottom: 12px; display: grid; grid-template-columns: repeat(3, 34px); grid-template-rows: repeat(2, 34px); gap: 4px; z-index: 5; }
+      #viewnav .vn { background: rgba(42,48,56,.85); color: #e6e9ee; border: 1px solid #3a424d; border-radius: 8px; font-size: 15px; cursor: pointer; touch-action: none; padding: 0; }
+      #viewnav .vn:active { background: #ff9d3f; color: #14181d; }
+      #viewnav .vn-up { grid-column: 2; grid-row: 1; }
+      #viewnav .vn-left { grid-column: 1; grid-row: 2; }
+      #viewnav .vn-down { grid-column: 2; grid-row: 2; }
+      #viewnav .vn-right { grid-column: 3; grid-row: 2; }
+      /* Left equipment pane (observation 3.0): collapsible list of all equipment; each row's
+         ▸ expands its info card(s) inline. Collapsed = one ☰ button above the nav pad. */
+      #eqpane-collapsed { position: absolute; left: 12px; bottom: 104px; z-index: 5; }
+      #eqpane-collapsed button { background: rgba(42,48,56,.9); color: #e6e9ee; border: 1px solid #3a424d; border-radius: 8px; padding: 7px 12px; font-size: 13px; cursor: pointer; }
+      #eqpane { position: absolute; left: 12px; top: 64px; bottom: 104px; width: 300px; max-width: 38vw; overflow-y: auto; background: rgba(16,21,28,.88); border: 1px solid #2a3038; border-radius: 10px; padding: 10px 12px; z-index: 5; color: #cfd8e3; font-size: 13px; }
+      #eqpane-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+      #eqpane-head b { font-size: 14px; letter-spacing: 0.08em; text-transform: uppercase; color: #ff9d3f; }
+      #eqpane-head button { background: none; border: 1px solid #3a424d; color: #cfd6e0; border-radius: 6px; width: 26px; height: 26px; cursor: pointer; }
+      #eqpane .eq-slice h4 { margin: 10px 0 4px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #8fa3b8; border-bottom: 1px solid #232830; padding-bottom: 3px; }
+      #eqpane .eq-item { margin: 2px 0; }
+      #eqpane .eq-head { display: flex; align-items: center; gap: 6px; width: 100%; text-align: left; background: none; border: none; color: #cfd6e0; font-size: 13px; padding: 5px 4px; cursor: pointer; border-radius: 6px; }
+      #eqpane .eq-head:hover { background: rgba(255,255,255,.05); }
+      #eqpane .eq-locked .eq-head { color: #6b7684; }
+      #eqpane .eq-caret { color: #ff9d3f; width: 12px; }
+      #eqpane .eq-lock { font-size: 11px; margin-left: auto; }
+      #eqpane .eq-draft { margin-left: auto; font-size: 9px; letter-spacing: 0.1em; color: #ffd23f; border: 1px solid #ffd23f66; border-radius: 4px; padding: 1px 5px; }
+      #eqpane .eq-card { margin: 2px 0 8px 18px; padding: 8px 10px; background: rgba(23,32,42,.7); border-left: 2px solid #ff9d3f; border-radius: 6px; line-height: 1.45; }
+      #eqpane .eq-card b { display: block; color: #e6e9ee; margin-bottom: 4px; }
+      #eqpane .eq-card p { margin: 4px 0; color: #9fb0c3; }
+      .blabel { position: absolute; transform: translate(-50%, -100%); background: rgba(16,20,24,.85); border: 1px solid #2a3038; border-radius: 6px; padding: 4px 10px; font-size: 14px; font-weight: 600; color: #cfd6e0; pointer-events: none; white-space: nowrap; }
+      .zlabel { background: rgba(16,20,24,.7); border: 1px solid #232830; border-radius: 6px; padding: 3px 8px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #8fa3b8; }
+      /* Right HUD (accordion: score strip, quests, per-slice live cards) */
+      #panel { position: absolute; right: 0; top: 0; bottom: 0; width: 340px; padding: 14px; border-left: 1px solid #2a3038; overflow-y: auto; font-size: 13px; color: #cfd8e3; background: rgba(16,21,28,.75); z-index: 4; }
+      #panel h1 { margin: 0 0 10px; font-size: 15px; }
+      #panel h2 { color: #8fb3d9; margin: 14px 0 6px; font-size: 13px; }
+      #panel .row { display: flex; gap: 8px; margin-bottom: 8px; }
+      #panel button { background: #2a3038; color: #e6e9ee; border: 1px solid #3a424d; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 13px; }
+      #panel .stat { display: flex; justify-content: space-between; border-bottom: 1px solid #232830; padding: 3px 0; }
+      #panel .stat b { font-weight: 600; }
+      #panel .learn { background: #17202a; border: 1px solid #2a3038; border-radius: 8px; padding: 10px; line-height: 1.45; }
+      /* Guided-build step card (§1.5, right panel) */
+      #onboard-card { background: #17202a; border: 1px solid #ff9d3f66; border-radius: 10px; padding: 12px; margin-bottom: 12px; line-height: 1.45; }
+      #onboard-card .ob-step { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #ff9d3f; margin-bottom: 4px; }
+      #onboard-card b { color: #e6e9ee; font-size: 14px; }
+      #onboard-card p { margin: 8px 0; color: #b8c2cf; }
+      #onboard-card table.ob-stats { width: 100%; border-collapse: collapse; margin: 6px 0; font-size: 12px; }
+      #onboard-card table.ob-stats td { border-bottom: 1px solid #232830; padding: 3px 4px; color: #9fb0c3; }
+      #onboard-card table.ob-stats td:last-child { text-align: right; color: #e6e9ee; }
+      #onboard-card .ob-trivia { font-size: 12px; color: #8fa3b8; font-style: italic; margin: 6px 0; }
+      #onboard-card button.ob-action { margin-top: 8px; width: 100%; background: #ff9d3f; color: #1a1206; border: none; border-radius: 8px; padding: 9px 12px; font-weight: 700; cursor: pointer; }
+      /* Accordion (PlantHud) */
+      #panel .fp-score { border: 1px solid #2a3038; border-radius: 8px; padding: 8px 10px; margin-bottom: 8px; background: rgba(23,32,42,.6); }
+      #panel .fp-speed { display: flex; gap: 6px; margin-top: 6px; }
+      #panel .fp-speed button.on { border-color: #ff9d45; color: #ffb066; }
+      #panel .fp-acc { border: 1px solid #2a3038; border-radius: 8px; margin-bottom: 8px; background: rgba(23,32,42,.6); }
+      #panel .fp-acc-head { display: block; width: 100%; text-align: left; background: none; border: none; padding: 8px 10px; font-weight: 600; color: #cfd6e0; cursor: pointer; font-size: 13px; }
+      #panel .fp-acc-body { padding: 0 10px 10px; }
+      #panel .kpi { display: flex; justify-content: space-between; padding: 2px 0; color: #9fb0c3; }
+      /* Live info card (two-tier tap result — never modal) */
+      .fp-card { background: #17202a; border: 1px solid #2a3038; border-left: 3px solid #ff9d45; border-radius: 8px; padding: 10px; margin: 6px 0; line-height: 1.45; }
+      .fp-card b { display: block; margin-bottom: 6px; color: #ffb066; }
+      .fp-card div { padding: 2px 0; color: #c3cfdd; }
+      /* Quest panel (shared) */
+      .steelx-quest-panel section { border: 1px solid #2a3038; border-radius: 8px; padding: 8px; margin-bottom: 6px; background: rgba(23,32,42,.5); }
+      .steelx-quest-panel h4 { margin: 0 0 4px; font-size: 13px; color: #cfd6e0; }
+      .steelx-quest-panel p { margin: 2px 0; color: #9fb0c3; }
+      /* Equipment popup (built-node tap — observation 3.3): compact card anchored over the play area */
+      #equip-card { position: absolute; left: 16px; bottom: 16px; width: 320px; max-height: 46vh; overflow-y: auto; background: rgba(23,32,42,.96); border: 1px solid #ff9d3f88; border-left: 3px solid #ff9d3f; border-radius: 10px; padding: 12px; z-index: 6; line-height: 1.45; color: #c3cfdd; font-size: 13px; }
+      #equip-card .ob-step { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #ff9d3f; margin-bottom: 4px; }
+      #equip-card b.ob-title { display: block; color: #e6e9ee; font-size: 14px; margin-bottom: 6px; }
+      #equip-card p { margin: 6px 0; color: #b8c2cf; }
+      #equip-card table.ob-stats { width: 100%; border-collapse: collapse; margin: 6px 0; font-size: 12px; }
+      #equip-card table.ob-stats td { border-bottom: 1px solid #232830; padding: 3px 4px; color: #9fb0c3; }
+      #equip-card table.ob-stats td:last-child { text-align: right; color: #e6e9ee; }
+      #equip-card .ob-trivia { font-size: 12px; color: #8fa3b8; font-style: italic; margin: 6px 0; }
+      #equip-card button.ob-close { position: absolute; top: 8px; right: 8px; background: none; border: none; color: #8fa3b8; cursor: pointer; font-size: 14px; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./main.tsx"></script>
+  </body>
+</html>

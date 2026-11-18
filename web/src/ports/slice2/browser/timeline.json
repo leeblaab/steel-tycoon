@@ -1,0 +1,407 @@
+{
+ "fixture_id": "s2_scrap_charge_scenario_seed11_120",
+ "ticks": 300,
+ "win": true,
+ "charges": [
+  {
+   "charge_id": "C1",
+   "recipe_id": "R1",
+   "deadline": 240,
+   "status": "ready",
+   "readiness_timestamp": 101
+  },
+  {
+   "charge_id": "C2",
+   "recipe_id": "R1",
+   "deadline": 270,
+   "status": "ready",
+   "readiness_timestamp": 201
+  },
+  {
+   "charge_id": "C3",
+   "recipe_id": "R1",
+   "deadline": 300,
+   "status": "ready",
+   "readiness_timestamp": 291
+  }
+ ],
+ "truck_loads": [
+  {
+   "tick": 12,
+   "grade": "hms1_hms2",
+   "tonnes": 30.0
+  },
+  {
+   "tick": 24,
+   "grade": "bushing",
+   "tonnes": 15.0
+  },
+  {
+   "tick": 48,
+   "grade": "hms1_hms2",
+   "tonnes": 30.0
+  },
+  {
+   "tick": 60,
+   "grade": "bushing",
+   "tonnes": 15.0
+  },
+  {
+   "tick": 84,
+   "grade": "hms1_hms2",
+   "tonnes": 30.0
+  },
+  {
+   "tick": 96,
+   "grade": "bushing",
+   "tonnes": 15.0
+  }
+ ],
+ "recipes": [
+  {
+   "recipe_id": "R1",
+   "name": "Clean charge (learning recipe)",
+   "composition": [
+    {
+     "grade": "hms1_hms2",
+     "required_usable_t": 30.0
+    },
+    {
+     "grade": "bushing",
+     "required_usable_t": 15.0
+    }
+   ],
+   "provenance": "game-balance"
+  }
+ ],
+ "tasks": [
+  {
+   "task_id": "T12-hms1_hms2",
+   "task_type": "receiving",
+   "material_grade": "hms1_hms2",
+   "source_location": "RECEIVING_AREA",
+   "destination_location": "HMS1_HMS2_STACK",
+   "grab_volume_m3": 2.0,
+   "estimated_duration": 28,
+   "priority": 2,
+   "tonnes": 30.0,
+   "start_tick": null,
+   "start": 12,
+   "end": 40
+  },
+  {
+   "task_id": "T24-bushing",
+   "task_type": "receiving",
+   "material_grade": "bushing",
+   "source_location": "RECEIVING_AREA",
+   "destination_location": "BUSHING_STACK",
+   "grab_volume_m3": 2.0,
+   "estimated_duration": 15,
+   "priority": 2,
+   "tonnes": 15.0,
+   "start_tick": null,
+   "start": 70,
+   "end": 85
+  },
+  {
+   "task_id": "T40-reclaim",
+   "task_type": "reclaiming",
+   "material_grade": null,
+   "source_location": "HMS1_HMS2_STACK",
+   "destination_location": "HMS1_HMS2_STACK",
+   "grab_volume_m3": 2.0,
+   "estimated_duration": 9,
+   "priority": 2,
+   "tonnes": 0.0,
+   "start_tick": null,
+   "start": 102,
+   "end": 111
+  },
+  {
+   "task_id": "P1-hms",
+   "task_type": "charging",
+   "material_grade": "hms1_hms2",
+   "source_location": "HMS1_HMS2_STACK",
+   "destination_location": "CHARGING_BUCKET_C1",
+   "grab_volume_m3": 2.0,
+   "estimated_duration": 28,
+   "priority": 0,
+   "tonnes": 30.0,
+   "start_tick": null,
+   "start": 41,
+   "end": 69
+  },
+  {
+   "task_id": "T48-hms1_hms2",
+   "task_type": "receiving",
+   "material_grade": "hms1_hms2",
+   "source_location": "RECEIVING_AREA",
+   "destination_location": "HMS1_HMS2_STACK",
+   "grab_volume_m3": 2.0,
+   "estimated_duration": 28,
+   "priority": 2,
+   "tonnes": 30.0,
+   "start_tick": null,
+   "start": 112,
+   "end": 140
+  },
+  {
+   "task_id": "T60-bushing",
+   "task_type": "receiving",
+   "material_grade": "bushing",
+   "source_location": "RECEIVING_AREA",
+   "destination_location": "BUSHING_STACK",
+   "grab_volume_m3": 2.0,
+   "estimated_duration": 15,
+   "priority": 2,
+   "tonnes": 15.0,
+   "start_tick": null,
+   "start": 170,
+   "end": 185
+  },
+  {
+   "task_id": "T84-hms1_hms2",
+   "task_type": "receiving",
+   "material_grade": "hms1_hms2",
+   "source_location": "RECEIVING_AREA",
+   "destination_location": "HMS1_HMS2_STACK",
+   "grab_volume_m3": 2.0,
+   "estimated_duration": 28,
+   "priority": 2,
+   "tonnes": 30.0,
+   "start_tick": null,
+   "start": 202,
+   "end": 230
+  },
+  {
+   "task_id": "P1-bush",
+   "task_type": "charging",
+   "material_grade": "bushing",
+   "source_location": "BUSHING_STACK",
+   "destination_location": "CHARGING_BUCKET_C1",
+   "grab_volume_m3": 2.0,
+   "estimated_duration": 15,
+   "priority": 0,
+   "tonnes": 15.0,
+   "start_tick": null,
+   "start": 86,
+   "end": 101
+  },
+  {
+   "task_id": "T96-bushing",
+   "task_type": "receiving",
+   "material_grade": "bushing",
+   "source_location": "RECEIVING_AREA",
+   "destination_location": "BUSHING_STACK",
+   "grab_volume_m3": 2.0,
+   "estimated_duration": 15,
+   "priority": 2,
+   "tonnes": 15.0,
+   "start_tick": null,
+   "start": 260,
+   "end": 275
+  },
+  {
+   "task_id": "P2-hms",
+   "task_type": "charging",
+   "material_grade": "hms1_hms2",
+   "source_location": "HMS1_HMS2_STACK",
+   "destination_location": "CHARGING_BUCKET_C2",
+   "grab_volume_m3": 2.0,
+   "estimated_duration": 28,
+   "priority": 0,
+   "tonnes": 30.0,
+   "start_tick": null,
+   "start": 141,
+   "end": 169
+  },
+  {
+   "task_id": "P2-bush",
+   "task_type": "charging",
+   "material_grade": "bushing",
+   "source_location": "BUSHING_STACK",
+   "destination_location": "CHARGING_BUCKET_C2",
+   "grab_volume_m3": 2.0,
+   "estimated_duration": 15,
+   "priority": 0,
+   "tonnes": 15.0,
+   "start_tick": null,
+   "start": 186,
+   "end": 201
+  },
+  {
+   "task_id": "P3-hms",
+   "task_type": "charging",
+   "material_grade": "hms1_hms2",
+   "source_location": "HMS1_HMS2_STACK",
+   "destination_location": "CHARGING_BUCKET_C3",
+   "grab_volume_m3": 2.0,
+   "estimated_duration": 28,
+   "priority": 0,
+   "tonnes": 30.0,
+   "start_tick": null,
+   "start": 231,
+   "end": 259
+  },
+  {
+   "task_id": "P3-bush",
+   "task_type": "charging",
+   "material_grade": "bushing",
+   "source_location": "BUSHING_STACK",
+   "destination_location": "CHARGING_BUCKET_C3",
+   "grab_volume_m3": 2.0,
+   "estimated_duration": 15,
+   "priority": 0,
+   "tonnes": 15.0,
+   "start_tick": null,
+   "start": 276,
+   "end": 291
+  }
+ ],
+ "events": [
+  {
+   "tick": 12,
+   "event": "truck arrives hms1_hms2 30.0t -> RECEIVING_AREA"
+  },
+  {
+   "tick": 12,
+   "event": "crane starts receiving T12-hms1_hms2 (28 ticks)"
+  },
+  {
+   "tick": 24,
+   "event": "truck arrives bushing 15.0t -> RECEIVING_AREA"
+  },
+  {
+   "tick": 40,
+   "event": "competing reclaim task enters crane queue"
+  },
+  {
+   "tick": 40,
+   "event": "crane completes receiving T12-hms1_hms2"
+  },
+  {
+   "tick": 41,
+   "event": "crane starts charging P1-hms (28 ticks)"
+  },
+  {
+   "tick": 48,
+   "event": "truck arrives hms1_hms2 30.0t -> RECEIVING_AREA"
+  },
+  {
+   "tick": 60,
+   "event": "truck arrives bushing 15.0t -> RECEIVING_AREA"
+  },
+  {
+   "tick": 69,
+   "event": "crane completes charging P1-hms"
+  },
+  {
+   "tick": 70,
+   "event": "crane starts receiving T24-bushing (15 ticks)"
+  },
+  {
+   "tick": 84,
+   "event": "truck arrives hms1_hms2 30.0t -> RECEIVING_AREA"
+  },
+  {
+   "tick": 85,
+   "event": "crane completes receiving T24-bushing"
+  },
+  {
+   "tick": 86,
+   "event": "crane starts charging P1-bush (15 ticks)"
+  },
+  {
+   "tick": 96,
+   "event": "truck arrives bushing 15.0t -> RECEIVING_AREA"
+  },
+  {
+   "tick": 101,
+   "event": "crane completes charging P1-bush"
+  },
+  {
+   "tick": 101,
+   "event": "charge C1 READY at tick 101"
+  },
+  {
+   "tick": 102,
+   "event": "crane starts reclaiming T40-reclaim (9 ticks)"
+  },
+  {
+   "tick": 111,
+   "event": "crane completes reclaiming T40-reclaim"
+  },
+  {
+   "tick": 112,
+   "event": "crane starts receiving T48-hms1_hms2 (28 ticks)"
+  },
+  {
+   "tick": 140,
+   "event": "crane completes receiving T48-hms1_hms2"
+  },
+  {
+   "tick": 141,
+   "event": "crane starts charging P2-hms (28 ticks)"
+  },
+  {
+   "tick": 169,
+   "event": "crane completes charging P2-hms"
+  },
+  {
+   "tick": 170,
+   "event": "crane starts receiving T60-bushing (15 ticks)"
+  },
+  {
+   "tick": 185,
+   "event": "crane completes receiving T60-bushing"
+  },
+  {
+   "tick": 186,
+   "event": "crane starts charging P2-bush (15 ticks)"
+  },
+  {
+   "tick": 201,
+   "event": "crane completes charging P2-bush"
+  },
+  {
+   "tick": 201,
+   "event": "charge C2 READY at tick 201"
+  },
+  {
+   "tick": 202,
+   "event": "crane starts receiving T84-hms1_hms2 (28 ticks)"
+  },
+  {
+   "tick": 230,
+   "event": "crane completes receiving T84-hms1_hms2"
+  },
+  {
+   "tick": 231,
+   "event": "crane starts charging P3-hms (28 ticks)"
+  },
+  {
+   "tick": 259,
+   "event": "crane completes charging P3-hms"
+  },
+  {
+   "tick": 260,
+   "event": "crane starts receiving T96-bushing (15 ticks)"
+  },
+  {
+   "tick": 275,
+   "event": "crane completes receiving T96-bushing"
+  },
+  {
+   "tick": 276,
+   "event": "crane starts charging P3-bush (15 ticks)"
+  },
+  {
+   "tick": 291,
+   "event": "crane completes charging P3-bush"
+  },
+  {
+   "tick": 291,
+   "event": "charge C3 READY at tick 291"
+  }
+ ]
+}

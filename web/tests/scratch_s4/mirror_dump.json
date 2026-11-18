@@ -1,0 +1,3170 @@
+{
+ "win": true,
+ "counters": {
+  "heats_tapped": 5,
+  "heats_starved": 65,
+  "charge_wait_ticks": 0,
+  "ladle_wait_ticks": 0,
+  "caster_wait_ticks": 0,
+  "refines_completed": 5,
+  "casts_completed": 5,
+  "energy_kwh_total": 120000.0,
+  "billet_t_total": 186.935,
+  "yield_loss_t": 9.249999999999998,
+  "ccm_loss_t": 3.8149999999999906,
+  "maintenance_events": 2,
+  "shift_changeovers": 3
+ },
+ "billet_yard_t": 186.935,
+ "balance_error_raw": 0.0,
+ "max_abs_balance_error_raw_all_ticks": 2.842170943040401e-14,
+ "charge_statuses": {
+  "C1": {
+   "status": "tapped",
+   "failure_cause": null
+  },
+  "C2": {
+   "status": "tapped",
+   "failure_cause": null
+  },
+  "C3": {
+   "status": "tapped",
+   "failure_cause": null
+  },
+  "C4": {
+   "status": "tapped",
+   "failure_cause": null
+  },
+  "C5": {
+   "status": "tapped",
+   "failure_cause": null
+  }
+ },
+ "dri_consumed_final": {
+  "D1": 10.0,
+  "D2": 10.0,
+  "D3": 10.0,
+  "D4": 10.0,
+  "D5": 10.0
+ },
+ "ladles_final": [
+  {
+   "ladle_id": "L1",
+   "status": "free",
+   "busy_charge_id": null,
+   "busy_since": 48,
+   "metal_t": 0.0,
+   "refined": false
+  },
+  {
+   "ladle_id": "L2",
+   "status": "free",
+   "busy_charge_id": null,
+   "busy_since": 36,
+   "metal_t": 0.0,
+   "refined": false
+  }
+ ],
+ "records": [
+  {
+   "tick": 1,
+   "eaf_busy": "C1",
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 0.0,
+   "balance_error": 0.0,
+   "events": [
+    "charge C1 delivered to EAF feed interface",
+    "DRI material D1 (10.0t) ready at EAF feed interface",
+    "EAF heat starts for C1 (10 ticks, ladle L1 reserved)"
+   ]
+  },
+  {
+   "tick": 2,
+   "eaf_busy": "C1",
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 0.0,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 3,
+   "eaf_busy": "C1",
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 0.0,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 4,
+   "eaf_busy": "C1",
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 0.0,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 5,
+   "eaf_busy": "C1",
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 0.0,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 6,
+   "eaf_busy": "C1",
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 0.0,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 7,
+   "eaf_busy": "C1",
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 0.0,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 8,
+   "eaf_busy": "C1",
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 0.0,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 9,
+   "eaf_busy": "C1",
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 0.0,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 10,
+   "eaf_busy": "C1",
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 0.0,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 11,
+   "eaf_busy": null,
+   "lrf_busy": "L1",
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 0.0,
+   "balance_error": 0.0,
+   "events": [
+    "EAF taps C1: 38.15t metal -> ladle L1",
+    "LRF refine starts for ladle L1"
+   ]
+  },
+  {
+   "tick": 12,
+   "eaf_busy": "C2",
+   "lrf_busy": "L1",
+   "ccm_busy": null,
+   "ladles_free": 0,
+   "billet_yard_t": 0.0,
+   "balance_error": 0.0,
+   "events": [
+    "charge C2 delivered to EAF feed interface",
+    "EAF heat starts for C2 (10 ticks, ladle L2 reserved)"
+   ]
+  },
+  {
+   "tick": 13,
+   "eaf_busy": "C2",
+   "lrf_busy": "L1",
+   "ccm_busy": null,
+   "ladles_free": 0,
+   "billet_yard_t": 0.0,
+   "balance_error": 0.0,
+   "events": [
+    "DRI material D2 (10.0t) ready at EAF feed interface"
+   ]
+  },
+  {
+   "tick": 14,
+   "eaf_busy": "C2",
+   "lrf_busy": null,
+   "ccm_busy": "L1",
+   "ladles_free": 0,
+   "billet_yard_t": 0.0,
+   "balance_error": 0.0,
+   "events": [
+    "LRF refine completes for ladle L1",
+    "CCM cast starts for ladle L1"
+   ]
+  },
+  {
+   "tick": 15,
+   "eaf_busy": "C2",
+   "lrf_busy": null,
+   "ccm_busy": "L1",
+   "ladles_free": 0,
+   "billet_yard_t": 0.0,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 16,
+   "eaf_busy": "C2",
+   "lrf_busy": null,
+   "ccm_busy": "L1",
+   "ladles_free": 0,
+   "billet_yard_t": 0.0,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 17,
+   "eaf_busy": "C2",
+   "lrf_busy": null,
+   "ccm_busy": "L1",
+   "ladles_free": 0,
+   "billet_yard_t": 0.0,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 18,
+   "eaf_busy": "C2",
+   "lrf_busy": null,
+   "ccm_busy": "L1",
+   "ladles_free": 0,
+   "billet_yard_t": 0.0,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 19,
+   "eaf_busy": "C2",
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 37.387,
+   "balance_error": 0.0,
+   "events": [
+    "CCM casts ladle L1: 37.387t billet -> billet yard"
+   ]
+  },
+  {
+   "tick": 20,
+   "eaf_busy": "C2",
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 37.387,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 21,
+   "eaf_busy": "C2",
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 37.387,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 22,
+   "eaf_busy": null,
+   "lrf_busy": "L2",
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 37.387,
+   "balance_error": 0.0,
+   "events": [
+    "EAF taps C2: 38.15t metal -> ladle L2",
+    "LRF refine starts for ladle L2"
+   ]
+  },
+  {
+   "tick": 23,
+   "eaf_busy": null,
+   "lrf_busy": "L2",
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 37.387,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 24,
+   "eaf_busy": "C3",
+   "lrf_busy": "L2",
+   "ccm_busy": null,
+   "ladles_free": 0,
+   "billet_yard_t": 37.387,
+   "balance_error": 0.0,
+   "events": [
+    "charge C3 delivered to EAF feed interface",
+    "EAF heat starts for C3 (10 ticks, ladle L1 reserved)"
+   ]
+  },
+  {
+   "tick": 25,
+   "eaf_busy": "C3",
+   "lrf_busy": null,
+   "ccm_busy": "L2",
+   "ladles_free": 0,
+   "billet_yard_t": 37.387,
+   "balance_error": 0.0,
+   "events": [
+    "DRI material D3 (10.0t) ready at EAF feed interface",
+    "LRF refine completes for ladle L2",
+    "CCM cast starts for ladle L2"
+   ]
+  },
+  {
+   "tick": 26,
+   "eaf_busy": "C3",
+   "lrf_busy": null,
+   "ccm_busy": "L2",
+   "ladles_free": 0,
+   "billet_yard_t": 37.387,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 27,
+   "eaf_busy": "C3",
+   "lrf_busy": null,
+   "ccm_busy": "L2",
+   "ladles_free": 0,
+   "billet_yard_t": 37.387,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 28,
+   "eaf_busy": "C3",
+   "lrf_busy": null,
+   "ccm_busy": "L2",
+   "ladles_free": 0,
+   "billet_yard_t": 37.387,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 29,
+   "eaf_busy": "C3",
+   "lrf_busy": null,
+   "ccm_busy": "L2",
+   "ladles_free": 0,
+   "billet_yard_t": 37.387,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 30,
+   "eaf_busy": "C3",
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 74.774,
+   "balance_error": 0.0,
+   "events": [
+    "workforce indicator: shift changeover (A -> B)",
+    "CCM casts ladle L2: 37.387t billet -> billet yard"
+   ]
+  },
+  {
+   "tick": 31,
+   "eaf_busy": "C3",
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 74.774,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 32,
+   "eaf_busy": "C3",
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 74.774,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 33,
+   "eaf_busy": "C3",
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 74.774,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 34,
+   "eaf_busy": null,
+   "lrf_busy": "L1",
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 74.774,
+   "balance_error": 0.0,
+   "events": [
+    "EAF taps C3: 38.15t metal -> ladle L1",
+    "LRF refine starts for ladle L1"
+   ]
+  },
+  {
+   "tick": 35,
+   "eaf_busy": null,
+   "lrf_busy": "L1",
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 74.774,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 36,
+   "eaf_busy": "C4",
+   "lrf_busy": "L1",
+   "ccm_busy": null,
+   "ladles_free": 0,
+   "billet_yard_t": 74.774,
+   "balance_error": -0.0,
+   "events": [
+    "charge C4 delivered to EAF feed interface",
+    "EAF heat starts for C4 (10 ticks, ladle L2 reserved)"
+   ]
+  },
+  {
+   "tick": 37,
+   "eaf_busy": "C4",
+   "lrf_busy": null,
+   "ccm_busy": "L1",
+   "ladles_free": 0,
+   "billet_yard_t": 74.774,
+   "balance_error": -0.0,
+   "events": [
+    "DRI material D4 (10.0t) ready at EAF feed interface",
+    "LRF refine completes for ladle L1",
+    "CCM cast starts for ladle L1"
+   ]
+  },
+  {
+   "tick": 38,
+   "eaf_busy": "C4",
+   "lrf_busy": null,
+   "ccm_busy": "L1",
+   "ladles_free": 0,
+   "billet_yard_t": 74.774,
+   "balance_error": -0.0,
+   "events": []
+  },
+  {
+   "tick": 39,
+   "eaf_busy": "C4",
+   "lrf_busy": null,
+   "ccm_busy": "L1",
+   "ladles_free": 0,
+   "billet_yard_t": 74.774,
+   "balance_error": -0.0,
+   "events": []
+  },
+  {
+   "tick": 40,
+   "eaf_busy": "C4",
+   "lrf_busy": null,
+   "ccm_busy": "L1",
+   "ladles_free": 0,
+   "billet_yard_t": 74.774,
+   "balance_error": -0.0,
+   "events": []
+  },
+  {
+   "tick": 41,
+   "eaf_busy": "C4",
+   "lrf_busy": null,
+   "ccm_busy": "L1",
+   "ladles_free": 0,
+   "billet_yard_t": 74.774,
+   "balance_error": -0.0,
+   "events": []
+  },
+  {
+   "tick": 42,
+   "eaf_busy": "C4",
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 112.161,
+   "balance_error": 0.0,
+   "events": [
+    "CCM casts ladle L1: 37.387t billet -> billet yard"
+   ]
+  },
+  {
+   "tick": 43,
+   "eaf_busy": "C4",
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 112.161,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 44,
+   "eaf_busy": "C4",
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 112.161,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 45,
+   "eaf_busy": "C4",
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 112.161,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 46,
+   "eaf_busy": null,
+   "lrf_busy": "L2",
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 112.161,
+   "balance_error": 0.0,
+   "events": [
+    "EAF taps C4: 38.15t metal -> ladle L2",
+    "LRF refine starts for ladle L2"
+   ]
+  },
+  {
+   "tick": 47,
+   "eaf_busy": null,
+   "lrf_busy": "L2",
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 112.161,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 48,
+   "eaf_busy": "C5",
+   "lrf_busy": "L2",
+   "ccm_busy": null,
+   "ladles_free": 0,
+   "billet_yard_t": 112.161,
+   "balance_error": 0.0,
+   "events": [
+    "charge C5 delivered to EAF feed interface",
+    "EAF heat starts for C5 (10 ticks, ladle L1 reserved)"
+   ]
+  },
+  {
+   "tick": 49,
+   "eaf_busy": "C5",
+   "lrf_busy": null,
+   "ccm_busy": "L2",
+   "ladles_free": 0,
+   "billet_yard_t": 112.161,
+   "balance_error": 0.0,
+   "events": [
+    "DRI material D5 (10.0t) ready at EAF feed interface",
+    "LRF refine completes for ladle L2",
+    "CCM cast starts for ladle L2"
+   ]
+  },
+  {
+   "tick": 50,
+   "eaf_busy": "C5",
+   "lrf_busy": null,
+   "ccm_busy": "L2",
+   "ladles_free": 0,
+   "billet_yard_t": 112.161,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 51,
+   "eaf_busy": "C5",
+   "lrf_busy": null,
+   "ccm_busy": "L2",
+   "ladles_free": 0,
+   "billet_yard_t": 112.161,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 52,
+   "eaf_busy": "C5",
+   "lrf_busy": null,
+   "ccm_busy": "L2",
+   "ladles_free": 0,
+   "billet_yard_t": 112.161,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 53,
+   "eaf_busy": "C5",
+   "lrf_busy": null,
+   "ccm_busy": "L2",
+   "ladles_free": 0,
+   "billet_yard_t": 112.161,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 54,
+   "eaf_busy": "C5",
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 149.548,
+   "balance_error": 0.0,
+   "events": [
+    "CCM casts ladle L2: 37.387t billet -> billet yard"
+   ]
+  },
+  {
+   "tick": 55,
+   "eaf_busy": "C5",
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 149.548,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 56,
+   "eaf_busy": "C5",
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 149.548,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 57,
+   "eaf_busy": "C5",
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 149.548,
+   "balance_error": 0.0,
+   "events": []
+  },
+  {
+   "tick": 58,
+   "eaf_busy": null,
+   "lrf_busy": "L1",
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 149.548,
+   "balance_error": 0.0,
+   "events": [
+    "EAF taps C5: 38.15t metal -> ladle L1",
+    "LRF refine starts for ladle L1"
+   ]
+  },
+  {
+   "tick": 59,
+   "eaf_busy": null,
+   "lrf_busy": "L1",
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 149.548,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 60,
+   "eaf_busy": null,
+   "lrf_busy": "L1",
+   "ccm_busy": null,
+   "ladles_free": 1,
+   "billet_yard_t": 149.548,
+   "balance_error": 0.0,
+   "events": [
+    "maintenance indicator: EAF planned outage window opens (8 ticks)",
+    "workforce indicator: shift changeover (B -> C)",
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 61,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": "L1",
+   "ladles_free": 1,
+   "billet_yard_t": 149.548,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)",
+    "LRF refine completes for ladle L1",
+    "CCM cast starts for ladle L1"
+   ]
+  },
+  {
+   "tick": 62,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": "L1",
+   "ladles_free": 1,
+   "billet_yard_t": 149.548,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 63,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": "L1",
+   "ladles_free": 1,
+   "billet_yard_t": 149.548,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 64,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": "L1",
+   "ladles_free": 1,
+   "billet_yard_t": 149.548,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 65,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": "L1",
+   "ladles_free": 1,
+   "billet_yard_t": 149.548,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 66,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)",
+    "CCM casts ladle L1: 37.387t billet -> billet yard"
+   ]
+  },
+  {
+   "tick": 67,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 68,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 69,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 70,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 71,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 72,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 73,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 74,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 75,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 76,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 77,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 78,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 79,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 80,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 81,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 82,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 83,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 84,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 85,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 86,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 87,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 88,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 89,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 90,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "maintenance indicator: CCM planned outage window opens (6 ticks)",
+    "workforce indicator: shift changeover (C -> A)",
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 91,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 92,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 93,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 94,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 95,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 96,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 97,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 98,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 99,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 100,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 101,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 102,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 103,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 104,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 105,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 106,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 107,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 108,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 109,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 110,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 111,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 112,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 113,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 114,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 115,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 116,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 117,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 118,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 119,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  },
+  {
+   "tick": 120,
+   "eaf_busy": null,
+   "lrf_busy": null,
+   "ccm_busy": null,
+   "ladles_free": 2,
+   "billet_yard_t": 186.935,
+   "balance_error": 0.0,
+   "events": [
+    "EAF idle \u2014 no delivered charge at feed interface (starvation)"
+   ]
+  }
+ ],
+ "bath_series": [
+  {
+   "tick": 1,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 2,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 3,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 4,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 5,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 6,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 7,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 8,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 9,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 10,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 11,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 12,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 13,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 14,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 15,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 16,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 17,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 18,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 19,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 20,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 21,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 22,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 23,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 24,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 25,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 26,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 27,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 28,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 29,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 30,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 31,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 32,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 33,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 34,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 35,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 36,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 37,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 38,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 39,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 40,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 41,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 42,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 43,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 44,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 45,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 46,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 47,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 48,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 49,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 50,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 51,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 52,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 53,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 54,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 55,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 56,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 57,
+   "bath_t": 40.0
+  },
+  {
+   "tick": 58,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 59,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 60,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 61,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 62,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 63,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 64,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 65,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 66,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 67,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 68,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 69,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 70,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 71,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 72,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 73,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 74,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 75,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 76,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 77,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 78,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 79,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 80,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 81,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 82,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 83,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 84,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 85,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 86,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 87,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 88,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 89,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 90,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 91,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 92,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 93,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 94,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 95,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 96,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 97,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 98,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 99,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 100,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 101,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 102,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 103,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 104,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 105,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 106,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 107,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 108,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 109,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 110,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 111,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 112,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 113,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 114,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 115,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 116,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 117,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 118,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 119,
+   "bath_t": 0.0
+  },
+  {
+   "tick": 120,
+   "bath_t": 0.0
+  }
+ ],
+ "consumed_series": [
+  {
+   "tick": 1,
+   "consumed_t": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 2,
+   "consumed_t": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 3,
+   "consumed_t": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 4,
+   "consumed_t": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 5,
+   "consumed_t": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 6,
+   "consumed_t": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 7,
+   "consumed_t": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 8,
+   "consumed_t": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 9,
+   "consumed_t": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 10,
+   "consumed_t": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 11,
+   "consumed_t": [
+    10.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 12,
+   "consumed_t": [
+    10.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 13,
+   "consumed_t": [
+    10.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 14,
+   "consumed_t": [
+    10.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 15,
+   "consumed_t": [
+    10.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 16,
+   "consumed_t": [
+    10.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 17,
+   "consumed_t": [
+    10.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 18,
+   "consumed_t": [
+    10.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 19,
+   "consumed_t": [
+    10.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 20,
+   "consumed_t": [
+    10.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 21,
+   "consumed_t": [
+    10.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 22,
+   "consumed_t": [
+    10.0,
+    10.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 23,
+   "consumed_t": [
+    10.0,
+    10.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 24,
+   "consumed_t": [
+    10.0,
+    10.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 25,
+   "consumed_t": [
+    10.0,
+    10.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 26,
+   "consumed_t": [
+    10.0,
+    10.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 27,
+   "consumed_t": [
+    10.0,
+    10.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 28,
+   "consumed_t": [
+    10.0,
+    10.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 29,
+   "consumed_t": [
+    10.0,
+    10.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 30,
+   "consumed_t": [
+    10.0,
+    10.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 31,
+   "consumed_t": [
+    10.0,
+    10.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 32,
+   "consumed_t": [
+    10.0,
+    10.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 33,
+   "consumed_t": [
+    10.0,
+    10.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 34,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 35,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 36,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 37,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 38,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 39,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 40,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 41,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 42,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 43,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 44,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 45,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 46,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 47,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 48,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 49,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 50,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 51,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 52,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 53,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 54,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 55,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 56,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 57,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    0.0
+   ]
+  },
+  {
+   "tick": 58,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 59,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 60,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 61,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 62,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 63,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 64,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 65,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 66,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 67,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 68,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 69,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 70,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 71,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 72,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 73,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 74,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 75,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 76,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 77,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 78,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 79,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 80,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 81,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 82,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 83,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 84,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 85,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 86,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 87,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 88,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 89,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 90,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 91,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 92,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 93,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 94,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 95,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 96,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 97,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 98,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 99,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 100,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 101,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 102,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 103,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 104,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 105,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 106,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 107,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 108,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 109,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 110,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 111,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 112,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 113,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 114,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 115,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 116,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 117,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 118,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 119,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  {
+   "tick": 120,
+   "consumed_t": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  }
+ ],
+ "negative_tests": [
+  {
+   "name": "N1 no-charge starvation (no fabricated heat, balance closed)",
+   "ok": true,
+   "detail": "tapped=0 starved=120 balance=0.0"
+  },
+  {
+   "name": "N2 ladle-cycle non-release diverges from healthy",
+   "ok": true,
+   "detail": "broken casts=0 healthy casts=5 broken ladle_wait=56"
+  },
+  {
+   "name": "N3 caster wait fires iff physically reachable (fixture cadence: asserts 0)",
+   "ok": true,
+   "detail": "reachable=False caster_wait=0"
+  },
+  {
+   "name": "N4 double-count control detects via balance",
+   "ok": true,
+   "detail": "healthy residual=0.0 double-count residual=-186.935"
+  }
+ ]
+}

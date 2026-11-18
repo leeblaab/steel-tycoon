@@ -1,0 +1,90 @@
+Domain 2 economics mirror (sales index + order book + forward/spot + QC)
+sales index at day 30: 1.000
+revenue: 8337016 USD | late penalties: 142875 USD
+fulfilled: 13100 t | unsold inventory: 0 t
+QC tiers: {'prime': 30, 'secondary': 4, 'prompt': 2}
+orders: [(0, 'forward', 'fulfilled'), (1, 'spot', 'open'), (2, 'spot', 'open')]
+balance check: dispatched 13100 t vs fulfilled+unsold 13100 t
+low-index day: unsold inventory now 100 t (100 t held, not sold)
+utilities opex: 59400.00 USD (config-driven, USD stream only)
+specific energy KPI (dispatch asset, live throughput): {'kwh_t': 5.0, 'nm3_ng_t': 0.0, 'throughput_t': 13200.0}
+specific energy KPI (zero-production asset drp): None -> None/NA, not 0
+negative tests:
+   PASS  low index -> tonnes stay as inventory (not sold)
+   PASS  late order -> penalty accrued
+   PASS  fails-all chemistry -> prompt (fallback price)
+   PASS  index stays inside band over 200 steps
+   PASS  forward prices at sign-time index (1.00), not dispatch-time (0.85)
+negative controls (rule deliberately broken -> assertion must FAIL):
+   PASS  late-penalty control: healthy 9525.00 USD vs broken 0.00 USD (rate neutralized -> divergence; rule assertion FAILS as intended)
+   PASS  penalty-cap control: healthy 12700.00 USD (capped at 10%) vs broken 38100.00 USD (uncapped 30%) -> divergence; cap assertion FAILS as intended
+   PASS  QC-haircut control: healthy 60720.00 USD vs broken 66000.00 USD (haircut neutralized -> divergence; assertion FAILS as intended)
+   PASS  demand-gate control: healthy unsold 100 t vs broken 0 t -> divergence; inventory assertion FAILS as intended
+   PASS  forward-pricing control: healthy 57150.00 USD (sign_index 0.90) vs broken 63500.00 USD (dispatch-time 1.00) -> divergence; assertion FAILS as intended
+   PASS  zero-production KPI control: healthy None/NA vs broken 0 -> divergence; NA assertion FAILS as intended
+   PASS  material-balance control: identity holds healthy, FAILS under double-count -> divergence; assertion FAILS as intended
+config validation negative tests (must fail as intended):
+   PASS  rejected (schema_version bump): economy/economics_domain2.json: schema_version missing or != 1
+   PASS  rejected (missing field (order_book.late_penalty_cap_pct)): economy/economics_domain2.json: order_book missing required field 'late_penalty_cap_pct'
+   PASS  rejected (negative value (negative utility cost)): economy/economics_domain2.json: utilities.assets[0].water_usd_t negative: -2.5
+   PASS  rejected (out-of-range (penalty cap 150%)): economy/economics_domain2.json: order_book.late_penalty_cap_pct out of range [0.0, 100.0]: 150.0
+   PASS  rejected (malformed (band inverted lo>hi)): economy/economics_domain2.json: sales_index.band inverted (lo>hi)
+   PASS  rejected (malformed (non-numeric step)): economy/economics_domain2.json: sales_index.step must be numeric, got '0.02'
+   PASS  rejected (duplicate stable ID (utilities assets)): economy/economics_domain2.json: utilities.assets duplicate stable IDs
+   PASS  healthy baseline doc validates clean (control for negative set)
+   end-to-end (corrupted real file, schema bump): economy/economics_domain2.json: schema_version missing or != 1
+   real file on disk validates clean: yes
+parity checks (loaded config vs pre-extraction constants):
+   PASS  sales-index band/step match pre-extraction Yasser-approved values
+   NOTE  late penalty loaded value is the recommended demo 1.5%/day cap 10% (config governs; pre-extraction 2.0 was the [ASK YASSER] placeholder — the config file is now the single source of truth, flagged sme_pending)
+final reconciliation:
+   dispatched 13100.0000 t = sold 13100.0000 t + unsold 0.0000 t -> OK
+   revenue 8337016.18 USD, penalties 142875.00 USD, utilities 58950.00 USD (USD streams only)
+   KPI dispatch: {'kwh_t': 5.0, 'nm3_ng_t': 0.0, 'throughput_t': 13100.0}; KPI drp (zero production): None
+wrote C:\AI_Lab\SteelX\fixtures\economics_domain2\d2_econ_30days_seed42.json
+{
+ "day": 30,
+ "sales_index": 1.0,
+ "generator_state": 730922798,
+ "revenue_usd": 8255255.57172656,
+ "late_penalty_usd": 142875.0,
+ "fulfilled_t": 13100.0,
+ "unsold_t": 0.0,
+ "dispatched_t": 13100.0,
+ "utilities_usd": 58950.0,
+ "downgrades": {
+  "prime": 30,
+  "secondary": 4,
+  "prompt": 2
+ },
+ "orders": [
+  {
+   "id": 0,
+   "mode": "forward",
+   "status": "fulfilled",
+   "grade": "B500B",
+   "tonnage": 0,
+   "due_day": 10,
+   "sign_index": 1.0
+  },
+  {
+   "id": 1,
+   "mode": "spot",
+   "status": "open",
+   "grade": "SG-2_special",
+   "tonnage": 1700,
+   "due_day": 15,
+   "sign_index": 1.0
+  },
+  {
+   "id": 2,
+   "mode": "spot",
+   "status": "open",
+   "grade": "CQ_high_strength",
+   "tonnage": 2200,
+   "due_day": 12,
+   "sign_index": 1.0
+  }
+ ],
+ "balance_identity": true
+}

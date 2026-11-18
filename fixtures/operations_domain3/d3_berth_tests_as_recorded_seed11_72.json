@@ -1,0 +1,74 @@
+{
+  "fixture_id": "d3_berth_tests_as_recorded_seed11_72",
+  "schema_version": 1,
+  "domain": "operations_domain3",
+  "status": "deferred_test_construction",
+  "note": "Frozen-oracle record, fresh process 2026-10-12 (Phase 3 session, Yasser decision (b): document deferred, move to Phase 3). Tests run as written through the mirror's berth_only_state helper under the engine/TS cadence (day += 1 BEFORE berth stages, arrivals on day % 24 == 0). The TS port reproduces this cadence exactly (web/src/ops_domain3.ts), so the mirror berth tests ARE the TS-cadence run; re-running under the TS cadence did not resolve them \u2014 the fault is the helper construction, not the cadence.",
+  "seed": 11,
+  "prng": "xorshift32",
+  "asset_order": [
+    "eaf",
+    "drp",
+    "cc",
+    "bar_mill",
+    "wire_rod_mill",
+    "crane"
+  ],
+  "initial_state": {
+    "day": 0,
+    "generator_state": 11,
+    "yard_stock_t": 5000.0,
+    "berth_ships": [],
+    "berth_only_isolation": true,
+    "rng": "FixedDraws([0.5] * 2400) \u2014 no-fire path"
+  },
+  "tick_order": "mirror tick_ops order reproduced exactly",
+  "cadence_boundary": "day += 1 BEFORE berth stages; arrivals on day % 24 == 0",
+  "tick_count": 72,
+  "expected_outputs": {
+    "tick48": {
+      "ships_arrived": 1,
+      "berth_ships": [
+        "S1"
+      ],
+      "unload_blocked_t_expected": 1000.0,
+      "unload_blocked_t_actual": 0.0,
+      "on_board_t_expected": 0.0,
+      "on_board_t_actual": 1000.0,
+      "berth_blocked_t_expected": 1.0,
+      "berth_blocked_t_actual": 1.0,
+      "yard_stock_t_expected": 5000.0,
+      "yard_stock_t_actual": 4920.0
+    },
+    "tick72": {
+      "berth_blocked_t_expected": 1.0,
+      "berth_blocked_t_actual": 2.0
+    },
+    "identity_tick48": {
+      "form": "accepted - unload_blocked = onboard + yard",
+      "accepted": 1000.0,
+      "blocked_actual": 0.0,
+      "onboard_actual": 1000.0,
+      "yard_actual": 4920.0,
+      "identity_must_hold": true
+    }
+  },
+  "fresh_run_result": {
+    "block_leg": "FAIL",
+    "capacity_leg": "FAIL",
+    "identity_leg": "FAIL",
+    "negative_control": "PASS",
+    "classification": "test construction (helper pre-fill does not survive to the berth stage: the berth_only flag is consumed at tick entry BEFORE the berth stages run, so the dispatch drain empties the yard-full pre-fill; the block can never fire). Berth RULE is correct \u2014 baseline reconciles (7/6/1, ship-days 7, identity intact) and the double-count negative control genuinely detects."
+  },
+  "corrected_construction_probe_20261012": {
+    "status": "documented, NOT applied (Yasser decision (b): document and defer, move to Phase 3)",
+    "construction": "yard starts at ZERO per berth accounting contract; drain skipped AND berth-only dispatch cap = 0 (isolated berth scenario has no crane chain); assertions at ticks where no day-tick lands (47, 71)",
+    "result": {
+      "leg_B_second_arrival_refused_tick71": "PASS",
+      "negative_control_double_count": "PASS",
+      "leg_A_block_tick47": "FAIL (blocked 0 vs expected 958.3333)",
+      "leg_C_identity_tick71": "FAIL (1000 - 0 = 1000 + 1420)",
+      "note": "two independent construction defects: flag stickeness (consumed before berth stages) and yard-full-vs-yard-zero contradiction between the block test and the identity test"
+    }
+  }
+}
