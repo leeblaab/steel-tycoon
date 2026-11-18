@@ -1,3 +1,4 @@
+> **FROZEN HISTORY (18.11):** audit complete; response kept as `docs/audit_1_architecture_qwen.md`.
 # AUDIT PROMPT — Full "Steel Tycoon" Repo Review by a Game / 3D / Code Expert
 
 You are being brought in as an independent senior expert: game systems design, real-time 3D (Three.js/R3F and mobile packaging), TypeScript simulation architecture, and long-lived project hygiene. You did not build this project and owe it no loyalty. Audit the repository at **https://github.com/leeblaab/steel-tycoon** (public during the audit window; branch `master`, single squashed baseline commit) and give a brutally honest, prioritized verdict. Cite file paths and line evidence for every claim — no vibes.

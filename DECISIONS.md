@@ -1,0 +1,40 @@
+# SteelX — DECISIONS ledger
+
+Newest first. A decision here is settled: don't reopen it in chat or code without the SME
+explicitly reopening it. IDs: F-xx = FORGED plan decisions (18.11), D-xx = older settled
+contracts carried forward from frozen docs.
+
+## FORGED decisions (settled 18.11 — source: docs/PLAN_FORGED.md §1)
+
+| ID | Decision | Supersedes |
+|---|---|---|
+| F-01 | Heroes = procedural Blender-Python ("Factorio-flat-3D"); scenery = Kenney CC0; textures/HDRI = Poly Haven; ComfyUI demoted to 2D concept/card art only | pristine-GLB rebuild program |
+| F-02 | `content/` published in-repo; project direction = open source | content/ gitignore exclusion |
+| F-03 | Stream-color material language is the PRIMARY visual grammar; zone tints demoted to secondary pad color | per-zone rainbow identity |
+| F-04 | Art bar = "readable industrial diorama"; SME gates on "reads as a real plant's flow and equipment", never photoreal; NO day/night, NO DOF | — |
+| F-05 | Treatment order: lighting + palette + fog applied to the CURRENT scene first; before-screenshot captured for measurable after | — |
+| F-06 | Nothing sacred: every old hero GLB (incl. rebuilt 21 MB jetty.glb) dies at its chapter gate; swap = add new + delete old + validate budget in ONE gated commit; one hero per gate | rebuild-all approval |
+| F-07 | Breadth freeze: no S2 scheduling engine, no seventh chapter, no extra economy systems until the six chapters are connected and readable (Stage 5 guard: dispatch revenue counter ONLY) | — |
+| F-08 | Mill routing (rebar vs wire rod) = visuals first, real player decision only when the order book exists; billet→mill interface stays tonnage-only | — |
+| F-09 | Gate discipline: sensory gate ("Yasser plays it, says it reads right") + per stage one objective perf gate + one "still playable" smoke; a closed stage never reopens | — |
+| F-10 | License: Apache-2.0 code + CC BY-SA 4.0 content (NC dropped; SME monetizes as copyright holder via dual-license if needed) | ISC license field, "proprietary" README claim |
+
+## Sim contracts carried forward (from frozen roadmap/specs — these stay LIVE)
+
+| ID | Contract | Source |
+|---|---|---|
+| D-01 | Pure ticks: state-in → state-out; no hidden globals. RNG = xorshift32, one word stored INSIDE the state (`generator_state`/`prng_state`); canonical mapping `uniform(a,b) = a + (b-a)*draw`, `draw = state/0xFFFFFFFF` after one step — the ONLY mapping mirrors use | mirror/build_fixtures.py header; roadmap marks |
+| D-02 | Per-tick ledger closure at tolerance 1e-6 t per accumulator (float accumulation error only); reporting gate prints balance to 4 decimals, gate < 0.01 t; JSON round-trip float comparisons keep abs diff < 0.01 | docs/foundations_definitions.md §C |
+| D-03 | Quest-gated unlocks: equipment/capability unlock when a quest needs it; no construction-cost field enters sim contracts (economy lives in content/config + hub economics port) | roadmap 19.10 GAMEPLAY marks |
+| D-04 | No irreversible campaign failure: quest failure explains and offers retry/adjustment/alternative; Bronze/Silver/Gold tiers; a poor result teaches | gameplay.md §4.2/§8 |
+| D-05 | Canonical units: t / USD / tick = 1 in-game hour (day = 24 ticks); new JSON fields follow `<quantity>_<unit>` naming; existing engine fields NOT renamed (mapping table is the contract) | foundations_definitions.md §A |
+| D-06 | Balance boundary per stage: Inputs = Products + By-products + Losses + ΔInventory; DRP yield_loss, EAF handling_loss + yield_loss separate; slag/dust live as losses until sustainability sells them | foundations_definitions.md §B |
+| D-07 | `schema_version: 1` top-level on every content JSON and savegame; loader rejects unknown versions fail-fast, never silently defaults | foundations_definitions.md §D |
+| D-08 | Revenue at dispatch outflow only (material actually sold); storage buffers must not hide the money problem | sim_loop_spec.md §2.6 |
+| D-09 | Eight settled gameplay directions: plant-manager role; transport visible-not-micromanaged; simple charge-priority EAF scheduling; accept/select-only orders; simple-first billet yard; rare-signalled-recoverable breakdowns; feedback-first sustainability; no irreversible campaign loss | gameplay.md §8 (recorded roadmap 19.10) |
+| D-10 | Content values are game-design placeholders flagged `sme_pending` unless SME-approved; no calibration loops; engineering figures = educational approximations from public industry sources, presented as ranges | roadmap content-JSON mark; README |
+
+## Audit-derived entries (Qwen audits 1–2 — findings NOT yet verified by us; promote only after verification)
+None promoted yet. Verification candidates tracked in PLAN_FORGED stage work
+(clone-build → fixed at S0.1; commissioning fix = S0.3; persistence v2 = S0.5; GLB size
+gate = F-06 chapter swaps).

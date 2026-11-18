@@ -1,3 +1,4 @@
+> **FROZEN HISTORY (18.11):** audit complete; response kept as `docs/audit_2_visuals_qwen.md`.
 # AUDIT PROMPT 2 — Visuals & Art Direction: Fix or Rebuild the 3D Look of "Steel Tycoon"
 
 Same project as before (**https://github.com/leeblaab/steel-tycoon** — public during the audit window). The first audit covered architecture; this one is about one thing only: **the game currently looks bad and communicates nothing visually.** Be blunt and concrete. The domain SME (16 yrs steel mills) can judge "does this look like a real plant"; you judge "does this look like a good game" — both matter, fun first.

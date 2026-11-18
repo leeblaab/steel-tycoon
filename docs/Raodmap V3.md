@@ -1,3 +1,4 @@
+> **FROZEN HISTORY (18.11):** superseded by `docs/PLAN_FORGED.md`. Do not plan from this file; settled sim contracts were copied into `DECISIONS.md` (D-01…D-10) first.
 # STEELX — ROADMAP V3 18.10.2026
 ## From Five Simulation Slices to a Complete, Playable Factory-Building Game
 

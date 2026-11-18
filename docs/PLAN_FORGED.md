@@ -1,4 +1,4 @@
-# PLAN_FORGED — SteelX full refurbishment plan (v1.0, Go-pending)
+# PLAN_FORGED — SteelX full refurbishment plan (v1.0, ACTIVE since S0.2 landing 18.11)
 
 **Status: THE ACTIVE PLAN. This document overrides all phase numbering and planning
 documents that came before it.** `docs/Raodmap V3.md`, `RoadMap_V2.md` and the session

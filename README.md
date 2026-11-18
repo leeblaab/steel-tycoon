@@ -100,8 +100,9 @@ web/                         # the web app (TypeScript, React, Three.js, Vite)
                              #       hud.tsx, layout.ts
     slice1..slice5/          #     per-slice browser scenes + sim.ts (+ shared TS ports)
     economics/ production_core/ sustainability/   # domain ports with parity tests
-  tests/                     #   vitest regression suite (42 files / 197 tests)
-docs/                        # roadmap, gameplay concept, specs, postmortems
+  tests/                     #   vitest regression suite (22 files / 177 tests)
+docs/                        # PLAN_FORGED.md (active plan), specs, audits, frozen history
+STATE.md / DECISIONS.md      # session opener + settled-decisions ledger
 ```
 
 ## Running the web app
@@ -128,7 +129,7 @@ cd web
 npx vitest run --root .
 ```
 
-- **42 test files / 197 tests** covering construction, layout, gate checks, tick loop, inspection cards, inventory registry, save/load, onboarding sequencing, quest tracking, and per-slice parity against the Python mirrors.
+- **22 test files / 177 tests** (`npm test`) covering construction, layout, gate checks, tick loop, inspection cards, inventory registry, save/load, onboarding sequencing, quest tracking, and per-slice parity against the Python mirrors.
 - Parity discipline: slice logic is cross-checked between the TypeScript port and a headless Python mirror; material-balance error is asserted at 0.0000 in regression runs.
 - E2E smoke checks use Playwright against the running dev server (guided-build flow, quest completion, GLB reveal on build).
 
@@ -143,11 +144,11 @@ npx vitest run --root .
 
 ## Roadmap
 
-The authoritative plan lives in `docs/Raodmap V3.md` (roadmap) and `docs/gameplay.md` (gameplay concept layer). Headlines:
+The authoritative plan lives in `docs/PLAN_FORGED.md` (the six-chapter refurbishment plan — it overrides all earlier roadmaps); `docs/gameplay.md` remains the live gameplay concept layer. `docs/Raodmap V3.md` / `RoadMap_V2.md` are frozen history. Headlines:
 
-- **Now:** integrated play home — guided Slice 1, park-and-play quest gate, per-node build reveal *(landed)*; consolidation of slice sims into one authoritative simulation.
-- **Next:** Slice 2 engine redesign; content plausibility pass on early quests; final Z-shape plant layout; persistence across the full five-slice campaign.
-- **Later:** maintenance/TPM layer, energy as an upgrade axis, drill-in mill internals, real vendor names under licensing, mobile packaging.
+- **Now:** Stage 0 foundation — content published *(landed)*, docs reset + licensing split, commissioning fix, scene relight (lighting/palette/fog), persistence v2.
+- **Next:** the six chapters of the material route (Ore Belt → Heat → Route → Cast → Mills → Shipment), one procedural hero model per chapter gate.
+- **Later:** maintenance/TPM layer, energy as an upgrade axis, drill-in mill internals, mobile packaging.
 
 ## Tech stack
 
@@ -159,6 +160,13 @@ The authoritative plan lives in `docs/Raodmap V3.md` (roadmap) and `docs/gamepla
 | Content | JSON with schema validation (`content/schema/`) |
 | Tests | Vitest (unit + parity), Playwright (E2E smoke) |
 
-## License & content note
+## License
 
-Source code and game content in this repository are proprietary to the project while it is in development. Equipment references use generic technology names only; no vendor trademarks, no third-party assets without license tracking. The engineering figures are educational approximations from public industry sources — they are ranges for gameplay and learning, not design values for real plants.
+Code is licensed under the **Apache License 2.0** (see `LICENSE`). Game content under
+`content/` (cards, quest text, economy figures, icons) is licensed under **CC BY-SA 4.0**
+(see `CONTENT_LICENSE`). Third-party assets and their licenses are recorded in
+`THIRD_PARTY.md` (Kenney CC0 kits; the kits themselves are downloaded separately — hash
+manifests live in `content/_vendor/`). Equipment references use generic technology names
+only; no vendor trademarks. The engineering figures are educational approximations from
+public industry sources — they are ranges for gameplay and learning, not design values for
+real plants.

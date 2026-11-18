@@ -1,3 +1,4 @@
+> **FROZEN HISTORY (18.11):** superseded by `docs/PLAN_FORGED.md`. Do not plan from this file.
 SteelX — Detailed Plan (Roadmap v2)
 Governing principles
 Brain first, body later. Logic is engine-agnostic; presentation is swappable.

@@ -1,3 +1,4 @@
+> **FROZEN HISTORY (18.11):** old session prompt — superseded by `STATE.md` + `docs/PLAN_FORGED.md`.
 # SteelX — Next Session Prompt (step 4 of the guided fullplant pass)
 
 Paste this as the opening message in the new session:
