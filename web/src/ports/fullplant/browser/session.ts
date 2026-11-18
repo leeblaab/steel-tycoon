@@ -10,11 +10,12 @@ import { InventoryRegistry, type BalanceCheckResult } from '../../../shared/inve
 import { QuestTracker, loadLevelQuests, type QuestProgressMap, type QuestsDoc } from '../../../shared/quest_tracker.ts';
 import { inspectSlice1Slot, inspectSlice3Slot, inspectSlice4Slot, inspectSlice5Slot } from '../../../shared/inspection_cards.ts';
 import { initState, loadSequence, advance, checkExit, currentStep, isBuilt, slice1Done, SLICE1_BUILD_NODES, type OnboardingState, type SeqStep } from './onboarding.ts';
+import { QUEST_BUILD_UNLOCK, SLICE_BUILD_NODES as SLICE_BUILD_NODES_SHARED, sliceBuildDone } from '../../../shared/commissioning.ts';
 
 export interface SliceRuntime {
   entry: CatalogEntry | null; // null for slice2 (no engine yet — pending redesign)
   loop: HubTickLoop<any> | null;
-  unlocked: boolean;
+  unlocked: boolean;    // BUILD CHAIN open: this area's sequence steps are tappable/visible
 }
 
 export interface PlantEvent {
@@ -25,17 +26,14 @@ export interface PlantEvent {
 
 export type Speed = 'pause' | 'normal' | 'fast';
 
-/** Quest completion -> which area's ENGINE joins the plant (contract clause 8:
- *  quest-scripted, fixed places, no random placement). The quest chain IS the production
- *  flow: each area commissions when its predecessor quest proves the upstream flow.
- *  q3 ("furnace fed") commissions slice5 (the mill needs billets); q4 ("first steel",
- *  whose criteria are slice1 fields) rewards with the scrap-prep plant (slice2). */
-const QUEST_COMMISSION: Record<string, string> = {
-  l1_q1_first_arrival: 'slice3',   // arrival flow proven -> DRP route gets commissioned
-  l1_q2_keep_it_moving: 'slice4',  // berth flow moving -> meltshop joins
-  l1_q3_feed_the_furnace: 'slice5',// furnace fed -> mill joins
-  l1_q4_first_steel: 'slice2',     // first steel -> scrap-prep plant commissioned
-};
+/** Quest completion -> which area's BUILD CHAIN opens (contract clause 8: quest-scripted,
+ *  fixed places, no random placement). The quest chain IS the production flow: each area
+ *  becomes buildable when its predecessor quest proves the upstream flow. This does NOT
+ *  start any engine — engines tick only at sliceBuildDone (S0.3 commissioning fix:
+ *  "no machine produces before you build it").
+ *  q3 ("furnace fed") opens slice5 (the mill needs billets); q4 ("first steel", whose
+ *  criteria are slice1 fields) rewards with the scrap-prep plant (slice2). */
+const QUEST_COMMISSION: Record<string, string> = QUEST_BUILD_UNLOCK;
 
 /** Slice -> inspect card key (shared/inspection_cards.ts contract). slice2 has no engine
  *  yet — its card is a placeholder (pending redesign), so it's absent here. */
@@ -105,13 +103,18 @@ export class GameSession {
     };
     if (jettyDone) this.events.push({ tick: this.tick, slice: 'slice1', event: 'plant_clock_started' });
     const slice = sliceOfNode[nodeId];
-    if (slice && this.sliceBuildDone(slice)) this.unlockSlice(slice); // engine ticks once its slice is fully built
+    // Slice1's engine is the exception: it ticks as soon as its builds complete (the
+    // jetty starts the clock). Other slices tick ONLY once BOTH their build chain is open
+    // AND their own sequence nodes are all placed (S0.3 gate: no production before build).
+    if (slice === 'slice1' && this.sliceBuildDone(slice)) this.unlockSlice(slice); // engine ticks once slice1 is fully built
     return nodeId;
   }
 
   /** Guided-flow gate check (checked against live sim state — real flow, not UI clicks).
-   *  Park step: only moves past when ALL slice-1 quests completed -> then the 'resume'
-   *  bridge card shows. Milestone step: flips index to -1 (quests take over fully). */
+   *  Park step: only moves past when ALL level-1 quests completed -> then the 'resume'
+   *  bridge card shows. Milestone step: flips index to -1 (quests take over fully).
+   *  (Sequence note 2026-10-26: "completing them commissions the next areas and unlocks
+   *  Slice 2 building" — quests gate ALL slice-2+ BUILDING, not just slice2.) */
   onboardingComplete(): boolean {
     this.onboard.questProgressSnapshot = this.tracker.snapshotProgress() as any;
     if (!checkExit(this.seqSteps, this.onboard, this.stateOf('slice1'))) return false;
@@ -131,52 +134,57 @@ export class GameSession {
   builtNode(nodeId: string): boolean { return isBuilt(this.onboard, nodeId); }
   slice1SlotsPending(): number { return SLICE1_BUILD_NODES.filter((n) => !isBuilt(this.onboard, n)).length; }
 
-  /** Slice -> build nodes placed by the guided flow (slice2 has no sequence builds —
-   *  it commissions only via quest completion, QUEST_COMMISSION below). */
-  static readonly SLICE_BUILD_NODES: Record<string, string[]> = {
-    slice1: ['jetty', 'scrap_yard', 'conv_ore_drp'],
-    slice3: ['drp', 'conv_dri_eaf'],
-    slice4: ['scrap_feed', 'eaf', 'lf', 'cc', 'conv_ccm_billet', 'billet_yard'],
-    slice5: ['conv_billet_rebar', 'bar_mill', 'conv_billet_wr', 'wire_rod_mill', 'finished_yard', 'conv_mill_dispatch', 'dispatch'],
-  };
+  /** Slice -> build nodes placed by the guided flow (single source: shared/commissioning.ts;
+   *  slice2 has no sequence builds — it commissions only via quest completion). */
+  static readonly SLICE_BUILD_NODES = SLICE_BUILD_NODES_SHARED;
 
   /** Is this slice's guided build finished (all its sequence nodes built)? */
-  sliceBuildDone(slice: string): boolean {
-    const nodes = GameSession.SLICE_BUILD_NODES[slice];
-    if (!nodes) return false;
-    return nodes.every((n) => isBuilt(this.onboard, n));
-  }
+  sliceBuildDone(slice: string): boolean { return sliceBuildDone(this.onboard, slice); }
 
-  /** Quest-scripted commissioning: places are fixed, no random placement, no purchase. */
+  /** Quest-scripted commissioning: opens the area's BUILD CHAIN only (sequence steps become
+   *  tappable). Places are fixed, no random placement, no purchase. Never starts an engine —
+   *  engine ticking is gated separately by engineRunning() / sliceBuildDone (S0.3 fix). */
   unlockSlice(slice: string): void {
     const rt = this.slices[slice];
     if (!rt || rt.unlocked) return;
     rt.unlocked = true;
-    this.events.push({ tick: this.tick, slice, event: 'slice_unlocked' });
+    this.events.push({ tick: this.tick, slice, event: `build_chain_open:${slice}` });
   }
 
-  /** Advance the whole plant by one tick. Quest completion commissions the next slice.
+  /** Does this slice's ENGINE tick this plant-minute? True only when the area is unlocked
+   *  AND every one of its sequence build nodes is placed. slice1 is exempt from the
+   *  unlock half (its builds themselves open it); slices without sequence builds
+   *  (slice2 — no engine) never tick. */
+  engineRunning(slice: string): boolean {
+    const rt = this.slices[slice];
+    if (!rt || !rt.loop) return false;
+    if (slice === 'slice1') return rt.unlocked;
+    return rt.unlocked && this.sliceBuildDone(slice);
+  }
+
+  /** Advance the whole plant by one tick. Quest completion opens the NEXT area's build
+   *  chain (never an engine — engines tick only once their own builds are placed).
    *  §1.5 time rule: while the guided build is pre-jetty, onboard.clockRunning is false —
    *  callers must not step; stepPlant also refuses as a guard. */
   stepPlant(): string[] {
     if (!this.onboard.clockRunning) return [];
     this.tick += 1;
     for (const rt of Object.values(this.slices)) {
-      if (!rt.unlocked || !rt.loop) continue;
+      if (!rt.loop || !this.engineRunning(rt.entry!.id)) continue; // engine gate: unlocked AND built
       const chk = rt.loop.step();
       if (!chk.ok) {
         throw new Error(`fullplant ledger broke on ${rt.entry!.id} at tick ${this.tick}: ${chk.detail}`);
       }
     }
     // Quest evaluation rides the authoritative slice state right after each step — same
-    // pattern as hub/main.tsx (all level_1 criteria are slice1-scoped).
+    // pattern as hub/main.tsx (all level_1 criteria are slice1-scoped). Reads slice1 state
+    // directly: q1 completes on the very tick slice1's engine starts, so this must not
+    // depend on the loop having stepped in THIS call.
     const completed: string[] = [];
-    for (const rt of Object.values(this.slices)) {
-      if (!rt.unlocked || !rt.loop) continue;
-      if (rt.entry!.id !== 'slice1') continue; // level_1 criteria are slice1 fields verbatim (quests.json success_criteria.slice)
-      const st = rt.loop.state as Record<string, any>;
-      const evs = (st.events ?? []).map((e: any) => ({ tick: this.tick, event: typeof e === 'string' ? e : e?.event ?? JSON.stringify(e) }));
-      completed.push(...this.tracker.update({ tick: this.tick, state: st, events: evs }));
+    const s1 = this.stateOf('slice1') as Record<string, any> | undefined;
+    if (s1) {
+      const evs = (s1.events ?? []).map((e: any) => ({ tick: this.tick, event: typeof e === 'string' ? e : e?.event ?? JSON.stringify(e) }));
+      completed.push(...this.tracker.update({ tick: this.tick, state: s1, events: evs }));
     }
     for (const id of completed) {
       const def = this.tracker.definition(id);

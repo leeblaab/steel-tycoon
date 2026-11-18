@@ -28,9 +28,17 @@ end goal; desktop/browser for now. No-rush iterative cadence, one Go-gated micro
 ## Current position (FORGED plan)
 - **S0.1 DONE** — `content/` published in git (F-02): game JSON, cards, icons tracked; 160 MB
   CC0 kits out of git with manifest.
-- **S0.2 IN PROGRESS** — docs reset: STATE.md + DECISIONS.md, README corrected, license split
+- **S0.2 DONE** — docs reset: STATE.md + DECISIONS.md, README corrected, license split
   (Apache-2.0 code / CC BY-SA 4.0 content / THIRD_PARTY), `npm test` made real.
-- Next after S0.2: **S0.3** commissioning fix → **S0.4** scene relight (before/after gate) →
+- **S0.3 CODE DONE (uncommitted)** — engine gate fixed: quest completion only unlocks the
+  build chain (`QUEST_BUILD_UNLOCK` in `web/src/shared/commissioning.ts`); an engine ticks
+  only when its slice is unlocked AND every sequence-build node of that slice is placed
+  (`engineRunning()` in fullplant session.ts). Tests: `commissioning.test.ts` (6) +
+  `fullplant_commissioning.test.ts` (5). SME decisions locked by Yasser (2026-11-18):
+  quests evaluate as a STRICT CHAIN (q2 only after q1 completes, etc.) and "keep it clean"
+  conditions measure over the SINCE-PREVIOUS-QUEST-COMPLETION cumulative window. Threshold
+  retune of the 4 sme_pending bands = separate gated content pass; his numbers required.
+- Next: **S0.4** scene relight (before/after gate) →
   **S0.5** persistence v2 in fullplant. Then Stage 1 (Chapter 1: The Ore Belt).
 
 ## The game as it plays today
@@ -51,7 +59,7 @@ EAF/LF/CCM, slice5 mills); each is a pure tick engine with a Python mirror + par
 - Unknown values are asked, never invented.
 
 ## Verified facts (measured, not remembered — re-measure if in doubt)
-- Test suite: `cd web && npx vitest run --root .` → **22 files / 177 tests green** (18.11).
+- Test suite: `cd web && npx vitest run --root .` → **24 files / 188 tests green** (S0.3, 11.18).
 - Fresh-clone gate passed at S0.1 (stranger's clone builds and plays step 1).
 - Remote master head after S0.1: `49d9cc1`.
 

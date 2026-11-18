@@ -18,6 +18,8 @@ contracts carried forward from frozen docs.
 | F-08 | Mill routing (rebar vs wire rod) = visuals first, real player decision only when the order book exists; billet→mill interface stays tonnage-only | — |
 | F-09 | Gate discipline: sensory gate ("Yasser plays it, says it reads right") + per stage one objective perf gate + one "still playable" smoke; a closed stage never reopens | — |
 | F-10 | License: Apache-2.0 code + CC BY-SA 4.0 content (NC dropped; SME monetizes as copyright holder via dual-license if needed) | ISC license field, "proprietary" README claim |
+| F-11 | Commissioning rule (S0.3): quest completion ONLY unlocks the next slice's build chain; an engine ticks only when its slice is unlocked AND every sequence-build node of that slice is placed — "no machine produces before you build it" | quest-commissioned engines ticking from tick 1 |
+| F-12 | Quest evaluation (S0.3, SME): Level quests evaluate as a STRICT CHAIN (qN evaluable only after q(N−1) completes); "keep it clean" conditions (unload_blocked / upstream_blocked bands) measure over the SINCE-PREVIOUS-QUEST-COMPLETION cumulative window, never a single-tick snapshot | q2/q3/q4 passing trivially at tick ~5 before q1 |
 
 ## Sim contracts carried forward (from frozen roadmap/specs — these stay LIVE)
 
