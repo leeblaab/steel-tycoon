@@ -564,11 +564,15 @@ function Slice2({ at }: { at: [number, number, number] }) {
   );
 }
 
-// ---------- Slice 3: DRP GLB + conveyor + buffer tank + EAF GLB ----------
+// ---------- Slice 3: DRP GLB + conveyor + DRI buffer tank ----------
 // Guided-build reveal: each node appears only once its build step is confirmed.
+// No EAF model here: the single EAF lives in the slice-4 meltshop zone (the S3
+// "EAF" was a duplicate ghost — same GLB, and it popped into slice 3 as soon as
+// the shared 'eaf' node_id got built for slice 4). Slice 3 ends at the DRI buffer;
+// its sim consumes charges from that buffer.
 function Slice3({ at }: { at: [number, number, number] }) {
   const drp = SESSION.builtNode('drp');
-  const eafBuilt = SESSION.builtNode('eaf');
+  const driBufferBuilt = SESSION.builtNode('conv_dri_eaf');
   return (
     <group position={at}>
       {drp && <Reveal built={drp}><Glb url={`${S3}drp.glb`} scale={8} pos={[-8, 0, 0]} /></Reveal>}
@@ -576,12 +580,10 @@ function Slice3({ at }: { at: [number, number, number] }) {
       <mesh position={[-4, 0.35, 0]}><boxGeometry args={[3.0, 0.3, 1.2]} /><meshStandardMaterial color="#4a525c" metalness={0.5} roughness={0.5} /></mesh>
       <FlowPulse from={[-5.4, 0.7, 0]} to={[-1.2, 2.4, 0]} active={() => { const s = SESSION.stateOf('slice3') as any; return !!s && Array.isArray(s.buffer) && s.buffer.some((l: any) => l.usable_t > 0); }} color="#d9a13f" />
       </>}
-      {eafBuilt && <>
+      {driBufferBuilt && <>
       <mesh castShadow position={[0, 2, 0]}><cylinderGeometry args={[1.6, 1.6, 4, 20]} /><meshStandardMaterial color="#39424e" metalness={0.5} roughness={0.5} /></mesh>
-      <Glb url={`${S3}eaf.glb`} scale={4.5} pos={[4.5, 0, 0]} />
-      <EafGlow pos={[4.5, 1.4, 0]} active={() => { const s = SESSION.stateOf('slice3') as any; return !!s && Array.isArray(s.heats) && s.heats.some((h: any) => h.status === 'charged'); }} />
       </>}
-      <LABEL3 at={at} items={[...(drp ? [['DRP', -8, 9]] : []), ...(eafBuilt ? [['DRI Buffer', 0, 5], ['EAF (S3)', 4.5, 6]] : [])] as Array<[string, number, number]>} />
+      <LABEL3 at={at} items={[...(drp ? [['DRP', -8, 9]] : []), ...(driBufferBuilt ? [['DRI Buffer', 0, 5]] : [])] as Array<[string, number, number]>} />
     </group>
   );
 }
