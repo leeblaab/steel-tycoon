@@ -252,13 +252,21 @@ export class QuestTracker {
     return { quest: q, unmet, stalled_for: snap.tick - since };
   }
 
-  /** Restore from a persisted snapshot (save/load coverage, §13 Phase 2 bullet). */
+  /** Restore from a persisted snapshot (save/load coverage, §13 Phase 2 bullet).
+   *  S0.5 hardening: an open-window row (active/available) must carry its window
+   *  fields — restoring one with defaulted {} / null baselines would evaluate
+   *  cumulative deltas from tick-0 zeros and silently complete on stale plant tonnage,
+   *  so a missing field is rejected here too (defence in depth behind loadSave). */
   restoreProgress(saved: QuestProgressMap): void {
     for (const q of this.defs) {
       const s = saved[q.id];
       if (!s) continue; // fresh quest def with no saved row stays at its initial state
       if (s.status !== 'locked' && s.status !== 'available' && s.status !== 'active' && s.status !== 'completed') {
         throw new Error(`quest '${q.id}' has invalid saved status '${s.status}'`);
+      }
+      if ((s.status === 'active' || s.status === 'available') &&
+          (s.window_baseline === undefined || s.window_open_tick === undefined)) {
+        throw new Error(`quest '${q.id}' (${s.status}) restored without window fields — refusing to load`);
       }
       this.progress[q.id] = {
         id: q.id, status: s.status, conditions_met: !!s.conditions_met, completed_at_tick: s.completed_at_tick ?? null,

@@ -925,5 +925,14 @@ createRoot(document.getElementById('root')!).render(<Scene />);
 (window as any).__steelxEquip = selectEquip;
 (window as any).__steelxSession = SESSION; // perf/quest probes (S0.4 baseline script) — read-only usage
 
+// S0.5 boot restore: a valid fullplant save resumes the campaign mid-game (onboarding
+// skipped to its saved step); missing/corrupt/old-schema saves fall through to a fresh
+// game (reject-never-default). Runs BEFORE render so the 3D tree paints the restored plant.
+const RESUMED = SESSION.tryRestore();
+if (RESUMED) window.dispatchEvent(new Event('steelx-onboard')); // HUD/accordions re-read state
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') SESSION.autosave(); // tab close / phone background
+});
+
 // S0.4 dev probe hook: ViewCamera publishes the live renderer/scene/camera so rig probes can
 // read tone mapping + light params from real pixels' source of truth (dev-only, harmless).

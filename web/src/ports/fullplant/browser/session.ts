@@ -11,6 +11,8 @@ import { QuestTracker, loadLevelQuests, type QuestProgressMap, type QuestsDoc } 
 import { inspectSlice1Slot, inspectSlice3Slot, inspectSlice4Slot, inspectSlice5Slot } from '../../../shared/inspection_cards.ts';
 import { initState, loadSequence, advance, checkExit, currentStep, isBuilt, slice1Done, SLICE1_BUILD_NODES, type OnboardingState, type SeqStep } from './onboarding.ts';
 import { QUEST_BUILD_UNLOCK, SLICE_BUILD_NODES as SLICE_BUILD_NODES_SHARED, sliceBuildDone } from '../../../shared/commissioning.ts';
+import { captureRng, writeFullplantSave, loadFullplantSave, LocalStorageSaveStorage, type SaveStorage, type SliceSnapshot, type OnboardingSnapshot } from '../../../shared/save_load.ts';
+import { applyDecision, type DecisionRow } from '../../../ports/slice1/slice1_decide.ts';
 
 export interface SliceRuntime {
   entry: CatalogEntry | null; // null for slice2 (no engine yet — pending redesign)
@@ -50,6 +52,8 @@ export class GameSession {
   readonly registry = new InventoryRegistry();
   readonly tracker: QuestTracker;
   readonly events: PlantEvent[] = [];
+  /** Plant clock (minutes/TICK_MIN). Restored from the save's top-level mirror tick —
+   *  session.tick and slices.slice1.state.tick are kept in lockstep by stepPlant. */
   tick = 0;
   speed: Speed = 'normal';
   /** Guided first build (docs/gameplay.md §1.5). Sequence is DATA (level1_draft.json). */
@@ -107,7 +111,43 @@ export class GameSession {
     // jetty starts the clock). Other slices tick ONLY once BOTH their build chain is open
     // AND their own sequence nodes are all placed (S0.3 gate: no production before build).
     if (slice === 'slice1' && this.sliceBuildDone(slice)) this.unlockSlice(slice); // engine ticks once slice1 is fully built
+    // Guided sequence nodes for LATER slices commission their area when placed (same rule
+    // the quest-commission path enforces via unlockSlice — S0.3 visibility gate).
+    if (slice && slice !== 'slice1' && this.builtNode(nodeId)) this.unlockSlice(slice);
+    // Re-derive unlock state for every other slice: unlocks are DATA-derived (built nodes +
+    // completed quests), so a mid-sequence confirmBuild can never leave a later area
+    // "unlocked but not yet commissioned" (S0.5 invariant: restored == live).
+    this.recomputeUnlocks();
     return nodeId;
+  }
+
+  /** Unlock state derived purely from onboarding data + quest rows — the single source of
+   *  truth for SliceRuntime.unlocked. Idempotent; called after every unlock event (build,
+   *  quest completion, restore). Never emits events. */
+  private recomputeUnlocks(): void {
+    const done = new Set<string>();
+    for (const [qid, prog] of Object.entries(this.tracker.snapshotProgress())) {
+      if ((prog as any)?.status === 'completed') done.add(qid);
+    }
+    for (const [slice, rt] of Object.entries(this.slices)) {
+      const nodes = GameSession.SLICE_BUILD_NODES[slice] ?? [];
+      let unlocked = nodes.length > 0 && nodes.every((n) => this.onboard.built.includes(n));
+      if (!unlocked) {
+        for (const [qid, target] of Object.entries(QUEST_COMMISSION)) {
+          if (target === slice && done.has(qid)) { unlocked = true; break; }
+        }
+      }
+      rt.unlocked = unlocked;
+    }
+  }
+
+  /** The node ids that WOULD be commissioned by completing quest `qid` (pure; used before
+   *  tracker.complete flips the row so unlock events get attributed to the right slice). */
+  private nodesCommissionedByQuest(qid: string): string[] {
+    const slice = QUEST_COMMISSION[qid];
+    if (!slice) return [];
+    const nodes = GameSession.SLICE_BUILD_NODES[slice] ?? [];
+    return nodes.filter((n) => !this.onboard.built.includes(n));
   }
 
   /** Guided-flow gate check (checked against live sim state — real flow, not UI clicks).
@@ -221,5 +261,132 @@ export class GameSession {
     if (slice === 'slice4') return inspectSlice4Slot(slot, st as any);
     if (slice === 'slice5') return inspectSlice5Slot(slot, st as any);
     return null;
+  }
+
+  // ---------- S0.5 persistence v2: fullplant save/restore ----------
+
+  /** Storage adapter. `window` is checked at construction so the class stays importable
+   *  in headless vitest (node env, no DOM); tests inject MemorySaveStorage via
+   *  setSaveStorage before any read/write touches it. */
+  private storage: SaveStorage =
+    typeof window !== 'undefined' && window.localStorage
+      ? new LocalStorageSaveStorage(window.localStorage)
+      : { read: () => null, write: () => { throw new Error('no storage backend in this environment'); }, remove: () => {} };
+  private autosaveCounter = 0;
+
+  /** Test seam: swap the persistence backend (MemorySaveStorage in vitest). */
+  setSaveStorage(storage: SaveStorage): void { this.storage = storage; }
+
+  /** JSON-plain snapshot of the whole session (mirrors the approved step-1 structure):
+   *  one SliceSnapshot per RUNNING engine (locked slices are re-derivable from onboarding
+   *  data, so they stay out of the file), quest rows, and the full onboarding block. */
+  snapshot(): { slices: Record<string, SliceSnapshot>; quest_progress: QuestProgressMap; onboarding: OnboardingSnapshot } {
+    const slices: Record<string, SliceSnapshot> = {};
+    for (const [slice, rt] of Object.entries(this.slices)) {
+      if (!rt.loop || !this.engineRunning(slice)) continue; // locked => state re-derivable
+      const st = rt.loop.state as Record<string, any>;
+      slices[slice] = { state: structuredClone(st), rng_state: captureRng(st) };
+    }
+    const onboarding: OnboardingSnapshot = {
+      index: this.onboard.index,
+      built: [...this.onboard.built],
+      clockRunning: this.onboard.clockRunning,
+      questProgressSnapshot: (this.onboard.questProgressSnapshot
+        ? structuredClone(this.onboard.questProgressSnapshot) : null) as any,
+    };
+    return { slices, quest_progress: this.questProgress(), onboarding };
+  }
+
+  /** Write the fullplant autosave (steelx-fullplant-save key). Silently false when no
+   *  slice1 engine runs yet (fresh pre-jetty game — nothing worth persisting) or when
+   *  storage throws (quota / private mode); a failed autosave must never crash the game. */
+  autosave(slot = 'main'): boolean {
+    const snap = this.snapshot();
+    if (!snap.slices['slice1']) return false; // writeFullplantSave needs the slice1 mirror
+    try {
+      writeFullplantSave(this.storage, slot, snap.slices, {
+        questProgress: snap.quest_progress,
+        onboarding: snap.onboarding,
+      });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  /** Restore a fullplant save into THIS session (engines already constructed by the ctor).
+   *  Order matters: quest rows first (unlock derivation reads them), then onboarding data,
+   *  then engine states. Unlocks are re-derived from data — never trusted from the file. */
+  restoreFrom(save: { slices: Record<string, SliceSnapshot>; quest_progress: QuestProgressMap; onboarding: OnboardingSnapshot }): void {
+    this.tracker.restoreProgress(save.quest_progress);
+    // Plant clock rides the save's top-level mirror tick (GameSave.tick, cross-checked
+    // against slices.slice1.state.tick by the loader). Quest windows are absolute ticks,
+    // so session.tick MUST resume — a restored session that restarted at 0 would re-open
+    // quest windows in the past and break determinism.
+    if (typeof (save as any).tick === 'number') this.tick = (save as any).tick;
+    this.onboard = {
+      index: save.onboarding.index,
+      built: [...save.onboarding.built],
+      clockRunning: save.onboarding.clockRunning,
+      ...(save.onboarding.questProgressSnapshot
+        ? { questProgressSnapshot: structuredClone(save.onboarding.questProgressSnapshot) } : {}),
+    };
+    for (const [slice, snap] of Object.entries(save.slices)) {
+      const rt = this.slices[slice];
+      if (!rt || !rt.loop) continue; // engine-less slice in a save => corrupt file (loader already rejects)
+      const chk = rt.loop.resume(structuredClone(snap.state));
+      if (!chk.ok) throw new Error(`fullplant restore broke ledger on ${slice}: ${chk.detail}`);
+    }
+    this.recomputeUnlocks();
+  }
+
+  /** Boot helper: load the fullplant save from storage into this session.
+   *  Returns true when a valid v2 save was restored (UI resumes mid-game), false when no
+   *  save exists / it's corrupt or an old schema (fresh game) — never throws. */
+  tryRestore(slot = 'main'): boolean {
+    const ctx = {
+      knownSliceIds: Object.keys(this.slices),
+      seqSteps: this.seqSteps.map((s) => String(s.step)),
+      validate: (sliceId: string, state: any) => {
+        const rt = this.slices[sliceId];
+        if (!rt?.entry || !rt.loop) throw new Error(`save references slice '${sliceId}' with no engine here`);
+        const chk = this.registry.check(sliceId, state);
+        if (!chk.ok) throw new Error(`save state fails ledger check on ${sliceId}: ${chk.detail}`);
+      },
+    };
+    let save;
+    try {
+      save = loadFullplantSave(this.storage, slot, ctx);
+    } catch {
+      return false; // missing / corrupt / schema-mismatched => fresh game (reject-never-default)
+    }
+    this.restoreFrom(save as any);
+    return true;
+  }
+
+  /** Autosave cadence hook, called by the tick pump after each plant step: every 32 ticks. */
+  noteTickForAutosave(): void {
+    this.autosaveCounter += 1;
+    if (this.autosaveCounter % 32 === 0) this.autosave();
+  }
+
+  /** Replay a Decide verb onto the live slice1 engine (restore of the decision log / player
+   *  actions). The engine's decide_* functions stay the only mutators; rejections re-reject. */
+  applyDecisionToSlice1(verb: DecisionRow['verb'], target: string, arg?: number): void {
+    const st = this.stateOf('slice1') as any;
+    if (!st) return;
+    applyDecision(st, verb, target, arg);
+  }
+
+  /** Drive the guided sequence to completion (test/boot helper): confirm every 'build' step
+   *  and dismiss every card/resume step until the flow ends or parks. */
+  runGuidedSequence(): void {
+    for (let guard = 0; guard < this.seqSteps.length + 2; guard++) {
+      const step = currentStep(this.seqSteps, this.onboard);
+      if (!step) return; // index -1: flow finished
+      if (step.type === 'build') this.confirmBuild();
+      else if (step.type === 'card' || step.type === 'resume') this.dismissCard();
+      else return; // parked on park/milestone — live sim state must carry us past it
+    }
   }
 }

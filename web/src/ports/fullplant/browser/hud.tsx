@@ -70,6 +70,8 @@ export function PlantHud({ session }: { session: GameSession }) {
     const interval = 1000 / (NORMAL_TPS * (session.speed === 'fast' ? FAST_MULTIPLIER : 1));
     const id = window.setInterval(() => {
       try { session.stepPlant(); } catch (e) { console.error(e); session.speed = 'pause'; }
+      // S0.5 autosave: every 32 ticks the pump snapshots the whole plant to storage.
+      session.noteTickForAutosave();
       // §1.5 exit check against live sim state: guided flow ends when Slice 1 is built AND
       // the first material actually flows — then Quest 1 ("First Arrival") takes over.
       if (session.onboardingComplete()) window.dispatchEvent(new Event('steelx-onboard'));

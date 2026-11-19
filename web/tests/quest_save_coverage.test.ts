@@ -1,7 +1,7 @@
 // Phase 2 quest save/load coverage (headless vitest probe — TS imports resolve natively).
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { MemorySaveStorage, writeSave, loadSave, SAVE_FILE_KEY } from '../src/shared/save_load.ts';
+import { MemorySaveStorage, writeSave, loadSave, SAVE_FILE_KEY, SNAPSHOT_SCHEMA_VERSION } from '../src/shared/save_load.ts';
 import { QuestTracker, loadLevelQuests } from '../src/shared/quest_tracker.ts';
 import { freshSlice1HubState, advanceSlice1HubState } from '../src/ports/slice1/slice1_hub.ts';
 import { freshSlice1HubStateV2, advanceSlice1HubStateV2, applyDecision } from '../src/ports/slice1/slice1_decide.ts';
@@ -118,7 +118,7 @@ describe('Phase 2 persistence coverage: quest progress rides the save snapshot (
     let st = freshSlice1HubState();
     for (let i = 0; i < 5; i++) st = advanceSlice1HubState(st);
     const legacy = { format: 'steelx-save', format_version: 1, saves: { main: {
-      schema_version: 1, saved_at: new Date().toISOString(), slice_id: 'slice1', tick: st.tick,
+      schema_version: SNAPSHOT_SCHEMA_VERSION, saved_at: new Date().toISOString(), slice_id: 'slice1', tick: st.tick,
       rng_state: { word: (st as any).generator_state ?? null }, state: st,
     } } };
     storage.write(SAVE_FILE_KEY, JSON.stringify(legacy));
