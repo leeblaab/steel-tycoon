@@ -118,7 +118,7 @@ def transfer(state, from_id, to_id, tonnes, travel_ticks):
         'depart_tick': s['tick'],
         'arrival_tick': s['tick'] + travel_ticks,
     })
-    _ev(s, f'transfer {tid} {tonnes}t departs ({travel_ticks}t travel)')
+    _ev(s, f'transfer {tid} {tonnes:g}t departs ({travel_ticks}t travel)')
     return s
 
 
@@ -133,7 +133,7 @@ def tick(state):
     for rec in s['in_transit']:
         if rec['arrival_tick'] <= s['tick']:
             s['inventories'][rec['to_id']]['usable_t'] += rec['tonnes']
-            _ev(s, f"transfer {rec['transfer_id']} arrives at {rec['to_id']!r} ({rec['tonnes']}t)")
+            _ev(s, f"transfer {rec['transfer_id']} arrives at {rec['to_id']} ({rec['tonnes']:g}t)")
         else:
             still.append(rec)
     s['in_transit'] = still

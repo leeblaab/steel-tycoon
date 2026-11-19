@@ -1,0 +1,155 @@
+{
+  "fixture_id": "registry_handoff_v1",
+  "schema_version": 1,
+  "note": "pinned from mirror/registry_handoff_mirror.py \u2014 no RNG; exact-value parity",
+  "positive": {
+    "initial_deposits": 1000.0,
+    "ops": [
+      {
+        "tick": 1,
+        "in_transit": 1,
+        "yard_ore": 600.0,
+        "belt_buffer": 0.0,
+        "drp_intake": 0.0
+      },
+      {
+        "tick": 2,
+        "in_transit": 1,
+        "yard_ore": 600.0,
+        "belt_buffer": 0.0,
+        "drp_intake": 0.0
+      },
+      {
+        "tick": 3,
+        "in_transit": 0,
+        "yard_ore": 600.0,
+        "belt_buffer": 400.0,
+        "drp_intake": 0.0
+      },
+      {
+        "tick": 4,
+        "in_transit": 0,
+        "yard_ore": 600.0,
+        "belt_buffer": 400.0,
+        "drp_intake": 0.0
+      },
+      {
+        "tick": 5,
+        "in_transit": 0,
+        "yard_ore": 600.0,
+        "belt_buffer": 400.0,
+        "drp_intake": 0.0
+      },
+      {
+        "tick": 6,
+        "in_transit": 0,
+        "yard_ore": 600.0,
+        "belt_buffer": 400.0,
+        "drp_intake": 0.0
+      },
+      {
+        "tick": 7,
+        "in_transit": 1,
+        "yard_ore": 600.0,
+        "belt_buffer": 0.0,
+        "drp_intake": 0.0
+      },
+      {
+        "tick": 8,
+        "in_transit": 0,
+        "yard_ore": 600.0,
+        "belt_buffer": 0.0,
+        "drp_intake": 400.0
+      }
+    ],
+    "events": [
+      {
+        "tick": 0,
+        "event": "transfer T0:yard_ore->belt_buffer 400t departs (3t travel)"
+      },
+      {
+        "tick": 3,
+        "event": "transfer T0:yard_ore->belt_buffer arrives at belt_buffer (400t)"
+      },
+      {
+        "tick": 6,
+        "event": "transfer T6:belt_buffer->drp_intake 400t departs (2t travel)"
+      },
+      {
+        "tick": 8,
+        "event": "transfer T6:belt_buffer->drp_intake arrives at drp_intake (400t)"
+      }
+    ],
+    "final_reserved": {
+      "yard_ore": 0.0,
+      "belt_buffer": 0.0
+    },
+    "closure_total": 1000.0
+  },
+  "interleaved": {
+    "initial_deposits": 500.0,
+    "ops": [
+      {
+        "tick": 1,
+        "in_transit": 2,
+        "yard": 0.0,
+        "buf1": 0.0,
+        "buf2": 0.0
+      },
+      {
+        "tick": 2,
+        "in_transit": 1,
+        "yard": 0.0,
+        "buf1": 200.0,
+        "buf2": 0.0
+      },
+      {
+        "tick": 3,
+        "in_transit": 1,
+        "yard": 0.0,
+        "buf1": 200.0,
+        "buf2": 0.0
+      },
+      {
+        "tick": 4,
+        "in_transit": 1,
+        "yard": 0.0,
+        "buf1": 200.0,
+        "buf2": 0.0
+      },
+      {
+        "tick": 5,
+        "in_transit": 0,
+        "yard": 0.0,
+        "buf1": 200.0,
+        "buf2": 300.0
+      },
+      {
+        "tick": 6,
+        "in_transit": 0,
+        "yard": 0.0,
+        "buf1": 200.0,
+        "buf2": 300.0
+      }
+    ],
+    "events": [
+      {
+        "tick": 0,
+        "event": "transfer T0:yard->buf1 200t departs (2t travel)"
+      },
+      {
+        "tick": 0,
+        "event": "transfer T0:yard->buf2 300t departs (5t travel)"
+      },
+      {
+        "tick": 2,
+        "event": "transfer T0:yard->buf1 arrives at buf1 (200t)"
+      },
+      {
+        "tick": 5,
+        "event": "transfer T0:yard->buf2 arrives at buf2 (300t)"
+      }
+    ],
+    "closure_total": 500.0
+  }
+}
