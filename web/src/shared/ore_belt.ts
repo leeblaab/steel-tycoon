@@ -116,3 +116,46 @@ export function beltInvariants(st: OreBeltState, initialDeposits: number): { ok:
   if (!res.ok) return { ok: false, detail: `reservation invalid on ${res.badId}` };
   return { ok: true, detail: `closed at ${close.total} t` };
 }
+
+// ---- Presentation projection (S1.2 visual layer) ------------------------------------
+// Pure read of the ledger -> what the 3D belt strip draws. The registry only credits a
+// destination at arrival_tick, so "on the belt" = in_transit records; each rides its leg
+// from depart_tick to arrival_tick. Progress is wall-clock smooth (presentation only —
+// sim tonnes never move between ticks).
+
+export interface BeltTokenView {
+  key: string;        // transfer_id (stable across frames while the record lives)
+  leg: 'yard-buffer' | 'buffer-drp';
+  progress: number;   // 0..1 along the leg (wall-clock eased, clamped)
+  size: number;       // 0.7..1.4 token scale, sqrt of load mass
+}
+
+export interface BeltStripView {
+  built: boolean;     // belt node exists -> show the physical strip even with no tonnes
+  live: boolean;      // DRP commissioned -> second hop painted too
+  tokens: BeltTokenView[];
+}
+
+/** Smooth per-token position between tick boundaries. `frac` = fraction of the current
+ *  tick already elapsed (0 at tick start, ->1 before the next step). A record one tick
+ *  from arrival sits at (travel-1+frac)/travel so it lands exactly at arrival_tick. */
+export function beltTokenView(st: OreBeltState, frac: number): BeltStripView {
+  const f = Math.max(0, Math.min(0.999, frac));
+  const tick = st.registry.tick;
+  const tokens: BeltTokenView[] = [];
+  for (const rec of st.registry.in_transit) {
+    const travel = rec.arrival_tick - rec.depart_tick;
+    const elapsed = (tick - rec.depart_tick) + f;
+    tokens.push({
+      key: rec.transfer_id,
+      leg: rec.to_id === BUFFER_INV ? 'yard-buffer' : 'buffer-drp',
+      progress: Math.max(0, Math.min(1, elapsed / travel)),
+      size: 0.7 + Math.sqrt(rec.tonnes) * 0.14, // 25t -> ~1.4; chunkT drives token mass
+    });
+  }
+  return {
+    built: st.commissionedAtTick !== undefined || tick > 0 || st.drpCommissioned,
+    live: st.drpCommissioned,
+    tokens,
+  };
+}

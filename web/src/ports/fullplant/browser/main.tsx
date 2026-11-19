@@ -20,6 +20,7 @@ import { currentStep } from './onboarding.ts';
 import { SLOT_LOCAL, stepCardView } from './onboarding_cards.ts';
 import { equipmentIndex, DRAFTED_CARD, type EquipEntry } from './equip_index.ts';
 import { STREAM, ZONE_PAD, LIGHTING, STATE } from './palette.ts';
+import { beltTokenView } from '../../../shared/ore_belt.ts';
 
 // S0.4 visual-pass A/B bisect (dev-only): URL params override the rig so each suspect gets
 // one headless shot without code churn. ?tone=0 -> NoToneMapping, ?exposure=X, ?fog=0 -> no
@@ -112,6 +113,7 @@ function LabelCameraBridge() { const { camera } = useThree(); CAM.current = came
 const NODE_FOOTPRINT: Record<string, [number, number]> = {
   jetty: [10, 8],       // enlarged GLB berth (scale 21)
   scrap_yard: [9, 9],   // yard pad is 7x7; footprint slightly larger for fat fingers
+  conv_ore_drp: [4, 4], // belt strip + head tower (S1.2) — tappable conveyor card
 };
 /** Non-sequence hit targets (visible equipment with no build step yet): the slice-1 dispatch
  *  RTG stands from the start, tappable via the left pane AND direct tap (observation 3.0). */
@@ -251,6 +253,120 @@ function LabelLayer() {
 // S0.4 (F-05): zone rainbow DEMOTED to secondary pad tints — stream-color ground strips
 // (StreamStrips, drawn between zones) now carry the primary visual grammar.
 const ZONE_COLORS: Record<string, string> = ZONE_PAD;
+
+// ---------- S1.2 ore belt (visual layer over the ledger) -------------------------------
+// The belt built at onboarding step 4 is a REAL transfer edge (session.stepPlant ticks it).
+// This component draws only what the ledger says is in flight: one token per in_transit
+// record, eased along its leg between tick boundaries. Sim tonnes never move continuously —
+// presentation reads registry.tick + wall-clock frac from the HUD pump cadence.
+const BELT_HEAD: [number, number, number] = (() => {
+  const z = ZONES.find((zz) => zz.id === 'slice1')!;
+  const local = SLOT_LOCAL['conv_ore_drp']!; // [-1, 1.5, 0] relative to slice1 center
+  return [z.pos[0] + local[0], 0, z.pos[2] + local[2]]; // (-41, 0, -2)
+})();
+const BELT_DRP: [number, number, number] = [-8, 0, 10]; // slice3 side of the bend (SLOT_LOCAL drp slot area)
+
+function OreBelt() {
+  const snap = SESSION.beltVisualSnapshot();
+  if (!snap) return null; // belt not built yet — draw nothing
+  // Physical strip: trough from yard edge to head tower, second hop to DRP once commissioned.
+  const group: THREE.Group = React.useMemo(() => {
+    const g: any = new THREE.Group();
+    const mkTrough = (a: [number, number, number], b: [number, number, number]) => {
+      const dx = b[0] - a[0], dz = b[2] - a[2];
+      const len = Math.hypot(dx, dz);
+      const t: any = new THREE.Mesh(
+        new THREE.BoxGeometry(1.3, 0.28, len),
+        new THREE.MeshStandardMaterial({ color: '#3a3f46', roughness: 0.7, metalness: 0.35 }),
+      );
+      t.position.set((a[0] + b[0]) / 2, 0.55, (a[2] + b[2]) / 2);
+      t.rotation.y = Math.atan2(dx, dz) + Math.PI / 2; // BoxGeometry z-axis along the leg
+      g.add(t);
+      const s: any = new THREE.Mesh(
+        new THREE.PlaneGeometry(1.9, len),
+        new THREE.MeshStandardMaterial({ color: STREAM.ore, transparent: true, opacity: 0.35, roughness: 0.9 }),
+      );
+      s.rotation.x = -Math.PI / 2;
+      s.position.set((a[0] + b[0]) / 2, 0.02, (a[2] + b[2]) / 2);
+      s.rotation.z = Math.atan2(dx, dz); // stream-color grammar under the trough
+      g.add(s);
+    };
+    mkTrough([BELT_HEAD[0] + 7, 0, BELT_HEAD[2]], BELT_HEAD); // yard edge -> head tower (leg A)
+    const hop: any = new THREE.Group();
+    const hd: any = new THREE.Mesh(
+      new THREE.BoxGeometry(1.8, 3.4, 1.8),
+      new THREE.MeshStandardMaterial({ color: '#565d66', roughness: 0.6, metalness: 0.4 }),
+    );
+    hd.position.set(BELT_HEAD[0], 1.7, BELT_HEAD[2]); // head tower the tokens arc over
+    g.add(hd);
+    hop.visible = snap.state.drpCommissioned; // second hop painted only once DRP is commissioned
+    mkTroughInto(hop, BELT_HEAD, BELT_DRP); // leg B (buffer -> drp_intake)
+    g.add(hop);
+    return g as THREE.Group;
+  }, [snap.state.drpCommissioned]);
+  function mkTroughInto(holder: any, a: [number, number, number], b: [number, number, number]) {
+    const dx = b[0] - a[0], dz = b[2] - a[2];
+    const len = Math.hypot(dx, dz);
+    const t: any = new THREE.Mesh(
+      new THREE.BoxGeometry(1.3, 0.28, len),
+      new THREE.MeshStandardMaterial({ color: '#3a3f46', roughness: 0.7, metalness: 0.35 }),
+    );
+    t.position.set((a[0] + b[0]) / 2, 0.55, (a[2] + b[2]) / 2);
+    t.rotation.y = Math.atan2(dx, dz) + Math.PI / 2;
+    holder.add(t);
+  }
+  // Ore tokens: instanced dodecahedra (low-poly pellets), one per in_transit record.
+  const tokensRef = React.useRef<{ mesh: any; keys: string[] } | null>(null);
+  const tokenMesh: any = React.useMemo(() => {
+    const geo = new THREE.DodecahedronGeometry(0.32, 0);
+    const mat = new THREE.MeshStandardMaterial({ color: STREAM.ore, roughness: 1.0 });
+    const im: any = new THREE.InstancedMesh(geo, mat, 48); // cap: in-flight records never exceed ~rate/chunk*travel
+    im.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    im.count = 0;
+    return im;
+  }, []);
+  tokensRef.current = { mesh: tokenMesh, keys: [] };
+
+  useRafLoop(() => {
+    const holder = tokensRef.current;
+    if (!holder) return;
+    const s = SESSION.beltVisualSnapshot();
+    const im = holder.mesh;
+    if (!s) { im.count = 0; return; }
+    const tickMs = SESSION.tickIntervalMs();
+    // frac: fraction of the current pump interval elapsed. The HUD pump steps on a
+    // setInterval aligned to wall clock; we recompute frac from last snapshot's registry
+    // tick vs performance.now() drift — good enough for smooth motion (presentation only).
+    const frac = Math.min(0.999, (performance.now() % tickMs) / tickMs);
+    const view = beltTokenView(s.state, frac);
+    const shown = Math.min(view.tokens.length, 48);
+    for (let i = 0; i < shown; i++) {
+      const tok = view.tokens[i];
+      // leg A: yard edge -> head tower (p in [0,1] along that span). Leg B continues to DRP.
+      let x: number, y: number, z: number;
+      if (tok.leg === 'yard-buffer') {
+        const p = tok.progress * 0.35; // first 35% of the visual loop is leg A
+        x = BELT_HEAD[0] + 7 + (BELT_HEAD[0] - (BELT_HEAD[0] + 7)) * p;
+        z = BELT_HEAD[2];
+        y = 1.0;
+      } else {
+        const p = 0.35 + tok.progress * 0.65;
+        x = BELT_HEAD[0] + (BELT_DRP[0] - BELT_HEAD[0]) * ((p - 0.35) / 0.65);
+        z = BELT_HEAD[2] + (BELT_DRP[2] - BELT_HEAD[2]) * ((p - 0.35) / 0.65);
+        y = 1.0;
+      }
+      const sc = tok.size;
+      _m4.makeScale(sc, sc, sc);
+      _m4.setPosition(x, y, z);
+      im.setMatrixAt(i, _m4);
+    }
+    im.count = shown;
+    im.instanceMatrix.needsUpdate = true;
+  });
+
+  return <primitive object={group} />;
+}
+const _m4 = new THREE.Matrix4();
 
 /** Stream-color ground strips connecting adjacent zones along the material route
  *  (PLAN_FORGED §2: "stream-color ground strips + arrows drawn between zones").
@@ -883,6 +999,7 @@ function Scene() {
           <meshStandardMaterial color={GROUND_COLOR} roughness={0.95} />
         </mesh>
         <StreamStrips />
+        {SESSION.builtNode('conv_ore_drp') && <OreBelt />}
         {ZONES.map((z) => <Zone key={z.id} zone={z} />)}
         <SelectionRim />
         {ZONES.map((z) => <LockedVeil key={`veil-${z.id}`} zone={z} />)}

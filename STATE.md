@@ -48,7 +48,7 @@ end goal; desktop/browser for now. No-rush iterative cadence, one Go-gated micro
   exactly one EAF (eaffix_* evidence). S0.4 CLOSED pending final bookkeeping below.
 - **S0.5 CLOSED** — persistence v2 (`371f09d`): save schema v2 (slices map + onboarding
   block, strict validation), autosave every 32 ticks + visibilitychange, boot `tryRestore()`,
-  unlock re-derivation. Suite now 26 files / 209 tests.
+  unlock re-derivation.
 - **STAGE 0 CLOSED — SME tuning pass settled (Yasser via Qwen, 19.11):** q2 = ONE tap
   (`produced_t >= 180` if liquid steel; ~150 if cast product); q3 = shipment event + one-load
   proving quantity (~30–50 t), time window only as Bronze/Silver/Gold modifier, never hard
@@ -63,12 +63,23 @@ end goal; desktop/browser for now. No-rush iterative cadence, one Go-gated micro
 - Vendor-kit gate CHECKED (19.11): every GLB the fullplant scene references lives in git under
   `web/src/ports/*/browser/assets/` (jetty/drp/feed/eaf/lrf/ccm/rebar_mill all tracked);
   `content/_vendor/cc0/` is referenced by ZERO code — unused source packs only. Fresh-clone gate holds.
-- Next: **Stage 1 — Chapter 1: The Ore Belt** per PLAN_FORGED (**S1.1 mirror DONE**:
-  `mirror/registry_handoff_mirror.py` — transfer/reserve/release + in_transit ledger with
-  arrival_tick, pure ticks, earmark lifecycle, closure 1e-6; ALL PASS incl. 6 negatives.
-  NEXT micro-step: TS port `web/src/shared/registry_handoff.ts` + parity tests) → S1.2 belt
-  edge+ore tokens → S1.3 procedural DRP hero swap → S1.4 mound fill. Remote push pending
-  (12 commits unpushed; Wi-Fi off).
+- **Stage 1 — Chapter 1: The Ore Belt** per PLAN_FORGED, in progress:
+  - **S1.1 DONE** (`f5367c9` mirror + `8770312` TS port): registry_handoff primitives
+    (transfer/reserve/release + in_transit ledger with arrival_tick, earmark lifecycle,
+    closure 1e-6) — Python mirror ALL PASS incl. negatives; parity test pinned vs dump.
+  - **S1.2 DONE** (`c8b3c92` core + `c4e39f3` integration, pushed): belt is a real transfer
+    edge (yard→ore_buffer→drp_intake) riding GameSession (build→tick→save/restore).
+  - **S1.2 visual layer — CODE COMPLETE + VERIFIED, COMMIT PENDING** (uncommitted working
+    tree: `main.tsx` OreBelt instanced-token renderer cap 48 + NODE_FOOTPRINT,
+    `session.ts` beltVisualSnapshot/tickIntervalMs, `shared/ore_belt.ts` beltTokenView
+    projection, session test +2). Live-browser evidence: token mesh created on belt build,
+    instanced count == min(ledger, 48) every sampled frame (0/0→1/1→2/2 over ~8s), zero
+    console errors (`web/shots/s12_belt_tokens.png`). NOTE: the probe script's own PASS/FAIL
+    line has a broken assertion — do NOT chase it; trust the per-frame timeline print. The
+    working probe is `web/scripts/probe_ore_belt_tokens6.mjs` (serve-time ctor-hook + rAF
+    scan); variants 1–5 are dead drafts, delete them in the commit.
+  - NEXT fresh session: commit the visual layer (+ tidy probes/shots), then **S1.3 procedural
+    DRP hero swap** → S1.4 mound fill.
 
 ## The game as it plays today
 Fullplant app (`web/src/ports/fullplant`, dev port 5178 via `start_digital_twin_v2.bat` —
@@ -88,9 +99,10 @@ EAF/LF/CCM, slice5 mills); each is a pure tick engine with a Python mirror + par
 - Unknown values are asked, never invented.
 
 ## Verified facts (measured, not remembered — re-measure if in doubt)
-- Test suite: `cd web && npx vitest run --root .` → **25 files / 195 tests green** (S0.4 WIP, 11.19).
+- Test suite: `cd web && npx vitest run --root .` → **30 files / 234 tests green** (S1.2 visual
+  layer in working tree, re-measured 19.11).
 - Fresh-clone gate passed at S0.1 (stranger's clone builds and plays step 1).
-- Remote master head: `1c37f6c` — local is 3 commits ahead (`52bda26`, `825a949`, `c697fc7`), push when network allows.
+- Remote master head: `c4e39f3` — remote and local are IN SYNC (pushed 19.11 while online).
 
 ## Key docs
 | Doc | Role |

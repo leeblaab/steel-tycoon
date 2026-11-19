@@ -5,6 +5,7 @@
 // verbatim slice state fields, exactly like the hub.
 
 import { buildCatalog, type CatalogEntry } from '../../../hub/catalog.ts';
+import { NORMAL_TPS, FAST_MULTIPLIER } from './layout.ts';
 import { HubTickLoop } from '../../../hub/tickloop.ts';
 import { InventoryRegistry, type BalanceCheckResult } from '../../../shared/inventory_registry.ts';
 import { QuestTracker, loadLevelQuests, type QuestProgressMap, type QuestsDoc } from '../../../shared/quest_tracker.ts';
@@ -309,6 +310,20 @@ export class GameSession {
 
   stateOf(slice: string): unknown {
     return this.slices[slice]?.loop?.state;
+  }
+
+  /** S1.2 visual layer: ms until the next plant tick (HUD pump cadence). Lets the belt
+   *  renderer ease token positions smoothly between discrete ticks. */
+  tickIntervalMs(): number {
+    const tps = NORMAL_TPS * (this.speed === 'fast' ? FAST_MULTIPLIER : 1);
+    return 1000 / tps;
+  }
+
+  /** S1.2 visual layer: the belt's in_transit records as a save-shaped snapshot (same
+   *  block autosave writes). Pure projection for the 3D token renderer — never mutates. */
+  beltVisualSnapshot(): { state: OreBeltState; deposits_total: number } | null {
+    if (!this.belt) return null;
+    return { state: structuredClone(this.belt), deposits_total: this.beltDepositsTotal };
   }
 
   questProgress(): QuestProgressMap {

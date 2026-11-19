@@ -7,7 +7,7 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { GameSession, validateOreBeltBlock } from '../src/ports/fullplant/browser/session.ts';
 import { MemorySaveStorage, FULLPLANT_SAVE_FILE_KEY } from '../src/shared/save_load.ts';
-import { beltLedgerView } from '../src/shared/ore_belt.ts';
+import { beltLedgerView, beltTokenView } from '../src/shared/ore_belt.ts';
 
 const ROOT = 'C:/AI_LAB/SteelX';
 const questsDoc = JSON.parse(readFileSync(`${ROOT}/content/quests.json`, 'utf8'));
@@ -147,5 +147,52 @@ describe('ore_belt save block gate (reject-never-default)', () => {
     const state = structuredClone(s.belt!);
     expect(() => validateOreBeltBlock({ state, deposits_total: s.beltDepositsTotal + 50 }))
       .toThrow(/ledger gate/);
+  });
+});
+
+describe('belt token view (S1.2 visual projection)', () => {
+  it('one token per in_transit record, progress eases with the tick clock', () => {
+    const s = freshSession();
+    buildUntil(s, 'conv_ore_drp');
+    for (let i = 0; i < 40; i++) s.stepPlant(); // yard has ore -> transfers in flight
+    const st = s.belt!;
+    const v0 = beltTokenView(st, 0);
+    expect(v0.tokens.length).toBe(st.registry.in_transit.length);
+    expect(v0.tokens.length).toBeGreaterThan(0);
+    for (const tok of v0.tokens) {
+      expect(['yard-buffer', 'buffer-drp']).toContain(tok.leg);
+      expect(tok.progress).toBeGreaterThanOrEqual(0);
+      expect(tok.progress).toBeLessThanOrEqual(1);
+      expect(tok.size).toBeGreaterThan(0.6);
+    }
+    // frac raises progress but never past 1; keys are stable (same transfer_id order)
+    const v1 = beltTokenView(st, 0.9);
+    expect(v1.tokens.map((t) => t.key)).toEqual(v0.tokens.map((t) => t.key));
+    for (let i = 0; i < v0.tokens.length; i++) {
+      expect(v1.tokens[i].progress).toBeGreaterThanOrEqual(v0.tokens[i].progress);
+      expect(v1.tokens[i].progress).toBeLessThanOrEqual(1);
+    }
+    // legs match the ledger's destinations
+    for (let i = 0; i < v0.tokens.length; i++) {
+      const rec = st.registry.in_transit[i];
+      expect(v0.tokens[i].leg).toBe(rec.to_id === 'ore_buffer' ? 'yard-buffer' : 'buffer-drp');
+    }
+  });
+
+  it('beltVisualSnapshot is a pure projection (mutating it cannot touch sim state)', () => {
+    const s = freshSession();
+    buildUntil(s, 'conv_ore_drp');
+    for (let i = 0; i < 12; i++) s.stepPlant();
+    const before = beltLedgerView(s.belt!);
+    const snap = s.beltVisualSnapshot()!;
+    snap.state.registry.inventories['yard_ore'].usable_t += 9999; // tamper the clone
+    snap.state.registry.in_transit.push({ transfer_id: 'fake', from_id: 'a', to_id: 'b', tonnes: 1, depart_tick: 0, arrival_tick: 1 } as any);
+    const after = beltLedgerView(s.belt!);
+    expect(after.yard_t).toBeCloseTo(before.yard_t, 9);
+    expect(after.in_transit_t).toBeCloseTo(before.in_transit_t, 9);
+    // pre-build: no snapshot at all (renderer shows nothing)
+    const s2 = freshSession();
+    buildUntil(s2, 'jetty');
+    expect(s2.beltVisualSnapshot()).toBeNull();
   });
 });
