@@ -46,8 +46,26 @@ end goal; desktop/browser for now. No-rush iterative cadence, one Go-gated micro
   EAF ghost in slice-3 zone removed (`c45cffe`) — the single EAF lives in the meltshop;
   root cause was `Slice3` gating on the shared `'eaf'` node_id. A/B re-shot confirms
   exactly one EAF (eaffix_* evidence). S0.4 CLOSED pending final bookkeeping below.
-- Next: **S0.5** persistence v2 (quest window fields in save) once S0.4 gate passes →
-  then Stage 1 (Chapter 1: The Ore Belt). Remote push pending (8 commits unpushed as of 560c797; Wi-Fi off).
+- **S0.5 CLOSED** — persistence v2 (`371f09d`): save schema v2 (slices map + onboarding
+  block, strict validation), autosave every 32 ticks + visibilitychange, boot `tryRestore()`,
+  unlock re-derivation. Suite now 26 files / 209 tests.
+- **STAGE 0 CLOSED — SME tuning pass settled (Yasser via Qwen, 19.11):** q2 = ONE tap
+  (`produced_t >= 180` if liquid steel; ~150 if cast product); q3 = shipment event + one-load
+  proving quantity (~30–50 t), time window only as Bronze/Silver/Gold modifier, never hard
+  fail in Level 1; optionals in Level 1 = gentle behavior nudges (starved ticks / idle /
+  queue), ratio metrics shown on cards but NOT gated until Level 4–5; ship cadence 3–5 days
+  OK for coastal feed (~10–20 kt parcels) — cargo size tied to cadence, randomized within
+  band via seeded xorshift32 mirror-first, FIRST arrival pinned early/fixed for the tutorial;
+  EAF tap size confirmed 180 t — draw bands ~380–450 kWh/t scrap-dominant, ~500–600 DRI-heavy
+  (~70–110 MWh/tap), tap-to-tap 50–60 min (power-on 40–50), transformer ~100–140 MVA, curve
+  bore-in→peak→taper; correct mirror ONLY if wildly off (<300/>700 kWh/t or <35/>90 min).
+  Tuning is a content pass folded into Stage 1+ — does not stall the spine.
+- Vendor-kit gate CHECKED (19.11): every GLB the fullplant scene references lives in git under
+  `web/src/ports/*/browser/assets/` (jetty/drp/feed/eaf/lrf/ccm/rebar_mill all tracked);
+  `content/_vendor/cc0/` is referenced by ZERO code — unused source packs only. Fresh-clone gate holds.
+- Next: **Stage 1 — Chapter 1: The Ore Belt** per PLAN_FORGED (S1.1 registry transfer/reserve/
+  release + in_transit ledger → S1.2 onboarding step 4 belt edge + ore tokens → S1.3 hero swap
+  #1 procedural DRP shaft → S1.4 ore-yard mound fill). Remote push pending (10 commits unpushed; Wi-Fi off).
 
 ## The game as it plays today
 Fullplant app (`web/src/ports/fullplant`, dev port 5178 via `start_digital_twin_v2.bat` —
