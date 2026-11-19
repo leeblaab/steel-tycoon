@@ -1,0 +1,496 @@
+{
+  "fixture_id": "ore_belt_v1",
+  "schema_version": 1,
+  "note": "slice1 mirror (seed 11 state, FixedDraws no-fire) arrived_t deltas drive the belt chain; literal Python clone of ore_belt.ts; DRP commissions at tick 30",
+  "belt": {
+    "rate_tph": 600.0,
+    "chunk_t": 25.0,
+    "travel_ticks": 2,
+    "commission_tick": 30
+  },
+  "tick_count": 60,
+  "rows": [
+    {
+      "tick": 1,
+      "slice_arrived_t": 100.0,
+      "yard_t": 75.0,
+      "buffer_t": 0.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 25.0
+    },
+    {
+      "tick": 2,
+      "slice_arrived_t": 200.0,
+      "yard_t": 150.0,
+      "buffer_t": 0.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 3,
+      "slice_arrived_t": 300.0,
+      "yard_t": 225.0,
+      "buffer_t": 25.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 4,
+      "slice_arrived_t": 400.0,
+      "yard_t": 300.0,
+      "buffer_t": 50.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 5,
+      "slice_arrived_t": 500.0,
+      "yard_t": 375.0,
+      "buffer_t": 75.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 6,
+      "slice_arrived_t": 600.0,
+      "yard_t": 450.0,
+      "buffer_t": 100.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 7,
+      "slice_arrived_t": 700.0,
+      "yard_t": 525.0,
+      "buffer_t": 125.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 8,
+      "slice_arrived_t": 800.0,
+      "yard_t": 600.0,
+      "buffer_t": 150.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 9,
+      "slice_arrived_t": 900.0,
+      "yard_t": 675.0,
+      "buffer_t": 175.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 10,
+      "slice_arrived_t": 1000.0,
+      "yard_t": 750.0,
+      "buffer_t": 200.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 11,
+      "slice_arrived_t": 1100.0,
+      "yard_t": 825.0,
+      "buffer_t": 225.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 12,
+      "slice_arrived_t": 1200.0,
+      "yard_t": 900.0,
+      "buffer_t": 250.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 13,
+      "slice_arrived_t": 1300.0,
+      "yard_t": 975.0,
+      "buffer_t": 275.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 14,
+      "slice_arrived_t": 1400.0,
+      "yard_t": 1050.0,
+      "buffer_t": 300.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 15,
+      "slice_arrived_t": 1500.0,
+      "yard_t": 1125.0,
+      "buffer_t": 325.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 16,
+      "slice_arrived_t": 1600.0,
+      "yard_t": 1200.0,
+      "buffer_t": 350.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 17,
+      "slice_arrived_t": 1700.0,
+      "yard_t": 1275.0,
+      "buffer_t": 375.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 18,
+      "slice_arrived_t": 1800.0,
+      "yard_t": 1350.0,
+      "buffer_t": 400.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 19,
+      "slice_arrived_t": 1900.0,
+      "yard_t": 1425.0,
+      "buffer_t": 425.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 20,
+      "slice_arrived_t": 2000.0,
+      "yard_t": 1500.0,
+      "buffer_t": 450.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 21,
+      "slice_arrived_t": 2100.0,
+      "yard_t": 1575.0,
+      "buffer_t": 475.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 22,
+      "slice_arrived_t": 2200.0,
+      "yard_t": 1650.0,
+      "buffer_t": 500.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 23,
+      "slice_arrived_t": 2300.0,
+      "yard_t": 1725.0,
+      "buffer_t": 525.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 24,
+      "slice_arrived_t": 2441.666667,
+      "yard_t": 1841.666667,
+      "buffer_t": 550.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 25,
+      "slice_arrived_t": 2583.333333,
+      "yard_t": 1958.333333,
+      "buffer_t": 575.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 26,
+      "slice_arrived_t": 2725.0,
+      "yard_t": 2075.0,
+      "buffer_t": 600.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 27,
+      "slice_arrived_t": 2866.666667,
+      "yard_t": 2191.666667,
+      "buffer_t": 625.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 28,
+      "slice_arrived_t": 3008.333333,
+      "yard_t": 2308.333333,
+      "buffer_t": 650.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 29,
+      "slice_arrived_t": 3150.0,
+      "yard_t": 2425.0,
+      "buffer_t": 675.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 30,
+      "slice_arrived_t": 3291.666667,
+      "yard_t": 2541.666667,
+      "buffer_t": 700.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 50.0
+    },
+    {
+      "tick": 31,
+      "slice_arrived_t": 3433.333333,
+      "yard_t": 2658.333333,
+      "buffer_t": 700.0,
+      "drp_intake_t": 0.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 32,
+      "slice_arrived_t": 3575.0,
+      "yard_t": 2775.0,
+      "buffer_t": 700.0,
+      "drp_intake_t": 25.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 33,
+      "slice_arrived_t": 3716.666667,
+      "yard_t": 2891.666667,
+      "buffer_t": 700.0,
+      "drp_intake_t": 50.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 34,
+      "slice_arrived_t": 3858.333333,
+      "yard_t": 3008.333333,
+      "buffer_t": 700.0,
+      "drp_intake_t": 75.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 35,
+      "slice_arrived_t": 4000.0,
+      "yard_t": 3125.0,
+      "buffer_t": 700.0,
+      "drp_intake_t": 100.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 36,
+      "slice_arrived_t": 4141.666667,
+      "yard_t": 3241.666667,
+      "buffer_t": 700.0,
+      "drp_intake_t": 125.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 37,
+      "slice_arrived_t": 4283.333333,
+      "yard_t": 3358.333333,
+      "buffer_t": 700.0,
+      "drp_intake_t": 150.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 38,
+      "slice_arrived_t": 4425.0,
+      "yard_t": 3475.0,
+      "buffer_t": 700.0,
+      "drp_intake_t": 175.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 39,
+      "slice_arrived_t": 4566.666667,
+      "yard_t": 3591.666667,
+      "buffer_t": 700.0,
+      "drp_intake_t": 200.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 40,
+      "slice_arrived_t": 4708.333333,
+      "yard_t": 3708.333333,
+      "buffer_t": 700.0,
+      "drp_intake_t": 225.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 41,
+      "slice_arrived_t": 4850.0,
+      "yard_t": 3825.0,
+      "buffer_t": 700.0,
+      "drp_intake_t": 250.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 42,
+      "slice_arrived_t": 4991.666667,
+      "yard_t": 3941.666667,
+      "buffer_t": 700.0,
+      "drp_intake_t": 275.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 43,
+      "slice_arrived_t": 5133.333333,
+      "yard_t": 4058.333333,
+      "buffer_t": 700.0,
+      "drp_intake_t": 300.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 44,
+      "slice_arrived_t": 5275.0,
+      "yard_t": 4175.0,
+      "buffer_t": 700.0,
+      "drp_intake_t": 325.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 45,
+      "slice_arrived_t": 5416.666667,
+      "yard_t": 4291.666667,
+      "buffer_t": 700.0,
+      "drp_intake_t": 350.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 46,
+      "slice_arrived_t": 5558.333333,
+      "yard_t": 4408.333333,
+      "buffer_t": 700.0,
+      "drp_intake_t": 375.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 47,
+      "slice_arrived_t": 5700.0,
+      "yard_t": 4525.0,
+      "buffer_t": 700.0,
+      "drp_intake_t": 400.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 48,
+      "slice_arrived_t": 5841.666667,
+      "yard_t": 4641.666667,
+      "buffer_t": 700.0,
+      "drp_intake_t": 425.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 49,
+      "slice_arrived_t": 5983.333333,
+      "yard_t": 4758.333333,
+      "buffer_t": 700.0,
+      "drp_intake_t": 450.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 50,
+      "slice_arrived_t": 6125.0,
+      "yard_t": 4875.0,
+      "buffer_t": 700.0,
+      "drp_intake_t": 475.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 51,
+      "slice_arrived_t": 6266.666667,
+      "yard_t": 4991.666667,
+      "buffer_t": 700.0,
+      "drp_intake_t": 500.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 52,
+      "slice_arrived_t": 6408.333333,
+      "yard_t": 5108.333333,
+      "buffer_t": 700.0,
+      "drp_intake_t": 525.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 53,
+      "slice_arrived_t": 6550.0,
+      "yard_t": 5225.0,
+      "buffer_t": 700.0,
+      "drp_intake_t": 550.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 54,
+      "slice_arrived_t": 6691.666667,
+      "yard_t": 5341.666667,
+      "buffer_t": 700.0,
+      "drp_intake_t": 575.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 55,
+      "slice_arrived_t": 6833.333333,
+      "yard_t": 5458.333333,
+      "buffer_t": 700.0,
+      "drp_intake_t": 600.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 56,
+      "slice_arrived_t": 6975.0,
+      "yard_t": 5575.0,
+      "buffer_t": 700.0,
+      "drp_intake_t": 625.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 57,
+      "slice_arrived_t": 7116.666667,
+      "yard_t": 5691.666667,
+      "buffer_t": 700.0,
+      "drp_intake_t": 650.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 58,
+      "slice_arrived_t": 7258.333333,
+      "yard_t": 5808.333333,
+      "buffer_t": 700.0,
+      "drp_intake_t": 675.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 59,
+      "slice_arrived_t": 7400.0,
+      "yard_t": 5925.0,
+      "buffer_t": 700.0,
+      "drp_intake_t": 700.0,
+      "in_transit_t": 75.0
+    },
+    {
+      "tick": 60,
+      "slice_arrived_t": 7541.666667,
+      "yard_t": 6041.666667,
+      "buffer_t": 700.0,
+      "drp_intake_t": 725.0,
+      "in_transit_t": 75.0
+    }
+  ],
+  "deposits_total": 7541.666667,
+  "closure_total": 7541.666667
+}
