@@ -35,13 +35,17 @@ end goal; desktop/browser for now. No-rush iterative cadence, one Go-gated micro
   `quest_windowing.test.ts`), q1 retuned to arrived_t>=3000 (Yasser's number). Commits
   `52bda26`→`825a949`. Parked to end of Stage 0: q2/q3/opt bands, ship cadence (3–5 days),
   EAF draw vs 180 t/tap.
-- **S0.4 AT SENSORY GATE** — relight committed (`c697fc7` WIP, `81bc671` bisect session: dev
+- **S0.4 DONE (gated by Yasser 2026-11-19: "rest looks good enough" + one specific fix)** — relight committed (`c697fc7` WIP, `81bc671` bisect session: dev
   rig-override URL params + `__steelxRig` hook, dead probe scripts deleted, A/B evidence in
   `docs/evidence/s04_ab/`). Dark-scene suspects fog + ACES tone mapping DISPROVEN by A/B
   bisect — relight v2 already fixed brightness at pixel level (mean RGB 26–38 → 55–61,
   near-black 38–66% → 7–16%). Perf caveat: headless draw/tri growth vs `perf_before.json`
   comes from slices 3–5 geometry now building in the guided flow, not a relight regression.
-  Waiting on Yasser's sensory verdict before marking S0.4 DONE.
+  Waiting on Yasser's sensory verdict before marking S0.4 DONE. **Verdict received**
+  ("layout much improved, rest looks good enough") + one specific fix shipped: duplicate
+  EAF ghost in slice-3 zone removed (`c45cffe`) — the single EAF lives in the meltshop;
+  root cause was `Slice3` gating on the shared `'eaf'` node_id. A/B re-shot confirms
+  exactly one EAF (eaffix_* evidence). S0.4 CLOSED pending final bookkeeping below.
 - Next: **S0.5** persistence v2 (quest window fields in save) once S0.4 gate passes →
   then Stage 1 (Chapter 1: The Ore Belt). Remote push pending (5 commits unpushed; Wi-Fi off).
 
