@@ -20,7 +20,7 @@ describe('QuestPanel (§5.4)', () => {
     expect(html).toContain('First Arrival');
     expect(html).toContain('No Idle Furnace');
     expect(html).toContain('ACTIVE'); // first main quest active
-    expect((html.match(/data-status="locked"/g) ?? []).length).toBe(3); // q2-q4 locked at start
+    expect((html.match(/data-status="locked"/g) ?? []).length).toBe(4); // F-12 strict chain: optional starts locked too
   });
 
   it('live condition progress reads the supplied sim state verbatim', () => {

@@ -7,6 +7,12 @@
 // opens too early and the quest chain loses its gating power. The engine gate itself is
 // correct here: even with slice3's build chain open, no DRP production happens until the
 // player places drp + conv_dri_eaf. Threshold values are SME decisions (Yasser) — next step.
+//
+// F-12 update: quest windows are now strict-chain + windowed, so q2..q4 can NO LONGER
+// complete before q1. The park gate ("all l1_q* completed") therefore stays shut until the
+// whole chain finishes with real thresholds. Tests that need past-park steps drive the
+// chain through the tracker directly (chainGateOpen) — placeholder numbers can never open
+// it on their own, which is exactly the F-12 contract working.
 
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
@@ -37,6 +43,25 @@ function buildUpTo(s: GameSession, nodes: string[]): void {
       }
       throw new Error(`unexpected ${step.type} step before building ${n}`);
     }
+  }
+}
+
+/** F-12: the park gate needs ALL l1_q* main quests completed — impossible on placeholder
+ *  thresholds. Tests past the park drive the tracker chain directly (the same snapshot the
+ *  real tick loop feeds checkExit), then re-run the flow past the park step. */
+function openParkGate(s: GameSession): void {
+  const prog = s.tracker.snapshotProgress();
+  for (const p of Object.values(prog)) {
+    if (String(p.id).startsWith('l1_q')) { p.status = 'completed'; p.conditions_met = true; }
+  }
+  s.onboard.questProgressSnapshot = prog;
+  // onboardingComplete() re-snapshots from the tracker, so complete the REAL tracker state:
+  s.tracker.restoreProgress(prog as any);
+  for (let i = 0; i < 10 && s.onboard.index >= 0; i++) {
+    if (s.onboardingComplete()) break;
+    const step = s.seqSteps[s.onboard.index];
+    if (!step) break;
+    if (step.type === 'resume') s.dismissCard();
   }
 }
 
@@ -76,7 +101,8 @@ describe('S0.3 engine gate: quest unlocks the build chain, building starts the e
     buildUpTo(s, ['jetty', 'scrap_yard', 'conv_ore_drp']); // slice1 live
     for (let i = 0; i < 200; i++) { if (s.stepPlant().includes('l1_q1_first_arrival')) break; }
     expect(s.slices['slice3'].unlocked).toBe(true); // q1 opened the chain
-    buildUpTo(s, ['drp']); // park opens early on current placeholder thresholds (see header note)
+    openParkGate(s); // F-12: park needs the WHOLE main chain done — placeholder thresholds can't
+    buildUpTo(s, ['drp']);
     expect(s.engineRunning('slice3')).toBe(false); // conv_dri_eaf still missing
     buildUpTo(s, ['conv_dri_eaf']);
     expect(s.engineRunning('slice3')).toBe(true); // engine joins the live ticking plant

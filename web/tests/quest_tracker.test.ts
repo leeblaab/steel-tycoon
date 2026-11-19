@@ -23,12 +23,12 @@ const LEVEL = loadLevelQuests(DOC, 'level_1');
 const snap = (st: any) => ({ tick: st.tick, state: st, events: st.events ?? [] });
 
 describe('quest tracker lifecycle', () => {
-  it('initial chain: first main active, rest locked, optional available', () => {
+  it('initial chain: first main active, rest locked, optional LOCKED until last main (F-12)', () => {
     const t = new QuestTracker(LEVEL);
     const p = t.snapshotProgress();
     expect(p.q_a.status).toBe('active');
     expect(p.q_b.status).toBe('locked');
-    expect(p.q_opt.status).toBe('available');
+    expect(p.q_opt.status).toBe('locked');
     expect(t.activeQuestId()).toBe('q_a');
   });
 
@@ -46,21 +46,31 @@ describe('quest tracker lifecycle', () => {
     expect(t.activeQuestId()).toBe('q_b');
   });
 
-  it('idempotent: a completed quest never re-fires and progress stays completed', () => {
+  it('idempotent: a completed quest never re-fires; windowed chain completes over successive ticks', () => {
     const t = new QuestTracker(LEVEL);
-    t.update({ tick: 1, state: { ships_arrived: 2, arrived_t: 9000 }, events: [] }); // both met same tick
+    // tick 1: q_a fires (its condition is raw ships_arrived) and opens q_b with arrived_t baseline 9000
+    t.update({ tick: 1, state: { ships_arrived: 2, arrived_t: 9000 }, events: [] });
+    // tick 2: q_b evaluates; window delta (9500-9000=500 < 5000) -> not met, no re-fire of q_a
     const again = t.update({ tick: 2, state: { ships_arrived: 3, arrived_t: 9500 }, events: [] });
     expect(again).toEqual([]);
+    // windowed chain: q_b completes once the WINDOW grows +5000 over its baseline
+    const done = t.update({ tick: 3, state: { ships_arrived: 3, arrived_t: 14000 }, events: [] });
+    expect(done).toEqual(['q_b']);
     expect(t.levelComplete()).toBe(true);
   });
 
-  it('optional quest tracks independently and never gates the chain', () => {
+  it('optional quest opens only after the last main and never gates the chain', () => {
     const t = new QuestTracker(LEVEL);
-    const fired = t.update({ tick: 1, state: { ships_arrived: 0, arrived_t: 0, upstream_blocked_t: 0 }, events: [] });
-    expect(fired).toEqual(['q_opt']); // optional completes while mains unmet
-    const p = t.snapshotProgress();
-    expect(p.q_a.status).toBe('active');
-    expect(t.levelComplete()).toBe(false);
+    // q_a then q_b complete (windowed: q_b's arrived_t baseline is taken at q_a's completion)
+    t.update({ tick: 1, state: { ships_arrived: 0, arrived_t: 0, upstream_blocked_t: 5 }, events: [] }); // nothing met
+    expect(t.snapshotProgress().q_opt.status).toBe('locked'); // still locked while chain incomplete
+    t.update({ tick: 2, state: { ships_arrived: 1, arrived_t: 0, upstream_blocked_t: 5 }, events: [] }); // q_a done; opt stays LOCKED (q_b not done)
+    expect(t.snapshotProgress().q_opt.status).toBe('locked');
+    t.update({ tick: 3, state: { ships_arrived: 1, arrived_t: 6000, upstream_blocked_t: 5 }, events: [] }); // q_b window delta met -> opt opens 'available'
+    expect(t.snapshotProgress().q_opt.status).toBe('available');
+    t.update({ tick: 4, state: { ships_arrived: 1, arrived_t: 6000, upstream_blocked_t: 5 }, events: [] }); // opt delta = 0 <= 0 -> completes; chain completion never depended on it
+    expect(t.snapshotProgress().q_opt.status).toBe('completed');
+    expect(t.levelComplete()).toBe(true);
   });
 
   it('unknown state field never satisfies a condition', () => {
@@ -84,7 +94,7 @@ describe('quest tracker lifecycle', () => {
 
   it('invalid saved status is rejected, not defaulted', () => {
     const t = new QuestTracker(LEVEL);
-    expect(() => t.restoreProgress({ q_a: { id: 'q_a', status: 'failed' as any, conditions_met: false, completed_at_tick: null } })).toThrow(/invalid saved status/);
+    expect(() => t.restoreProgress({ q_a: { id: 'q_a', status: 'failed' as any, conditions_met: false, completed_at_tick: null, window_baseline: {}, window_open_tick: null } })).toThrow(/invalid saved status/);
   });
 
   it('unsupported quests.json schema_version is rejected (versioned content, §14.3)', () => {
