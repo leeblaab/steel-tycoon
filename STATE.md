@@ -63,9 +63,12 @@ end goal; desktop/browser for now. No-rush iterative cadence, one Go-gated micro
 - Vendor-kit gate CHECKED (19.11): every GLB the fullplant scene references lives in git under
   `web/src/ports/*/browser/assets/` (jetty/drp/feed/eaf/lrf/ccm/rebar_mill all tracked);
   `content/_vendor/cc0/` is referenced by ZERO code — unused source packs only. Fresh-clone gate holds.
-- Next: **Stage 1 — Chapter 1: The Ore Belt** per PLAN_FORGED (S1.1 registry transfer/reserve/
-  release + in_transit ledger → S1.2 onboarding step 4 belt edge + ore tokens → S1.3 hero swap
-  #1 procedural DRP shaft → S1.4 ore-yard mound fill). Remote push pending (10 commits unpushed; Wi-Fi off).
+- Next: **Stage 1 — Chapter 1: The Ore Belt** per PLAN_FORGED (**S1.1 mirror DONE**:
+  `mirror/registry_handoff_mirror.py` — transfer/reserve/release + in_transit ledger with
+  arrival_tick, pure ticks, earmark lifecycle, closure 1e-6; ALL PASS incl. 6 negatives.
+  NEXT micro-step: TS port `web/src/shared/registry_handoff.ts` + parity tests) → S1.2 belt
+  edge+ore tokens → S1.3 procedural DRP hero swap → S1.4 mound fill. Remote push pending
+  (12 commits unpushed; Wi-Fi off).
 
 ## The game as it plays today
 Fullplant app (`web/src/ports/fullplant`, dev port 5178 via `start_digital_twin_v2.bat` —
