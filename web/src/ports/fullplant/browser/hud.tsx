@@ -23,13 +23,23 @@ function Accordion({ title, open, onToggle, children }: { title: string; open: b
 
 function fmt(v: number, d = 1): string { return (Math.round(v * 10 ** d) / 10 ** d).toLocaleString(); }
 
+import { beltLedgerView } from '../../../shared/ore_belt.ts';
+
 /** Live KPI lines per slice — read-only projections of verbatim state fields. */
 function kpiLines(session: GameSession, id: string): string[] {
   const st = session.stateOf(id) as any;
   if (!st) return [];
   switch (id) {
-    case 'slice1':
-      return [`day ${st.day} · tick ${st.tick}`, `yard stock: ${fmt(st.yard_stock_t)} t`, `arrived: ${fmt(st.arrived_t)} t`, `dispatched: ${fmt(st.dispatched_t)} t`, `demurrage: $${fmt(st.demurrage_usd, 0)}`];
+    case 'slice1': {
+      const lines = [`day ${st.day} · tick ${st.tick}`, `yard stock: ${fmt(st.yard_stock_t)} t`, `arrived: ${fmt(st.arrived_t)} t`, `dispatched: ${fmt(st.dispatched_t)} t`, `demurrage: $${fmt(st.demurrage_usd, 0)}`];
+      // S1.2 ore belt: live chain view once the player has built conv_ore_drp (step 4).
+      if (session.belt) {
+        const v = beltLedgerView(session.belt);
+        lines.push(`ore belt: buffer ${fmt(v.buffer_t)} t · on belt ${fmt(v.in_transit_t)} t`);
+        if (session.belt.drpCommissioned) lines.push(`DRP intake: ${fmt(v.drp_intake_t)} t`);
+      }
+      return lines;
+    }
     case 'slice3': {
       const buf = st.buffer.reduce((a: number, l: any) => a + l.usable_t, 0);
       return [`tick ${st.tick}`, `DRI buffer: ${fmt(buf)} t`, `heats charged: ${st.heats.filter((h: any) => h.status === 'charged').length}`];

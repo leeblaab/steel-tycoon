@@ -55,6 +55,11 @@ export interface GameSave {
   /** S0.5 (v2): fullplant onboarding progress so a resumed campaign does not replay the
    *  guided sequence. Absent = fresh onboarding; present-but-malformed = rejected. */
   onboarding?: OnboardingSnapshot;
+  /** S1.2 (PLAN_FORGED): ore-belt chain carried by fullplant saves. Absent = no belt
+   *  built yet (pre-S1.2 saves load fresh); present-but-malformed or ledger-open = reject.
+   *  Shape-checked in session.ts (validateOreBeltBlock) because the closure gate needs the
+   *  registry primitives, which save_load must not import. */
+  ore_belt?: { state: Record<string, unknown>; deposits_total: number };
 }
 
 /** One slice's snapshot inside a multi-slice save (S0.5). Sim states are immutable per
@@ -203,7 +208,11 @@ export function writeFullplantSave(
   storage: SaveStorage,
   slot: string,
   slices: Record<string, SliceSnapshot>,
-  opts?: { questProgress?: QuestProgressMap | null; onboarding?: OnboardingSnapshot | null },
+  opts?: {
+    questProgress?: QuestProgressMap | null;
+    onboarding?: OnboardingSnapshot | null;
+    oreBelt?: { state: Record<string, unknown>; deposits_total: number } | null;
+  },
 ): GameSave {
   const primary = slices['slice1'];
   if (!primary) throw new Error('writeFullplantSave needs a slice1 snapshot (the mirror)');
@@ -219,6 +228,7 @@ export function writeFullplantSave(
     slices,
   };
   if (opts?.onboarding) save.onboarding = opts.onboarding;
+  if (opts?.oreBelt) save.ore_belt = opts.oreBelt; // S1.2 belt chain (absent = no belt built)
   const file = readSaveFileAt(storage, FULLPLANT_SAVE_FILE_KEY);
   file.saves[slot] = save;
   storage.write(FULLPLANT_SAVE_FILE_KEY, JSON.stringify(file));
@@ -359,6 +369,16 @@ function loadSaveFrom(file: SaveFile, slot: string, ctx: LoadContext): GameSave 
   if (save.onboarding !== undefined && save.onboarding !== null) {
     if (!ctx.seqSteps) throw new Error('save carries an onboarding block but the loader supplied no seqSteps');
     save.onboarding = validateOnboardingBlock(save.onboarding, ctx.seqSteps);
+  }
+  // S1.2 v2: ore-belt block — absent = no belt built; present must at least have the right
+  // shape (the full ledger gate re-runs in session.validateOreBeltBlock on restore).
+  if (save.ore_belt !== undefined && save.ore_belt !== null) {
+    const ob = save.ore_belt as Record<string, unknown>;
+    if (typeof ob !== 'object' || Array.isArray(ob)) throw new Error('save ore_belt block is not an object');
+    if (!ob.state || typeof ob.state !== 'object') throw new Error('save ore_belt.state must be an object');
+    if (typeof ob.deposits_total !== 'number' || !Number.isFinite(ob.deposits_total)) {
+      throw new Error('save ore_belt.deposits_total must be a finite number');
+    }
   }
   // Quest progress coverage (Phase 2): a carried map must carry its content schema and
   // well-formed rows; a pre-Phase-2 save without the field loads as null (no restore).

@@ -13,6 +13,37 @@ import { initState, loadSequence, advance, checkExit, currentStep, isBuilt, slic
 import { QUEST_BUILD_UNLOCK, SLICE_BUILD_NODES as SLICE_BUILD_NODES_SHARED, sliceBuildDone } from '../../../shared/commissioning.ts';
 import { captureRng, writeFullplantSave, loadFullplantSave, LocalStorageSaveStorage, type SaveStorage, type SliceSnapshot, type OnboardingSnapshot } from '../../../shared/save_load.ts';
 import { applyDecision, type DecisionRow } from '../../../ports/slice1/slice1_decide.ts';
+import {
+  freshOreBeltState, stepOreBelt, commissionDrp, beltDepositYard,
+  beltLedgerView, beltInvariants, type OreBeltState,
+} from '../../../shared/ore_belt.ts';
+
+/** S1.2 (PLAN_FORGED): the belt built at onboarding step 4 is a REAL transfer edge — the
+ *  yard->ore_buffer->drp_intake chain rides the slice1 arrival stream. Authored against
+ *  content/nodes/conveyors_draft.json conv_ore_drp capacity band (400-800 tph, mid default). */
+export const ORE_BELT_DUMP = { rate_tph: 600.0, chunk_t: 25.0, travel_ticks: 2 } as const;
+
+/** Save/load gate for a carried belt block (reject-never-default, like onboarding):
+ *  shape + invariants only — the closure check re-runs the same 1e-6 ledger gate. */
+export function validateOreBeltBlock(ob: unknown): { state: OreBeltState; deposits: number } | null {
+  if (ob == null) return null; // absent = fresh belt (pre-S1.2 saves resume with an empty chain)
+  if (typeof ob !== 'object' || Array.isArray(ob)) throw new Error('save ore_belt block is not an object');
+  const o = ob as Record<string, unknown>;
+  const st = o.state as OreBeltState | undefined;
+  if (!st || typeof st !== 'object' || typeof st.registry?.tick !== 'number') {
+    throw new Error('save ore_belt.state is missing its registry tick');
+  }
+  if (typeof o.deposits_total !== 'number' || !Number.isFinite(o.deposits_total)) {
+    throw new Error('save ore_belt.deposits_total must be a finite number');
+  }
+  const rate = st.beltRateTph, chunk = st.chunkT, travel = st.travelTicks;
+  if (!(rate > 0) || !(chunk > 0) || !Number.isInteger(travel) || travel < 1) {
+    throw new Error('save ore_belt belt params invalid (rate/chunk positive, integer travel >= 1)');
+  }
+  const close = beltInvariants(st, o.deposits_total);
+  if (!close.ok) throw new Error(`save ore_belt failed its ledger gate: ${close.detail}`);
+  return { state: structuredClone(st), deposits: o.deposits_total };
+}
 
 export interface SliceRuntime {
   entry: CatalogEntry | null; // null for slice2 (no engine yet — pending redesign)
@@ -59,6 +90,10 @@ export class GameSession {
   /** Guided first build (docs/gameplay.md §1.5). Sequence is DATA (level1_draft.json). */
   readonly seqSteps: SeqStep[];
   onboard: OnboardingState = initState();
+  /** S1.2 belt chain state (yard->buffer->intake). Null while the belt isn't built yet. */
+  belt: OreBeltState | null = null;
+  beltDepositsTotal = 0.0; // closure baseline for the belt ledger gate
+  private prevSliceArrivedT = 0.0; // slice1 `arrived_t` deltas feed the yard credit
 
   constructor(questsDoc: QuestsDoc, seqDoc: any) {
     this.catalog = buildCatalog();
@@ -111,9 +146,19 @@ export class GameSession {
     // jetty starts the clock). Other slices tick ONLY once BOTH their build chain is open
     // AND their own sequence nodes are all placed (S0.3 gate: no production before build).
     if (slice === 'slice1' && this.sliceBuildDone(slice)) this.unlockSlice(slice); // engine ticks once slice1 is fully built
+    // S1.2: the ore belt becomes a live transfer edge the moment it is placed (step 4),
+    // even though no DRP exists yet — it runs yard -> ore_buffer until commissionDrp joins
+    // drp_intake later (drp build / slice3 unlock below).
+    if (nodeId === 'conv_ore_drp' && this.belt == null) {
+      this.belt = freshOreBeltState(ORE_BELT_DUMP.rate_tph, ORE_BELT_DUMP.chunk_t, ORE_BELT_DUMP.travel_ticks);
+      this.events.push({ tick: this.tick, slice: 'slice1', event: 'ore_belt_built' });
+    }
     // Guided sequence nodes for LATER slices commission their area when placed (same rule
     // the quest-commission path enforces via unlockSlice — S0.3 visibility gate).
     if (slice && slice !== 'slice1' && this.builtNode(nodeId)) this.unlockSlice(slice);
+    // S1.2: DRP joining the plant (guided build or area commissioning) starts the belt's
+    // second hop; pre-built buffer stock keeps flowing into drp_intake.
+    if (nodeId === 'drp' || slice === 'slice3') this.ensureDrpCommissioned();
     // Re-derive unlock state for every other slice: unlocks are DATA-derived (built nodes +
     // completed quests), so a mid-sequence confirmBuild can never leave a later area
     // "unlocked but not yet commissioned" (S0.5 invariant: restored == live).
@@ -191,6 +236,15 @@ export class GameSession {
     this.events.push({ tick: this.tick, slice, event: `build_chain_open:${slice}` });
   }
 
+  /** S1.2: drp_intake joins the belt ledger when the DRP node is built (guided step or
+   *  area commissioning). Idempotent; no-op before the belt exists (a DRP without a belt
+   *  simply has no upstream chain yet — the belt's own build wires it on placement). */
+  ensureDrpCommissioned(): void {
+    if (!this.belt || this.belt.drpCommissioned) return;
+    this.belt = commissionDrp(this.belt);
+    this.events.push({ tick: this.tick, slice: 'slice3', event: 'drp_intake_open' });
+  }
+
   /** Does this slice's ENGINE tick this plant-minute? True only when the area is unlocked
    *  AND every one of its sequence build nodes is placed. slice1 is exempt from the
    *  unlock half (its builds themselves open it); slices without sequence builds
@@ -214,6 +268,24 @@ export class GameSession {
       const chk = rt.loop.step();
       if (!chk.ok) {
         throw new Error(`fullplant ledger broke on ${rt.entry!.id} at tick ${this.tick}: ${chk.detail}`);
+      }
+    }
+    // S1.2 ore belt: rides the slice1 arrival stream (`arrived_t` delta = tonnes credited
+    // into the yard this tick). The belt has its own closed ledger (registry_handoff.ts
+    // primitives) — a break here is as fatal as a slice-engine break.
+    if (this.belt) {
+      const s1 = this.stateOf('slice1') as Record<string, any> | undefined;
+      const arrived = typeof s1?.arrived_t === 'number' ? s1.arrived_t : this.prevSliceArrivedT;
+      const delta = arrived - this.prevSliceArrivedT;
+      this.prevSliceArrivedT = arrived;
+      if (delta > 0) {
+        this.belt = beltDepositYard(this.belt, delta);
+        this.beltDepositsTotal += delta;
+      }
+      this.belt = stepOreBelt(this.belt);
+      const close = beltInvariants(this.belt, this.beltDepositsTotal);
+      if (!close.ok) {
+        throw new Error(`fullplant ore belt ledger broke at tick ${this.tick}: ${close.detail}`);
       }
     }
     // Quest evaluation rides the authoritative slice state right after each step — same
@@ -294,7 +366,11 @@ export class GameSession {
       questProgressSnapshot: (this.onboard.questProgressSnapshot
         ? structuredClone(this.onboard.questProgressSnapshot) : null) as any,
     };
-    return { slices, quest_progress: this.questProgress(), onboarding };
+    // S1.2 belt chain snapshot (absent = no belt built yet; restore validates + re-gates it).
+    const oreBelt = this.belt
+      ? { state: structuredClone(this.belt), deposits_total: this.beltDepositsTotal }
+      : undefined;
+    return { slices, quest_progress: this.questProgress(), onboarding, ...(oreBelt ? { ore_belt: oreBelt } : {}) };
   }
 
   /** Write the fullplant autosave (steelx-fullplant-save key). Silently false when no
@@ -307,6 +383,7 @@ export class GameSession {
       writeFullplantSave(this.storage, slot, snap.slices, {
         questProgress: snap.quest_progress,
         onboarding: snap.onboarding,
+        oreBelt: (snap as any).ore_belt ?? null,
       });
       return true;
     } catch {
@@ -331,12 +408,20 @@ export class GameSession {
       ...(save.onboarding.questProgressSnapshot
         ? { questProgressSnapshot: structuredClone(save.onboarding.questProgressSnapshot) } : {}),
     };
+    // S1.2 belt chain: absent block = fresh belt; a carried block already passed the
+    // ledger gate in validateOreBeltBlock (loader call site). prevSliceArrivedT seeds from
+    // the restored slice1 mirror so the first ticked delta is correct.
+    const beltBlock = validateOreBeltBlock((save as any).ore_belt);
+    this.belt = beltBlock ? beltBlock.state : null;
+    this.beltDepositsTotal = beltBlock ? beltBlock.deposits : 0.0;
     for (const [slice, snap] of Object.entries(save.slices)) {
       const rt = this.slices[slice];
       if (!rt || !rt.loop) continue; // engine-less slice in a save => corrupt file (loader already rejects)
       const chk = rt.loop.resume(structuredClone(snap.state));
       if (!chk.ok) throw new Error(`fullplant restore broke ledger on ${slice}: ${chk.detail}`);
     }
+    const restoredS1 = this.stateOf('slice1') as Record<string, any> | undefined;
+    this.prevSliceArrivedT = typeof restoredS1?.arrived_t === 'number' ? restoredS1.arrived_t : 0.0;
     this.recomputeUnlocks();
   }
 
