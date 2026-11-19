@@ -30,16 +30,18 @@ end goal; desktop/browser for now. No-rush iterative cadence, one Go-gated micro
   CC0 kits out of git with manifest.
 - **S0.2 DONE** — docs reset: STATE.md + DECISIONS.md, README corrected, license split
   (Apache-2.0 code / CC BY-SA 4.0 content / THIRD_PARTY), `npm test` made real.
-- **S0.3 CODE DONE (uncommitted)** — engine gate fixed: quest completion only unlocks the
-  build chain (`QUEST_BUILD_UNLOCK` in `web/src/shared/commissioning.ts`); an engine ticks
-  only when its slice is unlocked AND every sequence-build node of that slice is placed
-  (`engineRunning()` in fullplant session.ts). Tests: `commissioning.test.ts` (6) +
-  `fullplant_commissioning.test.ts` (5). SME decisions locked by Yasser (2026-11-18):
-  quests evaluate as a STRICT CHAIN (q2 only after q1 completes, etc.) and "keep it clean"
-  conditions measure over the SINCE-PREVIOUS-QUEST-COMPLETION cumulative window. Threshold
-  retune of the 4 sme_pending bands = separate gated content pass; his numbers required.
-- Next: **S0.4** scene relight (before/after gate) →
-  **S0.5** persistence v2 in fullplant. Then Stage 1 (Chapter 1: The Ore Belt).
+- **S0.3 CLOSED** — engine gate (`engineRunning()`) + F-12 quest contract: STRICT CHAIN +
+  windowed since-completion deltas for cumulative fields (`quest_tracker.ts`, tests in
+  `quest_windowing.test.ts`), q1 retuned to arrived_t>=3000 (Yasser's number). Commits
+  `52bda26`→`825a949`. Parked to end of Stage 0: q2/q3/opt bands, ship cadence (3–5 days),
+  EAF draw vs 180 t/tap.
+- **S0.4 IN PROGRESS (WIP committed `c697fc7`, NOT SME-gated)** — golden-hour lighting rig,
+  fog + background, StreamStrips route grammar, empty-pad locked zones, camera-set hooks,
+  perf probe scripts + baseline (`docs/evidence/s04/perf_before.json`). Open: headless shots
+  read too cool/dark — fog range vs camera distance is suspect #1; fix list in the skill
+  checkpoint `checkpoint_2026-11-19_s04.md`. Gate = perf no-regression + Yasser sensory pass.
+- Next: finish **S0.4** visual pass → **S0.5** persistence v2 (quest window fields in save).
+  Then Stage 1 (Chapter 1: The Ore Belt). Remote push pending (3 commits unpushed; DNS was down).
 
 ## The game as it plays today
 Fullplant app (`web/src/ports/fullplant`, dev port 5178 via `start_digital_twin_v2.bat` —
@@ -59,9 +61,9 @@ EAF/LF/CCM, slice5 mills); each is a pure tick engine with a Python mirror + par
 - Unknown values are asked, never invented.
 
 ## Verified facts (measured, not remembered — re-measure if in doubt)
-- Test suite: `cd web && npx vitest run --root .` → **24 files / 188 tests green** (S0.3, 11.18).
+- Test suite: `cd web && npx vitest run --root .` → **25 files / 195 tests green** (S0.4 WIP, 11.19).
 - Fresh-clone gate passed at S0.1 (stranger's clone builds and plays step 1).
-- Remote master head after S0.1: `49d9cc1`.
+- Remote master head: `1c37f6c` — local is 3 commits ahead (`52bda26`, `825a949`, `c697fc7`), push when network allows.
 
 ## Key docs
 | Doc | Role |
