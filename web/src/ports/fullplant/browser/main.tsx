@@ -21,6 +21,15 @@ import { SLOT_LOCAL, stepCardView } from './onboarding_cards.ts';
 import { equipmentIndex, DRAFTED_CARD, type EquipEntry } from './equip_index.ts';
 import { STREAM, ZONE_PAD, LIGHTING, STATE } from './palette.ts';
 
+// S0.4 visual-pass A/B bisect (dev-only): URL params override the rig so each suspect gets
+// one headless shot without code churn. ?tone=0 -> NoToneMapping, ?exposure=X, ?fog=0 -> no
+// fog, ?ground=HEX. Nothing here changes default behaviour when the params are absent.
+const RIG_Q = new URLSearchParams(typeof location !== 'undefined' ? location.search : '');
+const TONE_MODE = RIG_Q.get('tone') === '0' ? THREE.NoToneMapping : THREE.ACESFilmicToneMapping;
+const EXPOSURE = RIG_Q.has('exposure') ? Number(RIG_Q.get('exposure')) : 1;
+const FOG_ON = RIG_Q.get('fog') !== '0';
+const GROUND_COLOR = RIG_Q.get('ground') ? `#${RIG_Q.get('ground')}` : LIGHTING.ground_color;
+
 const { useEffect, useRef, useState } = React;
 
 // quests.json inlined at build time. NOTE: the glob is rooted at this file's dir, so it
@@ -844,14 +853,14 @@ function Scene() {
   };
   return (
     <div id="scene">
-      <Canvas camera={{ fov: 45 }} shadows gl={{ antialias: true }}>
+      <Canvas camera={{ fov: 45 }} shadows gl={{ antialias: true, toneMapping: TONE_MODE, toneMappingExposure: EXPOSURE }}>
         <LabelCameraBridge />
         <ZoneTapFallback />
         <ViewCamera home={home} />
         {/* S0.4 lighting rig (PLAN_FORGED §2): fixed golden-hour — warm sun ~35° with long
             shadows, hemisphere sky/rust fill, steel-blue distance fog. NO day/night, NO DOF. */}
         <color attach="background" args={[new THREE.Color(LIGHTING.fog_color)]} />
-        <fog attach="fog" args={[LIGHTING.fog_color, LIGHTING.fog_near, LIGHTING.fog_far]} />
+        {FOG_ON && <fog attach="fog" args={[LIGHTING.fog_color, LIGHTING.fog_near, LIGHTING.fog_far]} />}
         <hemisphereLight color={LIGHTING.sky_color} groundColor={LIGHTING.ground_bounce} intensity={LIGHTING.hemi_intensity} />
         <directionalLight
           position={LIGHTING.sun_dir}
@@ -869,7 +878,7 @@ function Scene() {
         {/* continuous plant ground */}
         <mesh position={[-2, -0.01, 6]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
           <planeGeometry args={[110, 46]} />
-          <meshStandardMaterial color={LIGHTING.ground_color} roughness={0.95} />
+          <meshStandardMaterial color={GROUND_COLOR} roughness={0.95} />
         </mesh>
         <StreamStrips />
         {ZONES.map((z) => <Zone key={z.id} zone={z} />)}
@@ -913,3 +922,6 @@ createRoot(document.getElementById('root')!).render(<Scene />);
 (window as any).__steelxSelect = selectZone;
 (window as any).__steelxEquip = selectEquip;
 (window as any).__steelxSession = SESSION; // perf/quest probes (S0.4 baseline script) — read-only usage
+
+// S0.4 dev probe hook: ViewCamera publishes the live renderer/scene/camera so rig probes can
+// read tone mapping + light params from real pixels' source of truth (dev-only, harmless).

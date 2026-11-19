@@ -26,18 +26,25 @@ export const ZONE_PAD: Record<string, string> = {
   slice5: '#39434f',
 };
 
-/** Fixed golden-hour lighting rig (PLAN_FORGED §2 — NO day/night, NO DOF). */
+/** Fixed golden-hour lighting rig (PLAN_FORGED §2 — NO day/night, NO DOF).
+ *  S0.4 visual pass v2 (headless pixel stats: mean RGB ~29,37,47 = cool/dark; camera home
+ *  dist ~68 > fog_far 150 blended most geometry toward fog color):
+ *  - fog pushed past the widest home framing (near 110 / far 280) so distance fades only
+ *    at true horizon, not across the whole plant;
+ *  - sun swung to camera-front-right (-36, 24, 52): lights faces visible from the az-0
+ *    home cam AND throws long shadows away from camera (sun_dir is light POSITION in three);
+ *  - warmer + brighter floor albedo so the diorama base reads instead of going black. */
 export const LIGHTING = {
-  sun_color: '#ffd9a6',      // warm sun
-  sun_dir: [28, 20, 14] as [number, number, number], // ~35° elevation, long shadows
-  sun_intensity: 2.2,
-  sky_color: '#7ea6c8',      // hemisphere fill: sky-blue top / rust bounce bottom
-  ground_bounce: '#5a4636',
-  hemi_intensity: 0.55,
-  fog_color: '#1d2733',      // steel-blue distance fog
-  fog_near: 55,
-  fog_far: 150,
-  ground_color: '#232d38',   // continuous plant floor (fog-matched, not pure black)
+  sun_color: '#ffe2b8',      // warm sun (less orange after ACES desaturation)
+  sun_dir: [-30, 42, 60] as [number, number, number], // ~35° elevation per plan, but lifted so long shadows still land inside the ±60 shadow frustum (SME pass 19.11: v2 dir [-36,24,52] put most shadows outside the map → sun looked ambient)
+  sun_intensity: 3.2,
+  sky_color: '#a8c4de',      // hemisphere fill: brighter sky dome (was too dim for ACES)
+  ground_bounce: '#7a5f4b',
+  hemi_intensity: 1.1,
+  fog_color: '#3d4a58',      // steel-blue distance fog — lighter so fogged far pads read as haze, not void
+  fog_near: 120,
+  fog_far: 300,
+  ground_color: '#5a5b56',   // continuous plant floor — mid concrete; ACES was crushing the darker value near-black
 } as const;
 
 /** State grammar on every machine (F-05): idle desaturated / running stream-emissive /

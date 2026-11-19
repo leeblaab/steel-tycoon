@@ -25,6 +25,17 @@ export function ViewCamera({ home }: { home: ViewHome }) {
   const tgt = useRef(new THREE.Vector3(...home.target));
 
   useEffect(() => {
+    // S0.4 rig probe hook (dev-only): publish live renderer/camera state for headless probes
+    // via useThree context — the reliable path (fiber-walking R3F internals failed).
+    const g = gl as any;
+    (window as any).__steelxRig = () => ({
+      toneMapping: g.toneMapping, exposure: g.toneMappingExposure,
+      shadowMapEnabled: g.shadowMap?.enabled, shadowAutoUpdate: g.shadowMap?.autoUpdate,
+      camPos: (camera as any).position?.toArray?.() ?? null,
+    });
+  }, [gl, camera]);
+
+  useEffect(() => {
     const canvas = gl.domElement;
     canvas.style.touchAction = 'none'; // own the touch gestures on the scene
     const pointers = new Map<number, { x: number; y: number }>();
