@@ -20,6 +20,7 @@ contracts carried forward from frozen docs.
 | F-10 | License: Apache-2.0 code + CC BY-SA 4.0 content (NC dropped; SME monetizes as copyright holder via dual-license if needed) | ISC license field, "proprietary" README claim |
 | F-11 | Commissioning rule (S0.3): quest completion ONLY unlocks the next slice's build chain; an engine ticks only when its slice is unlocked AND every sequence-build node of that slice is placed — "no machine produces before you build it" | quest-commissioned engines ticking from tick 1 |
 | F-12 | Quest evaluation (S0.3, SME): Level quests evaluate as a STRICT CHAIN (qN evaluable only after q(N−1) completes); "keep it clean" conditions (unload_blocked / upstream_blocked bands) measure over the SINCE-PREVIOUS-QUEST-COMPLETION cumulative window, never a single-tick snapshot | q2/q3/q4 passing trivially at tick ~5 before q1 |
+| F-12a | Quest threshold retune (partial, 19.11): SME numbers applied where given — q1 arrived_t ≥ 3000 t (three 1,000 t ships), produced_t bands kept as-is ("keep as it is"); PARKED for end of Stage 0: q2 unload band ("small band" — number TBC), q3 starvation band, opt-challenge band, ship cadence (Yasser: 1 ship / 3–5 days vs current daily), EAF draw calibration vs ~180 t/tap | slice1 probe trace shows daily-arrival + 600 t/tick draw makes all bands freebies; cadence change is an ops-config decision, not quest JSON |
 
 ## Sim contracts carried forward (from frozen roadmap/specs — these stay LIVE)
 

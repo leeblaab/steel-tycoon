@@ -34,7 +34,7 @@
             "slice": "slice1",
             "conditions": [
               {"field": "ships_arrived", "op": ">=", "value": 1, "sme_pending": false},
-              {"field": "arrived_t", "op": ">=", "value": 100.0, "unit": "t", "note": "one day of unload cadence landed in the yard (placeholder band)", "sme_pending": true}
+              {"field": "arrived_t", "op": ">=", "value": 3000.0, "unit": "t", "note": "three 1,000 t cargo ships landed in the yard (SME-settled by Yasser, F-12 retune pass)", "sme_pending": false}
             ]
           },
           "scoring_tiers": {"bronze": "ship unloaded", "silver": "unloaded without blocking the berth queue", "gold": "unloaded with the yard route confirmed before arrival"},

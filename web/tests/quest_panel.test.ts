@@ -30,7 +30,7 @@ describe('QuestPanel (§5.4)', () => {
       simState: { ships_arrived: 0, arrived_t: 42.5 }, note: null,
     }));
     expect(html).toContain('ships_arrived &gt;= 1 (now: 0)');
-    expect(html).toContain('arrived_t &gt;= 100 (now: 42.5)');
+    expect(html).toContain('arrived_t &gt;= 3000 (now: 42.5)');
   });
 
   it('panel is presentation-only: rendering never changes tracker progress', () => {
