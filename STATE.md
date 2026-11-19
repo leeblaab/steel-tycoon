@@ -35,13 +35,15 @@ end goal; desktop/browser for now. No-rush iterative cadence, one Go-gated micro
   `quest_windowing.test.ts`), q1 retuned to arrived_t>=3000 (Yasser's number). Commits
   `52bda26`→`825a949`. Parked to end of Stage 0: q2/q3/opt bands, ship cadence (3–5 days),
   EAF draw vs 180 t/tap.
-- **S0.4 IN PROGRESS (WIP committed `c697fc7`, NOT SME-gated)** — golden-hour lighting rig,
-  fog + background, StreamStrips route grammar, empty-pad locked zones, camera-set hooks,
-  perf probe scripts + baseline (`docs/evidence/s04/perf_before.json`). Open: headless shots
-  read too cool/dark — fog range vs camera distance is suspect #1; fix list in the skill
-  checkpoint `checkpoint_2026-11-19_s04.md`. Gate = perf no-regression + Yasser sensory pass.
-- Next: finish **S0.4** visual pass → **S0.5** persistence v2 (quest window fields in save).
-  Then Stage 1 (Chapter 1: The Ore Belt). Remote push pending (3 commits unpushed; DNS was down).
+- **S0.4 AT SENSORY GATE** — relight committed (`c697fc7` WIP, `81bc671` bisect session: dev
+  rig-override URL params + `__steelxRig` hook, dead probe scripts deleted, A/B evidence in
+  `docs/evidence/s04_ab/`). Dark-scene suspects fog + ACES tone mapping DISPROVEN by A/B
+  bisect — relight v2 already fixed brightness at pixel level (mean RGB 26–38 → 55–61,
+  near-black 38–66% → 7–16%). Perf caveat: headless draw/tri growth vs `perf_before.json`
+  comes from slices 3–5 geometry now building in the guided flow, not a relight regression.
+  Waiting on Yasser's sensory verdict before marking S0.4 DONE.
+- Next: **S0.5** persistence v2 (quest window fields in save) once S0.4 gate passes →
+  then Stage 1 (Chapter 1: The Ore Belt). Remote push pending (5 commits unpushed; Wi-Fi off).
 
 ## The game as it plays today
 Fullplant app (`web/src/ports/fullplant`, dev port 5178 via `start_digital_twin_v2.bat` —
