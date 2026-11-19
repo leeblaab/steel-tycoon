@@ -1,0 +1,39 @@
+{
+  "url": "http://localhost:5178/",
+  "built": [
+    "build:jetty",
+    "build:scrap_yard",
+    "build:conv_ore_drp"
+  ],
+  "ticks": {
+    "n": 600,
+    "log2": [
+      "build:drp",
+      "build:conv_dri_eaf",
+      "build:scrap_feed",
+      "build:eaf",
+      "build:lf",
+      "build:cc",
+      "build:conv_ccm_billet",
+      "build:billet_yard",
+      "build:conv_billet_rebar",
+      "build:bar_mill",
+      "build:conv_billet_wr",
+      "build:wire_rod_mill",
+      "build:finished_yard",
+      "build:conv_mill_dispatch",
+      "build:dispatch"
+    ]
+  },
+  "fps": 7,
+  "draw_calls_per_frame": 61.6,
+  "tris_per_frame": 700956,
+  "programs": 7,
+  "gl_total_calls": 8696,
+  "download": {
+    "resources_kb": 83518,
+    "glb_kb": 70877,
+    "count": 87
+  },
+  "ts": "2026-11-19T04:32:20.385Z"
+}

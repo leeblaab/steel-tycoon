@@ -127,6 +127,8 @@ export function ViewCamera({ home }: { home: ViewHome }) {
     window.addEventListener('keyup', onKeyUp);
     (window as any).__steelxResetView = () => { st.current = { az: (home.azDeg * Math.PI) / 180, el: (Math.min(75, Math.max(15, home.elDeg)) * Math.PI) / 180, dist: home.dist }; tgt.current.set(...home.target); apply(); };
     (window as any).__steelxPan = (dx: number, dy: number) => { panBy(dx, dy); apply(); }; // on-screen nav arrows route through the same pan
+    (window as any).__steelxSetView = (azDeg: number, elDeg: number, dist: number) => { st.current.az = (azDeg * Math.PI) / 180; st.current.el = (Math.min(75, Math.max(15, elDeg)) * Math.PI) / 180; st.current.dist = Math.min(home.maxDist, Math.max(home.minDist, dist)); apply(); }; // S0.4 camera presets + probe framing
+    (window as any).__steelxSetTarget = (x: number, y: number, z: number) => { tgt.current.set(x, y, z); apply(); }; // preset look-at for zone/machine framing
     return () => {
         canvas.removeEventListener('pointerdown', onPointerDown);
         canvas.removeEventListener('pointermove', onPointerMove);

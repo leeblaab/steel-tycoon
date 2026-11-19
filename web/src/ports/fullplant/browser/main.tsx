@@ -19,6 +19,7 @@ import { OnboardingCard, notifyOnboard } from './onboarding_ui.tsx';
 import { currentStep } from './onboarding.ts';
 import { SLOT_LOCAL, stepCardView } from './onboarding_cards.ts';
 import { equipmentIndex, DRAFTED_CARD, type EquipEntry } from './equip_index.ts';
+import { STREAM, ZONE_PAD, LIGHTING, STATE } from './palette.ts';
 
 const { useEffect, useRef, useState } = React;
 
@@ -238,7 +239,50 @@ function LabelLayer() {
 }
 
 // ---------- Painted zone strips from the LAYOUT table (contract clause 6) ----------
-const ZONE_COLORS: Record<string, string> = { slice1: '#3f7fbf', slice2: '#9a7fd0', slice3: '#d9a13f', slice4: '#e07070', slice5: '#4fae7d' };
+// S0.4 (F-05): zone rainbow DEMOTED to secondary pad tints — stream-color ground strips
+// (StreamStrips, drawn between zones) now carry the primary visual grammar.
+const ZONE_COLORS: Record<string, string> = ZONE_PAD;
+
+/** Stream-color ground strips connecting adjacent zones along the material route
+ *  (PLAN_FORGED §2: "stream-color ground strips + arrows drawn between zones").
+ *  One thin quad per route leg, colored by the MATERIAL that travels it. */
+const ROUTE_LEGS: Array<{ from: string; to: string; stream: string }> = [
+  { from: 'slice1', to: 'slice2', stream: STREAM.scrap }, // scrap arrives and is prepped
+  { from: 'slice2', to: 'slice3', stream: STREAM.ore },   // ore/scrap blend into the DRP bend
+  { from: 'slice3', to: 'slice4', stream: STREAM.dri },   // DRI into the meltshop
+  { from: 'slice4', to: 'slice5', stream: STREAM.billet_hot }, // billets to the mills
+];
+function StreamStrips() {
+  const quads = ROUTE_LEGS.map((leg) => {
+    const a = ZONES.find((z) => z.id === leg.from)!, b = ZONES.find((z) => z.id === leg.to)!;
+    const dx = b.pos[0] - a.pos[0], dz = b.pos[2] - a.pos[2];
+    const len = Math.hypot(dx, dz);
+    const mx = (a.pos[0] + b.pos[0]) / 2, mz = (a.pos[2] + b.pos[2]) / 2;
+    const ang = Math.atan2(dx, dz); // strip runs along the leg
+    return { key: `${leg.from}-${leg.to}`, mx, mz, len, ang, stream: leg.stream };
+  });
+  // THREE objects (not JSX) — fullplant has no @types/three and the ambient three typing
+  // stub is incomplete (Object3D members missing); cast to any around construction only.
+  const group: THREE.Group = React.useMemo(() => {
+    const g: any = new THREE.Group();
+    for (const q of quads) {
+      const strip: any = new THREE.Mesh(new THREE.PlaneGeometry(1.4, q.len), new THREE.MeshStandardMaterial({ color: q.stream, transparent: true, opacity: 0.5, roughness: 0.9 }));
+      strip.rotation.x = -Math.PI / 2;
+      const holder: any = new THREE.Group();
+      holder.position.set(q.mx, 0.025, q.mz);
+      holder.rotation.y = q.ang; // leg direction along +Z local
+      holder.add(strip);
+      const arrow: any = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 1.6), new THREE.MeshStandardMaterial({ color: q.stream, transparent: true, opacity: 0.75, roughness: 0.9 }));
+      arrow.rotation.x = -Math.PI / 2;
+      arrow.rotation.z = Math.PI / 4; // diamond -> chevron-ish pointer
+      arrow.position.set(0, 0, q.len / 2 - 1.6);
+      holder.add(arrow);
+      g.add(holder);
+    }
+    return g as THREE.Group;
+  }, []);
+  return <primitive object={group} />;
+}
 
 function Zone({ zone }: { zone: ZoneDef }) {
   const [hover, setHover] = useState(false);
@@ -370,10 +414,12 @@ function LockedVeil({ zone }: { zone: ZoneDef }) {
     return () => window.removeEventListener('steelx-tick', h);
   }, []);
   if (SESSION.slices[zone.id]?.unlocked) return null;
+  // S0.4: a locked area is an EMPTY PAD, not a black box — the old solid dark veil made
+  // every future zone a void that swallowed the relit scene (SME visual pass 19.11).
   return (
-    <mesh position={[zone.pos[0], 1.2, zone.pos[2]]}>
-      <boxGeometry args={[zone.size[0], 2.4, zone.size[1]]} />
-      <meshStandardMaterial color="#0c1117" transparent opacity={0.55} depthWrite={false} />
+    <mesh position={[zone.pos[0], 0.02, zone.pos[2]]} rotation={[-Math.PI / 2, 0, 0]}>
+      <planeGeometry args={[zone.size[0], zone.size[1]]} />
+      <meshStandardMaterial color="#10161d" transparent opacity={0.35} depthWrite={false} roughness={1} />
     </mesh>
   );
 }
@@ -798,17 +844,34 @@ function Scene() {
   };
   return (
     <div id="scene">
-      <Canvas camera={{ fov: 45 }}>
+      <Canvas camera={{ fov: 45 }} shadows gl={{ antialias: true }}>
         <LabelCameraBridge />
         <ZoneTapFallback />
         <ViewCamera home={home} />
-        <ambientLight intensity={0.35} />
-        <directionalLight position={[30, 40, 20]} intensity={1.3} />
+        {/* S0.4 lighting rig (PLAN_FORGED §2): fixed golden-hour — warm sun ~35° with long
+            shadows, hemisphere sky/rust fill, steel-blue distance fog. NO day/night, NO DOF. */}
+        <color attach="background" args={[new THREE.Color(LIGHTING.fog_color)]} />
+        <fog attach="fog" args={[LIGHTING.fog_color, LIGHTING.fog_near, LIGHTING.fog_far]} />
+        <hemisphereLight color={LIGHTING.sky_color} groundColor={LIGHTING.ground_bounce} intensity={LIGHTING.hemi_intensity} />
+        <directionalLight
+          position={LIGHTING.sun_dir}
+          color={LIGHTING.sun_color}
+          intensity={LIGHTING.sun_intensity}
+          castShadow
+          shadow-mapSize={[1024, 1024]}
+          shadow-camera-left={-60}
+          shadow-camera-right={60}
+          shadow-camera-top={60}
+          shadow-camera-bottom={-60}
+          shadow-camera-far={160}
+          shadow-bias={-0.0005}
+        />
         {/* continuous plant ground */}
-        <mesh position={[-2, -0.01, 6]} rotation={[-Math.PI / 2, 0, 0]}>
+        <mesh position={[-2, -0.01, 6]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
           <planeGeometry args={[110, 46]} />
-          <meshStandardMaterial color="#17202a" />
+          <meshStandardMaterial color={LIGHTING.ground_color} roughness={0.95} />
         </mesh>
+        <StreamStrips />
         {ZONES.map((z) => <Zone key={z.id} zone={z} />)}
         <SelectionRim />
         {ZONES.map((z) => <LockedVeil key={`veil-${z.id}`} zone={z} />)}
@@ -849,3 +912,4 @@ createRoot(document.getElementById('root')!).render(<Scene />);
 // path without raycast guesswork; harmless in production).
 (window as any).__steelxSelect = selectZone;
 (window as any).__steelxEquip = selectEquip;
+(window as any).__steelxSession = SESSION; // perf/quest probes (S0.4 baseline script) — read-only usage
