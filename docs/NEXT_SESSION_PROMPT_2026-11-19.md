@@ -5,7 +5,7 @@ Continue SteelX Stage 0. Read STATE.md first, then load the steel-plant-game ski
 references/checkpoint_2026-11-19_s04.md — it has all S0.5 scoping facts.
 
 State: S0.3 CLOSED, S0.4 CLOSED (Yasser gated 2026-11-19; duplicate-EAF fix c45cffe).
-Local master head = c45cffe; SIX commits unpushed (origin/master still 1c37f6c). Do NOT
+Local master head = c45cffe; EIGHT commits unpushed (origin/master still 1c37f6c). Do NOT
 push until Yasser says Wi-Fi is back, then push first thing.
 
 TASK — S0.5 persistence v2 (fullplant save/load), one micro-step at a time, each step

@@ -47,7 +47,7 @@ end goal; desktop/browser for now. No-rush iterative cadence, one Go-gated micro
   root cause was `Slice3` gating on the shared `'eaf'` node_id. A/B re-shot confirms
   exactly one EAF (eaffix_* evidence). S0.4 CLOSED pending final bookkeeping below.
 - Next: **S0.5** persistence v2 (quest window fields in save) once S0.4 gate passes →
-  then Stage 1 (Chapter 1: The Ore Belt). Remote push pending (5 commits unpushed; Wi-Fi off).
+  then Stage 1 (Chapter 1: The Ore Belt). Remote push pending (8 commits unpushed as of 560c797; Wi-Fi off).
 
 ## The game as it plays today
 Fullplant app (`web/src/ports/fullplant`, dev port 5178 via `start_digital_twin_v2.bat` —
