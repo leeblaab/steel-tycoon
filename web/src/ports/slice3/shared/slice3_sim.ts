@@ -94,6 +94,7 @@ export interface SimState {
   prng_state: number;
   buffer: DriLot[]; // FIFO lots
   buffer_t: number;
+  discharged_t_total: number; // S3.1: monotonic DRP discharge counter (feed-edge source signal)
   drp_tripped_until: number; // tick until which discharge is halted (0 = running)
   heats: HeatRecord[];
   events: Array<{ tick: number; event: string }>;
@@ -147,6 +148,7 @@ export function freshState(fx: S3Fixture): SimState {
     prng_state: sc.seed >>> 0,
     buffer: [],
     buffer_t: 0.0,
+    discharged_t_total: 0.0,
     drp_tripped_until: 0,
     heats: [],
     events: [],
@@ -183,6 +185,7 @@ export function tick(state: SimState, fx: S3Fixture): SimState {
     } else {
       s.buffer.push(lot(`M${s.tick}`, rate, s.tick));
       s.buffer_t += rate;
+      s.discharged_t_total += rate;
       ev.push(`DRP discharge ${pyNum(rate)}t -> buffer (${pyNum(pyRound(s.buffer_t, 2))}t)`);
     }
   }

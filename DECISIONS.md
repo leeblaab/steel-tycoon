@@ -85,3 +85,18 @@ gate = F-06 chapter swaps).
   pose; (c) probes pause the HUD pump via the real pause BUTTON (direct speed assignment
   doesn't re-render → interval keeps running), and restart exhausted scripted scenarios via
   loop.resume(entry.module.fresh()). Stage 2 objective gates all green; sensory PENDING.
+- **S3.1 (20.11) — handoffs #2/#3 (meltshop feed):** scrap edge rides slice1 dispatched_t Δ
+  (yard outbound = scrap feed per the established topology; the ore belt already claims
+  arrived_t Δ — no double-count), DRI edge rides slice3 discharged_t_total Δ (NEW additive
+  monotonic counter, mirror-first, parity-safe). Edges: scrap 225 tph / 5 t chunk / 2 tick
+  travel (150-300 tph SME band mid; 25 t chunk would exceed the 9.375 t/tick rate cap and
+  never flow — caught by mirror N3), DRI 600 tph / 25 t / 2 tick. Boundary buffers real;
+  interfaces join on EAF commission; owner-tagged (charge_id) consume at slice4 heat start;
+  consume what exists, event the shortfall (S3.2 amber signal), never fabricate. Closure:
+  usable + in_transit + consumed == deposits (1e-6). CONTRACT READING (flagged for Yasser):
+  slice engines stay deterministic replay ports (S1.2 precedent — drp_intake accumulates
+  alongside slice3's script); the feed ledger is the real cross-slice account; HARD
+  production gating on feed stock is a later explicit rule change with updated tests.
+  Fill levels: scrap bin (yard_stock_t/5000 ops cap), DRI tank (buffer_t/fixture capacity),
+  EAF interface gauges (200 t presentation ref, sme_pending). Gates: mirror N1-N5, 60-tick
+  three-engine parity, suite 259/32, gauges 12/12, restore byte-exact, tap-time meshes 150.

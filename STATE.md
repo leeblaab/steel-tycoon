@@ -113,6 +113,20 @@ end goal; desktop/browser for now. No-rush iterative cadence, one Go-gated micro
     mirror-first registry transfers + fill levels on all yards/buffers) → S3.2 state lights
     + amber rings wired to existing `starved`/`wait` events. Sensory verdicts pending for
     S1.4, S2.1, S2.2 (Yasser AFK during the batch; play and judge on return).
+  - **S3.1 DONE (code + objective gates; SME sensory verdict PENDING)** — handoffs #2/#3:
+    `mirror/meltshop_feed_mirror.py` (N1-N5 PASS) → `shared/meltshop_feed.ts` on the frozen
+    S1.1 primitives: scrap edge (slice1 `dispatched_t` Δ → scrap_bucket → eaf_scrap) + DRI
+    edge (slice3 `discharged_t_total` Δ [new additive counter, mirror-first] → dri_feed_buffer
+    → eaf_dri); interfaces join on EAF commission; owner-tagged consume at heat start,
+    shortfall events never fabricate; closure usable+transit+consumed == deposits (1e-6).
+    Session wiring + save block (restore byte-exact verified). Fill levels: scrap bin gauge
+    (yard_stock/5000), DRI tank gauge (buffer_t/capacity), EAF interface gauges (200 t ref).
+    Parity: 60-tick three-engine dump row-by-row; suite 32 files / 259; gauges 12/12 frames;
+    tap-time meshes 150 ≤150; 0 console errors. Evidence: `docs/evidence/s31/`.
+    CONTRACT READING (flagged for Yasser): engines stay replay ports (S1.2 precedent); hard
+    production gating on feed stock is a later explicit rule change.
+  - NEXT: **S3.2 state lights + amber rings** (existing `starved`/`wait` events + feed
+    shortfall). Gate: starve the DRP on purpose → plant visibly amber where it hurts.
 
 ## The game as it plays today
 Fullplant app (`web/src/ports/fullplant`, dev port 5178 via `start_digital_twin_v2.bat` —
@@ -132,8 +146,8 @@ EAF/LF/CCM, slice5 mills); each is a pure tick engine with a Python mirror + par
 - Unknown values are asked, never invented.
 
 ## Verified facts (measured, not remembered — re-measure if in doubt)
-- Test suite: `cd web && npx vitest run --root .` → **31 files / 252 tests green** (re-measured
-  20.11 at S2.2; +10 heat-pose projection tests).
+- Test suite: `cd web && npx vitest run --root .` → **32 files / 259 tests green** (re-measured
+  20.11 at S3.1; +7 meltshop-feed parity/negative tests).
 - Fresh-clone gate passed at S0.1 (stranger's clone builds and plays step 1).
 - Remote master head: S1.3 hero-swap commit (20.11) — in sync after push; `git log -1` for hash.
 - S1.3 perf (headless SwiftShader, relative deltas only): GLB download 16.5 MB, tris/frame 6.8k,

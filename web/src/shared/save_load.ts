@@ -60,6 +60,10 @@ export interface GameSave {
    *  Shape-checked in session.ts (validateOreBeltBlock) because the closure gate needs the
    *  registry primitives, which save_load must not import. */
   ore_belt?: { state: Record<string, unknown>; deposits_total: number };
+  /** S3.1 (PLAN_FORGED): meltshop feed chain (scrap + DRI edges). Absent = no feed built
+   *  yet; present-but-malformed or ledger-open = reject. Shape-checked here, full ledger
+   *  gate re-runs in session.validateMeltshopFeedBlock on restore (same split as ore_belt). */
+  meltshop_feed?: { state: Record<string, unknown>; deposits_total: number };
 }
 
 /** One slice's snapshot inside a multi-slice save (S0.5). Sim states are immutable per
@@ -212,6 +216,7 @@ export function writeFullplantSave(
     questProgress?: QuestProgressMap | null;
     onboarding?: OnboardingSnapshot | null;
     oreBelt?: { state: Record<string, unknown>; deposits_total: number } | null;
+    meltshopFeed?: { state: Record<string, unknown>; deposits_total: number } | null;
   },
 ): GameSave {
   const primary = slices['slice1'];
@@ -229,6 +234,7 @@ export function writeFullplantSave(
   };
   if (opts?.onboarding) save.onboarding = opts.onboarding;
   if (opts?.oreBelt) save.ore_belt = opts.oreBelt; // S1.2 belt chain (absent = no belt built)
+  if (opts?.meltshopFeed) save.meltshop_feed = opts.meltshopFeed; // S3.1 feed chain (absent = no feed built)
   const file = readSaveFileAt(storage, FULLPLANT_SAVE_FILE_KEY);
   file.saves[slot] = save;
   storage.write(FULLPLANT_SAVE_FILE_KEY, JSON.stringify(file));
@@ -378,6 +384,15 @@ function loadSaveFrom(file: SaveFile, slot: string, ctx: LoadContext): GameSave 
     if (!ob.state || typeof ob.state !== 'object') throw new Error('save ore_belt.state must be an object');
     if (typeof ob.deposits_total !== 'number' || !Number.isFinite(ob.deposits_total)) {
       throw new Error('save ore_belt.deposits_total must be a finite number');
+    }
+  }
+  // S3.1 v2: meltshop-feed block — same shape gate as ore_belt (ledger gate in session).
+  if (save.meltshop_feed !== undefined && save.meltshop_feed !== null) {
+    const mf = save.meltshop_feed as Record<string, unknown>;
+    if (typeof mf !== 'object' || Array.isArray(mf)) throw new Error('save meltshop_feed block is not an object');
+    if (!mf.state || typeof mf.state !== 'object') throw new Error('save meltshop_feed.state must be an object');
+    if (typeof mf.deposits_total !== 'number' || !Number.isFinite(mf.deposits_total)) {
+      throw new Error('save meltshop_feed.deposits_total must be a finite number');
     }
   }
   // Quest progress coverage (Phase 2): a carried map must carry its content schema and

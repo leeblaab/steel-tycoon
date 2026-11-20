@@ -18,6 +18,10 @@ import {
   freshOreBeltState, stepOreBelt, commissionDrp, beltDepositYard,
   beltLedgerView, beltInvariants, type OreBeltState,
 } from '../../../shared/ore_belt.ts';
+import {
+  freshMeltshopFeedState, stepMeltshopFeed, commissionEaf, feedDepositScrap, feedDepositDri,
+  feedInvariants, type MeltshopFeedState, type FeedConsumption,
+} from '../../../shared/meltshop_feed.ts';
 
 /** S1.2 (PLAN_FORGED): the belt built at onboarding step 4 is a REAL transfer edge — the
  *  yard->ore_buffer->drp_intake chain rides the slice1 arrival stream. Authored against
@@ -43,6 +47,29 @@ export function validateOreBeltBlock(ob: unknown): { state: OreBeltState; deposi
   }
   const close = beltInvariants(st, o.deposits_total);
   if (!close.ok) throw new Error(`save ore_belt failed its ledger gate: ${close.detail}`);
+  return { state: structuredClone(st), deposits: o.deposits_total };
+}
+
+/** S3.1 save/load gate for a carried meltshop-feed block (same split as ore_belt:
+ *  shape + invariants here, full ledger gate re-runs on restore). */
+export function validateMeltshopFeedBlock(fb: unknown): { state: MeltshopFeedState; deposits: number } | null {
+  if (fb == null) return null; // absent = fresh feed (pre-S3.1 saves resume without the chain)
+  if (typeof fb !== 'object' || Array.isArray(fb)) throw new Error('save meltshop_feed block is not an object');
+  const o = fb as Record<string, unknown>;
+  const st = o.state as MeltshopFeedState | undefined;
+  if (!st || typeof st !== 'object' || typeof st.registry?.tick !== 'number') {
+    throw new Error('save meltshop_feed.state is missing its registry tick');
+  }
+  if (typeof o.deposits_total !== 'number' || !Number.isFinite(o.deposits_total)) {
+    throw new Error('save meltshop_feed.deposits_total must be a finite number');
+  }
+  for (const e of [st.scrapEdge, st.driEdge]) {
+    if (!e || !(e.rate_tph > 0) || !(e.chunk_t > 0) || !Number.isInteger(e.travel_ticks) || e.travel_ticks < 1) {
+      throw new Error('save meltshop_feed edge params invalid (rate/chunk positive, integer travel >= 1)');
+    }
+  }
+  const close = feedInvariants(st, o.deposits_total);
+  if (!close.ok) throw new Error(`save meltshop_feed failed its ledger gate: ${close.detail}`);
   return { state: structuredClone(st), deposits: o.deposits_total };
 }
 
@@ -95,6 +122,12 @@ export class GameSession {
   belt: OreBeltState | null = null;
   beltDepositsTotal = 0.0; // closure baseline for the belt ledger gate
   private prevSliceArrivedT = 0.0; // slice1 `arrived_t` deltas feed the yard credit
+  /** S3.1 meltshop feed chain (scrap + DRI edges). Null until the scrap_feed node is built. */
+  feed: MeltshopFeedState | null = null;
+  feedDepositsTotal = 0.0;
+  private prevDispatchedT = 0.0;  // slice1 dispatched_t deltas deposit the scrap edge
+  private prevDischargedT = 0.0;  // slice3 discharged_t_total deltas deposit the DRI edge
+  private prevChargeStatus: Record<string, string> = {}; // slice4 heat-start transitions = consumptions
 
   constructor(questsDoc: QuestsDoc, seqDoc: any) {
     this.catalog = buildCatalog();
@@ -154,12 +187,21 @@ export class GameSession {
       this.belt = freshOreBeltState(ORE_BELT_DUMP.rate_tph, ORE_BELT_DUMP.chunk_t, ORE_BELT_DUMP.travel_ticks);
       this.events.push({ tick: this.tick, slice: 'slice1', event: 'ore_belt_built' });
     }
+    // S3.1: the scrap_feed node opens the meltshop feed chain (two real transfer edges).
+    // Prev-signal baselines seed from the LIVE states so pre-build tonnage is never credited.
+    if (nodeId === 'scrap_feed' && this.feed == null) {
+      this.feed = freshMeltshopFeedState();
+      this.prevDispatchedT = (this.stateOf('slice1') as Record<string, any> | undefined)?.dispatched_t ?? 0.0;
+      this.prevDischargedT = (this.stateOf('slice3') as Record<string, any> | undefined)?.discharged_t_total ?? 0.0;
+      this.events.push({ tick: this.tick, slice: 'slice4', event: 'meltshop_feed_built' });
+    }
     // Guided sequence nodes for LATER slices commission their area when placed (same rule
     // the quest-commission path enforces via unlockSlice — S0.3 visibility gate).
     if (slice && slice !== 'slice1' && this.builtNode(nodeId)) this.unlockSlice(slice);
     // S1.2: DRP joining the plant (guided build or area commissioning) starts the belt's
     // second hop; pre-built buffer stock keeps flowing into drp_intake.
     if (nodeId === 'drp' || slice === 'slice3') this.ensureDrpCommissioned();
+    this.ensureEafCommissioned(); // S3.1 (self-gated on the eaf build / slice4 build-done)
     // Re-derive unlock state for every other slice: unlocks are DATA-derived (built nodes +
     // completed quests), so a mid-sequence confirmBuild can never leave a later area
     // "unlocked but not yet commissioned" (S0.5 invariant: restored == live).
@@ -246,6 +288,16 @@ export class GameSession {
     this.events.push({ tick: this.tick, slice: 'slice3', event: 'drp_intake_open' });
   }
 
+  /** S3.1: the EAF feed interfaces join the feed ledger when the EAF node is built (or
+   *  the whole slice4 build chain completes via quest commissioning). Idempotent; no-op
+   *  before the feed chain exists. */
+  ensureEafCommissioned(): void {
+    if (!this.feed || this.feed.eafCommissioned) return;
+    if (!this.builtNode('eaf') && !this.sliceBuildDone('slice4')) return;
+    this.feed = commissionEaf(this.feed);
+    this.events.push({ tick: this.tick, slice: 'slice4', event: 'eaf_feed_interfaces_open' });
+  }
+
   /** Does this slice's ENGINE tick this plant-minute? True only when the area is unlocked
    *  AND every one of its sequence build nodes is placed. slice1 is exempt from the
    *  unlock half (its builds themselves open it); slices without sequence builds
@@ -289,6 +341,44 @@ export class GameSession {
         throw new Error(`fullplant ore belt ledger broke at tick ${this.tick}: ${close.detail}`);
       }
     }
+    // S3.1 meltshop feed: scrap rides slice1's dispatched_t delta, DRI rides slice3's
+    // discharged_t_total delta; slice4 heat starts (delivered -> in_furnace) are
+    // owner-tagged consumptions. A ledger break here is as fatal as a slice-engine break.
+    if (this.feed) {
+      const s1f = this.stateOf('slice1') as Record<string, any> | undefined;
+      const disp = typeof s1f?.dispatched_t === 'number' ? s1f.dispatched_t : this.prevDispatchedT;
+      const dScrap = disp - this.prevDispatchedT;
+      this.prevDispatchedT = disp;
+      if (dScrap > 0) {
+        this.feed = feedDepositScrap(this.feed, dScrap);
+        this.feedDepositsTotal += dScrap;
+      }
+      const s3f = this.stateOf('slice3') as Record<string, any> | undefined;
+      const disch = typeof s3f?.discharged_t_total === 'number' ? s3f.discharged_t_total : this.prevDischargedT;
+      const dDri = disch - this.prevDischargedT;
+      this.prevDischargedT = disch;
+      if (dDri > 0) {
+        this.feed = feedDepositDri(this.feed, dDri);
+        this.feedDepositsTotal += dDri;
+      }
+      const s4f = this.stateOf('slice4') as Record<string, any> | undefined;
+      const cons: FeedConsumption[] = [];
+      for (const c of s4f?.charges ?? []) {
+        if (c.status === 'in_furnace' && this.prevChargeStatus[c.charge_id] !== 'in_furnace') {
+          cons.push({
+            charge_id: c.charge_id,
+            scrap_t: c.grade_composition.filter((r: any) => r.grade !== 'DRI').reduce((a: number, r: any) => a + r.actual_usable_t, 0),
+            dri_t: c.grade_composition.filter((r: any) => r.grade === 'DRI').reduce((a: number, r: any) => a + r.actual_usable_t, 0),
+          });
+        }
+        this.prevChargeStatus[c.charge_id] = c.status;
+      }
+      this.feed = stepMeltshopFeed(this.feed, cons);
+      const fclose = feedInvariants(this.feed, this.feedDepositsTotal);
+      if (!fclose.ok) {
+        throw new Error(`fullplant meltshop feed ledger broke at tick ${this.tick}: ${fclose.detail}`);
+      }
+    }
     // Quest evaluation rides the authoritative slice state right after each step — same
     // pattern as hub/main.tsx (all level_1 criteria are slice1-scoped). Reads slice1 state
     // directly: q1 completes on the very tick slice1's engine starts, so this must not
@@ -324,6 +414,13 @@ export class GameSession {
   beltVisualSnapshot(): { state: OreBeltState; deposits_total: number } | null {
     if (!this.belt) return null;
     return { state: structuredClone(this.belt), deposits_total: this.beltDepositsTotal };
+  }
+
+  /** S3.1 visual layer: feed ledger snapshot for fill levels + shortfall amber. Pure
+   *  projection (structuredClone) — the renderer can never mutate the feed state. */
+  feedVisualSnapshot(): { state: MeltshopFeedState; deposits_total: number } | null {
+    if (!this.feed) return null;
+    return { state: structuredClone(this.feed), deposits_total: this.feedDepositsTotal };
   }
 
   questProgress(): QuestProgressMap {
@@ -385,7 +482,10 @@ export class GameSession {
     const oreBelt = this.belt
       ? { state: structuredClone(this.belt), deposits_total: this.beltDepositsTotal }
       : undefined;
-    return { slices, quest_progress: this.questProgress(), onboarding, ...(oreBelt ? { ore_belt: oreBelt } : {}) };
+    const meltshopFeed = this.feed
+      ? { state: structuredClone(this.feed), deposits_total: this.feedDepositsTotal }
+      : undefined;
+    return { slices, quest_progress: this.questProgress(), onboarding, ...(oreBelt ? { ore_belt: oreBelt } : {}), ...(meltshopFeed ? { meltshop_feed: meltshopFeed } : {}) };
   }
 
   /** Write the fullplant autosave (steelx-fullplant-save key). Silently false when no
@@ -399,6 +499,7 @@ export class GameSession {
         questProgress: snap.quest_progress,
         onboarding: snap.onboarding,
         oreBelt: (snap as any).ore_belt ?? null,
+        meltshopFeed: (snap as any).meltshop_feed ?? null,
       });
       return true;
     } catch {
@@ -429,6 +530,11 @@ export class GameSession {
     const beltBlock = validateOreBeltBlock((save as any).ore_belt);
     this.belt = beltBlock ? beltBlock.state : null;
     this.beltDepositsTotal = beltBlock ? beltBlock.deposits : 0.0;
+    // S3.1 feed chain: absent block = fresh feed; a carried block already passed the
+    // ledger gate in validateMeltshopFeedBlock. Prev signals seed AFTER the slice restore.
+    const feedBlock = validateMeltshopFeedBlock((save as any).meltshop_feed);
+    this.feed = feedBlock ? feedBlock.state : null;
+    this.feedDepositsTotal = feedBlock ? feedBlock.deposits : 0.0;
     for (const [slice, snap] of Object.entries(save.slices)) {
       const rt = this.slices[slice];
       if (!rt || !rt.loop) continue; // engine-less slice in a save => corrupt file (loader already rejects)
@@ -437,6 +543,15 @@ export class GameSession {
     }
     const restoredS1 = this.stateOf('slice1') as Record<string, any> | undefined;
     this.prevSliceArrivedT = typeof restoredS1?.arrived_t === 'number' ? restoredS1.arrived_t : 0.0;
+    // S3.1: seed the feed prev-signals from the restored mirrors so the first ticked
+    // deltas are correct, and mark all restored charge statuses so only FUTURE heat
+    // starts consume from the feed ledger.
+    this.prevDispatchedT = typeof restoredS1?.dispatched_t === 'number' ? restoredS1.dispatched_t : 0.0;
+    const restoredS3 = this.stateOf('slice3') as Record<string, any> | undefined;
+    this.prevDischargedT = typeof restoredS3?.discharged_t_total === 'number' ? restoredS3.discharged_t_total : 0.0;
+    this.prevChargeStatus = {};
+    const restoredS4 = this.stateOf('slice4') as Record<string, any> | undefined;
+    for (const c of restoredS4?.charges ?? []) this.prevChargeStatus[c.charge_id] = c.status;
     this.recomputeUnlocks();
   }
 

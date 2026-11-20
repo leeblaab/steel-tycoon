@@ -388,6 +388,29 @@ function OreYardMound() {
   return <mesh ref={meshRef} castShadow geometry={geo} material={mat} position={[4, 0.15, 0]} />;
 }
 
+// ---------- S3.1 fill levels (PLAN_FORGED: every inventory = fill level) ----------
+// Generic live gauge: inner mesh scale.y = clamped fraction, seated on its base.
+// Fill-only (no shell) by design — the visible-draw budget is tight (150 worst-case).
+// Absolute scale set per frame (no smoothing) -> rAF-restart safe.
+function FillGauge({ pos, size, color, frac, cyl, hookId }: {
+  pos: [number, number, number]; size: [number, number, number]; color: string;
+  frac: () => number; cyl?: boolean; hookId?: string;
+}) {
+  const ref = React.useRef<any>(null);
+  const geo = React.useMemo(() => cyl
+    ? new THREE.CylinderGeometry(size[0] / 2, size[0] / 2, size[1], 16)
+    : new THREE.BoxGeometry(size[0], size[1], size[2]), []);
+  const mat = React.useMemo(() => new THREE.MeshStandardMaterial({ color, roughness: 0.9 }), []);
+  useRafLoop(() => {
+    const m = ref.current; if (!m) return;
+    if (hookId) ((window as any).__steelxGauges ??= {})[hookId] = m; // dev probe hook
+    const f = Math.max(0.02, Math.min(1, frac()));
+    m.scale.y = f;
+    m.position.y = pos[1] + (size[1] * f) / 2;
+  });
+  return <mesh ref={ref} castShadow geometry={geo} material={mat} position={[pos[0], pos[1] + size[1] * 0.01, pos[2]]} />;
+}
+
 /** Stream-color ground strips connecting adjacent zones along the material route
  *  (PLAN_FORGED §2: "stream-color ground strips + arrows drawn between zones").
  *  One thin quad per route leg, colored by the MATERIAL that travels it. */
@@ -667,9 +690,11 @@ function Slice1({ at }: { at: [number, number, number] }) {
       {yard ? (
         <>
           <mesh position={[4, 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}><planeGeometry args={[7, 7]} /><meshStandardMaterial color="#232c36" /></mesh>
-          {/* S1.4: live ore mound (scale = yard_ore inventory) + static scrap bin + stacker boom */}
+          {/* S1.4: live ore mound (scale = yard_ore inventory) + stacker boom;
+              S3.1: the scrap bin is a live gauge of slice1 yard_stock_t (cap 5000 t, ops config) */}
           <OreYardMound />
-          <mesh castShadow position={[5.7, 0.75, -1.9]}><boxGeometry args={[1.7, 1.5, 2.4]} /><meshStandardMaterial color={STREAM.scrap} metalness={0.3} roughness={0.7} /></mesh>
+          <FillGauge pos={[5.7, 0.02, -1.9]} size={[1.7, 1.5, 2.4]} color={STREAM.scrap} hookId="scrap_bin"
+            frac={() => ((SESSION.stateOf('slice1') as any)?.yard_stock_t ?? 0) / 5000} />
           <mesh castShadow position={[2.3, 1.6, 1.8]}><boxGeometry args={[0.18, 3.2, 0.18]} /><meshStandardMaterial color="#4a525c" metalness={0.4} roughness={0.6} /></mesh>
           <mesh castShadow position={[3.15, 3.1, 0.9]} rotation={[0, Math.atan2(1.7, -1.8), 0]}><boxGeometry args={[0.14, 0.14, 2.6]} /><meshStandardMaterial color="#4a525c" metalness={0.4} roughness={0.6} /></mesh>
           <NodeHit nodeId="scrap_yard" center={[4, 0]} size={[9, 9]} />
@@ -719,7 +744,14 @@ function Slice3({ at }: { at: [number, number, number] }) {
       <FlowPulse from={[-5.4, 0.7, 0]} to={[-1.2, 2.4, 0]} active={() => { const s = SESSION.stateOf('slice3') as any; return !!s && Array.isArray(s.buffer) && s.buffer.some((l: any) => l.usable_t > 0); }} color="#d9a13f" />
       </>}
       {driBufferBuilt && <>
-      <mesh castShadow position={[0, 2, 0]}><cylinderGeometry args={[1.6, 1.6, 4, 20]} /><meshStandardMaterial color="#39424e" metalness={0.5} roughness={0.5} /></mesh>
+      <mesh castShadow position={[0, 2, 0]}><cylinderGeometry args={[1.6, 1.6, 4, 20]} /><meshStandardMaterial color="#39424e" metalness={0.5} roughness={0.5} transparent opacity={0.4} /></mesh>
+      {/* S3.1: DRI buffer fill level = slice3 buffer_t / capacity (live gauge inside the tank) */}
+      <FillGauge cyl pos={[0, 0.05, 0]} size={[2.9, 3.9, 2.9]} color={STREAM.dri} hookId="dri_buffer"
+        frac={() => {
+          const s3 = SESSION.stateOf('slice3') as any;
+          const cap = (SESSION.slices as any).slice3?.entry?.fixture?.scenario?.buffer?.capacity_t ?? 1000;
+          return (s3?.buffer_t ?? 0) / cap;
+        }} />
       </>}
       <LABEL3 at={at} items={[...(drp ? [['DRP', -8, 9]] : []), ...(driBufferBuilt ? [['DRI Buffer', 0, 5]] : [])] as Array<[string, number, number]>} />
     </group>
@@ -773,8 +805,8 @@ function EafHeatCycle() {
     // restrained spark shower at ladle impact (10 instanced tetra, presentation-only arcs)
     const sparks: any = new THREE.InstancedMesh(new THREE.TetrahedronGeometry(0.05), new THREE.MeshBasicMaterial({ color: '#ffc46b' }), 10);
     sparks.instanceMatrix.setUsage(THREE.DynamicDrawUsage); sparks.visible = false;
-    // smoke: 4 billboard quads, visible only while melting/tapping
-    const smoke: any[] = [0, 1, 2, 3].map(() => {
+    // smoke: 3 billboard quads, visible only while melting/tapping (draw budget: 150 worst-case)
+    const smoke: any[] = [0, 1, 2].map(() => {
       const q: any = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 0.9), new THREE.MeshBasicMaterial({ color: '#767c82', transparent: true, opacity: 0, depthWrite: false }));
       q.visible = false; return q;
     });
@@ -876,6 +908,14 @@ function Slice4({ at }: { at: [number, number, number] }) {
     <group position={at}>
       {feed && <Reveal built={feed}><Glb url={`${S4}feed.glb`} scale={4.5} pos={[-10, 0, 0]} /></Reveal>}
       {eaf4 && <group position={[-5, 0, 0]}><EafHeatCycle /></group>}
+      {/* S3.1: EAF feed interface gauges — scrap (rust) + DRI (silver) levels from the
+          feed ledger; 200 t full-scale is a presentation design value (sme_pending). */}
+      {eaf4 && SESSION.feed && <>
+        <FillGauge pos={[-1.3, 0.02, 1.6]} size={[0.5, 2.0, 0.5]} color={STREAM.scrap} hookId="eaf_scrap"
+          frac={() => (SESSION.feedVisualSnapshot()?.state.registry.inventories['eaf_scrap']?.usable_t ?? 0) / 200} />
+        <FillGauge pos={[-1.3, 0.02, -1.6]} size={[0.5, 2.0, 0.5]} color={STREAM.dri} hookId="eaf_dri"
+          frac={() => (SESSION.feedVisualSnapshot()?.state.registry.inventories['eaf_dri']?.usable_t ?? 0) / 200} />
+      </>}
       {lf && <Reveal built={lf}><Glb url={`${S4}lrf.glb`} scale={3} pos={[0, 0, 0]} /></Reveal>}
       {cc && <><Glb url={`${S4}ccm.glb`} scale={6} pos={[5, 0, 0]} />
       <FlowPulse from={[-2.5, 0.8, 0]} to={[3.5, 0.8, 0]} active={() => !!(SESSION.stateOf('slice4') as any)?.ccm?.busy_ladle_id} color="#e07070" /></>}

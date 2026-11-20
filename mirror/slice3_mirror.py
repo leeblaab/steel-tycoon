@@ -86,6 +86,7 @@ def fresh_state(fx):
         'prng_state': sc['seed'],
         'buffer': [],            # FIFO lots: {material_id, usable_t, discharge_tick}
         'buffer_t': 0.0,
+        'discharged_t_total': 0.0,  # S3.1: monotonic DRP discharge counter (feed-edge source signal)
         'drp_tripped_until': 0, # tick until which discharge is halted (0 = running)
         'heats': [],             # heat records (dri_charge_material contract fields)
         'events': [],
@@ -129,6 +130,7 @@ def tick(state, fx):
         else:
             s['buffer'].append(_lot(f"M{s['tick']}", rate, s['tick']))
             s['buffer_t'] += rate
+            s['discharged_t_total'] += rate
             ev.append(f"DRP discharge {rate}t -> buffer ({round(s['buffer_t'],2)}t)")
 
     # 3) EAF batch demand (FIFO take, full charge or skip)
