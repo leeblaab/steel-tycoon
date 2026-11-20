@@ -830,7 +830,7 @@ function EafHeatCycle() {
     const find = (n: string): any => root.getObjectByName(n) ?? null;
     const nodes: any = {
       vessel: find('pivot_vessel'), roof: find('pivot_roof'),
-      electrodes: ['electrode_a', 'electrode_b', 'electrode_c'].map(find),
+      electrodes: [find('electrodes')], // S4.1: 3 columns joined (one bore value, 1 draw)
       ladle: find('ladle'), ladleCar: find('ladle_car'), bath: find('ladle_bath'),
       lamp: find('state_light'),
     };
@@ -965,7 +965,7 @@ function Slice4({ at }: { at: [number, number, number] }) {
           frac={() => (SESSION.feedVisualSnapshot()?.state.registry.inventories['eaf_dri']?.usable_t ?? 0) / 200} />
       </>}
       {lf && <Reveal built={lf}><Glb url={`${S4}lrf.glb`} scale={3} pos={[0, 0, 0]} /></Reveal>}
-      {cc && <><Glb url={`${S4}ccm.glb`} scale={6} pos={[5, 0, 0]} />
+      {cc && <><Glb url={`${S4}ccm_hero.glb`} scale={1} pos={[5, 0, 0]} />
       <FlowPulse from={[-2.5, 0.8, 0]} to={[3.5, 0.8, 0]} active={() => !!(SESSION.stateOf('slice4') as any)?.ccm?.busy_ladle_id} color="#e07070" /></>}
       {/* billet yard gantry (same construction as slices' yards), compact here */}
       {yard4 && <group position={[10, 0, -3.5]}>

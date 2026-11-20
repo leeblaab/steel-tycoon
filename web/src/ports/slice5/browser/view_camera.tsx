@@ -35,6 +35,14 @@ export function ViewCamera({ home }: { home: ViewHome }) {
       // S1.3 perf gate: visible-mesh count = main-pass draw-call proxy (the GL-level
       // probe counts shadow-pass draws too; this separates the ≤150 visible-draw budget).
       sceneMeshes: (() => { let n = 0; (scene as any).traverse((o: any) => { if (o.isMesh && o.visible) n++; }); return n; })(),
+      // S4.1: hero swap verification — named pivots/parts present in the live scene.
+      heroParts: (() => {
+        const want = ['pivot_turret', 'pivot_mold', 'turret_load', 'mold_unit', 'torch_head', 'electrodes', 'roof_unit', 'vessel_refractory', 'ladle', 'ladle_car'];
+        const found: Record<string, boolean> = {};
+        for (const w of want) found[w] = false;
+        (scene as any).traverse((o: any) => { if (Object.prototype.hasOwnProperty.call(found, o.name)) found[o.name] = true; });
+        return found;
+      })(),
     });
   }, [gl, camera, scene]);
 

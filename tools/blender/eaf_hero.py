@@ -21,7 +21,7 @@ import math
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from steelx_hero_lib import (  # noqa: E402
     PAL, L, S, R, mat, clear_scene, box, cyl, cone, pivot,
-    merge_static_by_material, export_glb, stats, budget_gate, render_preview, outdir_from_args,
+    join_named, merge_static_by_material, export_glb, stats, budget_gate, render_preview, outdir_from_args,
 )
 import bpy  # noqa: E402
 
@@ -47,28 +47,37 @@ for sx in (-1.25, 1.25):
 # --- vessel on the tilt pivot (trunnion axis at h 1.85 = vessel CG, along design Z) ---
 p_vessel = pivot('pivot_vessel', L(0, 1.85, 0))
 cone('vessel_shell', 1.3, 1.5, 1.3, L(0, 1.85, 0), M_shell, verts=14, parent=p_vessel)
-cyl('refractory_rim', 1.52, 0.18, L(0, 2.55, 0), M_refract, verts=14, parent=p_vessel)
+cyl('refractory_rim', 1.52, 0.18, L(0, 2.55, 0), M_refract, verts=14)
 cyl('trunnion_ring', 1.72, 0.35, L(0, 1.85, 0), M_steel_l, verts=14, rot=R(math.pi / 2, 0, 0), parent=p_vessel)
-box('tap_spout', S(0.55, 0.3, 0.45), L(1.55, 1.75, 0), M_refract, parent=p_vessel)
+box('tap_spout', S(0.55, 0.3, 0.45), L(1.55, 1.75, 0), M_refract)
+# S4.1 draw budget: rim + spout share the vessel pivot and material -> 1 draw.
+join_named(['refractory_rim', 'tap_spout'], 'vessel_refractory', parent=p_vessel)
 
 # --- swing roof: mast FIXED west of vessel; roof+arms+electrodes ride pivot_roof ---
 box('electrode_mast', S(0.28, 2.6, 0.28), L(-1.95, 2.6, 0), M_steel_l)  # 1.3..3.9, fixed
 cyl('state_light', 0.1, 0.12, L(-1.95, 3.96, 0), M_lamp, verts=8)
 p_roof = pivot('pivot_roof', L(-1.95, 2.7, 0))
-cone('roof', 1.55, 0.45, 0.35, L(0, 2.78, 0), M_steel_l, verts=14, parent=p_roof)
-cyl('roof_cap', 0.3, 0.18, L(0, 3.0, 0), M_steel_d, verts=10, parent=p_roof)
+cone('roof', 1.55, 0.45, 0.35, L(0, 2.78, 0), M_steel_l, verts=14)
+cyl('roof_cap', 0.3, 0.18, L(0, 3.0, 0), M_steel_l, verts=10)
+# S4.1 draw budget: roof + cap co-move, same material -> 1 draw.
+join_named(['roof', 'roof_cap'], 'roof_unit', parent=p_roof)
+_el_cols, _el_arms = [], []
 for name, ang in (('a', 90), ('b', 210), ('c', 330)):
     a = math.radians(ang)
     ex, ez = 0.7 * math.cos(a), 0.7 * math.sin(a)
     # electrode: graphite column through the roof into the vessel (bore = position.y).
     # Long above-roof section (to 3.9) so the triangle READS as three columns, not stubs.
-    cyl(f'electrode_{name}', 0.11, 2.25, L(ex, 2.775, ez), M_graph, verts=8, parent=p_roof)
+    _el_cols.append(cyl(f'electrode_{name}', 0.11, 2.25, L(ex, 2.775, ez), M_graph, verts=8))
     # copper arm from mast head to electrode top (horizontal, design rotY)
     dx, dz = ex - (-1.95), ez - 0.0
     arm_len = math.hypot(dx, dz)
     arm_ang = math.atan2(dx, dz)
-    box(f'electrode_arm_{name}', S(0.12, 0.12, arm_len),
-        L(-1.95 + dx / 2, 3.75, dz / 2), M_copper, rot=R(0, arm_ang, 0), parent=p_roof)
+    _el_arms.append(box(f'electrode_arm_{name}', S(0.12, 0.12, arm_len),
+        L(-1.95 + dx / 2, 3.75, dz / 2), M_copper, rot=R(0, arm_ang, 0)))
+# S4.1 draw budget: all 3 electrodes share ONE bore value (eaf_heat_pose) -> merge to 1
+# draw; the renderer animates the joined 'electrodes' mesh. Arms likewise co-move.
+join_named(_el_cols, 'electrodes', parent=p_roof)
+join_named(_el_arms, 'electrode_arms', parent=p_roof)
 
 # --- transformer house + copper bus bars (FRONT-left: visible from the home camera +Z) ---
 box('transformer_house', S(1.2, 1.4, 1.0), L(-2.4, 0.95, 1.6), M_steel_d)

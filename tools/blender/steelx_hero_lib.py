@@ -136,6 +136,28 @@ def pivot(name, loc):
     return o
 
 
+def join_named(parts, name, parent=None):
+    """Join already-built meshes into ONE named mesh (1 draw), then parent.
+    For parts that always animate TOGETHER under one pivot (e.g. EAF electrodes share
+    one bore value; turret ladles+arm share one rotation). Geometry unchanged; the
+    renderer addresses the joined name. S4.1 draw-budget lesson: named-per-part heroes
+    blow the <=150 visible-draw budget — merge co-moving parts, keep only independently
+    animated / emissive parts separate."""
+    objs = [bpy.data.objects[n] if isinstance(n, str) else n for n in parts]
+    bpy.ops.object.select_all(action='DESELECT')
+    for o in objs:
+        o.select_set(True)
+    bpy.context.view_layer.objects.active = objs[0]
+    bpy.ops.object.join()
+    o = bpy.context.object
+    o.name = name
+    if parent is not None:
+        bpy.context.view_layer.update()
+        o.parent = parent
+        o.matrix_parent_inverse = parent.matrix_world.inverted()
+    return o
+
+
 def merge_static_by_material(hero_label, exclude=()):
     """Join UNPARENTED static meshes that share a material into one mesh per material
     (1 draw call each) — the visible-draw budget gate. Pivot-parented parts (animation)

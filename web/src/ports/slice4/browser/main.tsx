@@ -136,7 +136,7 @@ function GlbModel({ url }: { url: string }) {
 
 const EAF_GLB_URL = new URL('./assets/eaf_hero.glb', import.meta.url).href;
 const LRF_GLB_URL = new URL('./assets/lrf.glb', import.meta.url).href;
-const CCM_GLB_URL = new URL('./assets/ccm.glb', import.meta.url).href;
+const CCM_GLB_URL = new URL('./assets/ccm_hero.glb', import.meta.url).href;
 const FEED_GLB_URL = new URL('./assets/feed.glb', import.meta.url).href;
 
 // Play-test feedback (23.10): no non-uniform scale (looked stretched) -> original
@@ -174,13 +174,13 @@ function LrfModel({ hot }: { hot: boolean }) {
 function CcmModel({ hot }: { hot: boolean }) {
   const gltf = GlbModel({ url: CCM_GLB_URL });
   const scaled = gltf ? gltf.clone() : null;
-  if (scaled) scaled.scale.setScalar(MODEL_SCALE * 2);
+  if (scaled) scaled.scale.setScalar(1); // S4.1 hero built at final scene size (no normalize knob)
   const minY = scaled ? new THREE.Box3().setFromObject(scaled).min.y : 0;
   return (
     <group position={[0, -minY, 0]}>
       {scaled && <primitive object={scaled} />}
-      {/* keep the emerging-billet glow while casting */}
-      {hot && <mesh position={[1.4, 0.6, 0]}><boxGeometry args={[2.8, 0.15, 0.15]} /><meshStandardMaterial color="#d98040" emissive="#d98040" emissiveIntensity={0.5} /></mesh>}
+      {/* strand glow while casting: overlay on the hero's roller-table line (S4.2 fades with age) */}
+      {hot && <mesh position={[1.05, 0.95, 0]}><boxGeometry args={[2.9, 0.14, 0.29]} /><meshStandardMaterial color="#d98040" emissive="#d98040" emissiveIntensity={0.5} /></mesh>}
     </group>
   );
 }

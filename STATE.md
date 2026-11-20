@@ -140,6 +140,18 @@ end goal; desktop/browser for now. No-rush iterative cadence, one Go-gated micro
     Evidence: `docs/evidence/s32/`. **STAGE 3 COMPLETE.**
   - NEXT: **Stage 4 — Cast** per docs/PLAN_FORGED.md (read the stage before starting).
     Sensory verdicts pending: S1.4, S2.1, S2.2, S3.1, S3.2 (Yasser AFK batch).
+  - **S4.1 DONE (code + objective gates; SME sensory verdict PENDING)** — hero swap #3:
+    procedural caster arc `tools/blender/hero_ccm.py` → ccm_hero.glb (712 tris / 52 KB,
+    7 draws + pivot_turret/pivot_mold): turret with 2 ladle seats (turret_load joined),
+    copper curved mold (mold_unit joined), straightener stands, roller table, yellow
+    torch gantry + traveling torch_head. Old 1.6 MB ccm.glb soup DELETED same commit
+    (both fullplant + slice4 scenes swapped). Draw budget held via join_named (new lib
+    helper): co-moving parts merged — EAF perf re-export (electrodes 3→1 shared bore,
+    arms 3→1, roof+cap, rim+spout; geometry identical, S2.2 pose regression green).
+    Tap-time 150 ≤150, idle 147; heroParts rig hook verifies named pivots live; suite
+    269/33; 0 errors; screenshot-verified (reads as a caster). Evidence docs/evidence/s41/.
+  - NEXT: **S4.2** billet rows instanced + emissive hot→cold fade tied to sim billet age;
+    ladle car EAF→LF→caster on rails. Gate: a full heat runs charge→tap→cast visibly.
 
 ## The game as it plays today
 Fullplant app (`web/src/ports/fullplant`, dev port 5178 via `start_digital_twin_v2.bat` —

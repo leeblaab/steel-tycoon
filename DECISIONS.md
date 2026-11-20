@@ -114,3 +114,16 @@ gate = F-06 chapter swaps).
   'drp'/'eaf'/'cc'/'bar_mill' (commissioning.ts SLICE_BUILD_NODES); cardFor synthesizes
   zone slots {id:`${slice}.zone`, inspect_key} — no dri_buffer slot in factory_layout.
   Known pre-existing: LabelLayer chips/banners overlap at some camera angles (later pass).
+- **S4.1 (20.11) — caster hero swap #3:** ccm_hero.glb 712 tris / 52 KB, 7 visible draws
+  + 2 pivots (pivot_turret→turret_load joined arm+ladles+nozzle; pivot_mold→mold_unit
+  joined block+flange; torch_head travels). Strand glow / billet rows = S4.2 renderer
+  work, NOT permanent hero meshes. DRAW-BUDGET LAW (join_named added to hero lib):
+  parts that always animate TOGETHER under one pivot are JOINED into one mesh — EAF
+  perf re-export merged electrodes 3→1 (one shared bore value), arms 3→1, roof+cap,
+  rim+spout (−6 draws, geometry identical, S2.2 pose probe green). CCM structural steel
+  collapsed to one tone (steel_light) for −1 more. Tap-time 150 ≤150 exactly; idle 147.
+  Old ccm.glb (1.6 MB ComfyUI soup, quantized single-node) deleted in BOTH scenes same
+  commit; repo shrinks monotonically (F-06). heroParts added to __steelxRig hook for
+  live pivot verification. Blender render_preview PNG silently missing on this host
+  (GLB export fine) — in-game screenshots are the visual gate, don't chase the preview.
+  sme_pending: curve radius, stand count, ladle sizes.
