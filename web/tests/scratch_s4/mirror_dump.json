@@ -69,6 +69,8 @@
   {
    "tick": 1,
    "eaf_busy": "C1",
+   "eaf_phase": "charge",
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 1,
@@ -83,6 +85,8 @@
   {
    "tick": 2,
    "eaf_busy": "C1",
+   "eaf_phase": "charge",
+   "eaf_phase_progress": 0.666667,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 1,
@@ -93,6 +97,8 @@
   {
    "tick": 3,
    "eaf_busy": "C1",
+   "eaf_phase": "melt",
+   "eaf_phase_progress": 0.090909,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 1,
@@ -103,6 +109,8 @@
   {
    "tick": 4,
    "eaf_busy": "C1",
+   "eaf_phase": "melt",
+   "eaf_phase_progress": 0.272727,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 1,
@@ -113,6 +121,8 @@
   {
    "tick": 5,
    "eaf_busy": "C1",
+   "eaf_phase": "melt",
+   "eaf_phase_progress": 0.454545,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 1,
@@ -123,6 +133,8 @@
   {
    "tick": 6,
    "eaf_busy": "C1",
+   "eaf_phase": "melt",
+   "eaf_phase_progress": 0.636364,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 1,
@@ -133,6 +145,8 @@
   {
    "tick": 7,
    "eaf_busy": "C1",
+   "eaf_phase": "melt",
+   "eaf_phase_progress": 0.818182,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 1,
@@ -143,6 +157,8 @@
   {
    "tick": 8,
    "eaf_busy": "C1",
+   "eaf_phase": "refine",
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 1,
@@ -153,6 +169,8 @@
   {
    "tick": 9,
    "eaf_busy": "C1",
+   "eaf_phase": "refine",
+   "eaf_phase_progress": 0.5,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 1,
@@ -163,6 +181,8 @@
   {
    "tick": 10,
    "eaf_busy": "C1",
+   "eaf_phase": "tap",
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 1,
@@ -173,6 +193,8 @@
   {
    "tick": 11,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": "L1",
    "ccm_busy": null,
    "ladles_free": 1,
@@ -186,6 +208,8 @@
   {
    "tick": 12,
    "eaf_busy": "C2",
+   "eaf_phase": "charge",
+   "eaf_phase_progress": 0.0,
    "lrf_busy": "L1",
    "ccm_busy": null,
    "ladles_free": 0,
@@ -199,6 +223,8 @@
   {
    "tick": 13,
    "eaf_busy": "C2",
+   "eaf_phase": "charge",
+   "eaf_phase_progress": 0.666667,
    "lrf_busy": "L1",
    "ccm_busy": null,
    "ladles_free": 0,
@@ -211,6 +237,8 @@
   {
    "tick": 14,
    "eaf_busy": "C2",
+   "eaf_phase": "melt",
+   "eaf_phase_progress": 0.090909,
    "lrf_busy": null,
    "ccm_busy": "L1",
    "ladles_free": 0,
@@ -224,6 +252,8 @@
   {
    "tick": 15,
    "eaf_busy": "C2",
+   "eaf_phase": "melt",
+   "eaf_phase_progress": 0.272727,
    "lrf_busy": null,
    "ccm_busy": "L1",
    "ladles_free": 0,
@@ -234,6 +264,8 @@
   {
    "tick": 16,
    "eaf_busy": "C2",
+   "eaf_phase": "melt",
+   "eaf_phase_progress": 0.454545,
    "lrf_busy": null,
    "ccm_busy": "L1",
    "ladles_free": 0,
@@ -244,6 +276,8 @@
   {
    "tick": 17,
    "eaf_busy": "C2",
+   "eaf_phase": "melt",
+   "eaf_phase_progress": 0.636364,
    "lrf_busy": null,
    "ccm_busy": "L1",
    "ladles_free": 0,
@@ -254,6 +288,8 @@
   {
    "tick": 18,
    "eaf_busy": "C2",
+   "eaf_phase": "melt",
+   "eaf_phase_progress": 0.818182,
    "lrf_busy": null,
    "ccm_busy": "L1",
    "ladles_free": 0,
@@ -264,6 +300,8 @@
   {
    "tick": 19,
    "eaf_busy": "C2",
+   "eaf_phase": "refine",
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 1,
@@ -276,6 +314,8 @@
   {
    "tick": 20,
    "eaf_busy": "C2",
+   "eaf_phase": "refine",
+   "eaf_phase_progress": 0.5,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 1,
@@ -286,6 +326,8 @@
   {
    "tick": 21,
    "eaf_busy": "C2",
+   "eaf_phase": "tap",
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 1,
@@ -296,6 +338,8 @@
   {
    "tick": 22,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": "L2",
    "ccm_busy": null,
    "ladles_free": 1,
@@ -309,6 +353,8 @@
   {
    "tick": 23,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": "L2",
    "ccm_busy": null,
    "ladles_free": 1,
@@ -321,6 +367,8 @@
   {
    "tick": 24,
    "eaf_busy": "C3",
+   "eaf_phase": "charge",
+   "eaf_phase_progress": 0.0,
    "lrf_busy": "L2",
    "ccm_busy": null,
    "ladles_free": 0,
@@ -334,6 +382,8 @@
   {
    "tick": 25,
    "eaf_busy": "C3",
+   "eaf_phase": "charge",
+   "eaf_phase_progress": 0.666667,
    "lrf_busy": null,
    "ccm_busy": "L2",
    "ladles_free": 0,
@@ -348,6 +398,8 @@
   {
    "tick": 26,
    "eaf_busy": "C3",
+   "eaf_phase": "melt",
+   "eaf_phase_progress": 0.090909,
    "lrf_busy": null,
    "ccm_busy": "L2",
    "ladles_free": 0,
@@ -358,6 +410,8 @@
   {
    "tick": 27,
    "eaf_busy": "C3",
+   "eaf_phase": "melt",
+   "eaf_phase_progress": 0.272727,
    "lrf_busy": null,
    "ccm_busy": "L2",
    "ladles_free": 0,
@@ -368,6 +422,8 @@
   {
    "tick": 28,
    "eaf_busy": "C3",
+   "eaf_phase": "melt",
+   "eaf_phase_progress": 0.454545,
    "lrf_busy": null,
    "ccm_busy": "L2",
    "ladles_free": 0,
@@ -378,6 +434,8 @@
   {
    "tick": 29,
    "eaf_busy": "C3",
+   "eaf_phase": "melt",
+   "eaf_phase_progress": 0.636364,
    "lrf_busy": null,
    "ccm_busy": "L2",
    "ladles_free": 0,
@@ -388,6 +446,8 @@
   {
    "tick": 30,
    "eaf_busy": "C3",
+   "eaf_phase": "melt",
+   "eaf_phase_progress": 0.818182,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 1,
@@ -401,6 +461,8 @@
   {
    "tick": 31,
    "eaf_busy": "C3",
+   "eaf_phase": "refine",
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 1,
@@ -411,6 +473,8 @@
   {
    "tick": 32,
    "eaf_busy": "C3",
+   "eaf_phase": "refine",
+   "eaf_phase_progress": 0.5,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 1,
@@ -421,6 +485,8 @@
   {
    "tick": 33,
    "eaf_busy": "C3",
+   "eaf_phase": "tap",
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 1,
@@ -431,6 +497,8 @@
   {
    "tick": 34,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": "L1",
    "ccm_busy": null,
    "ladles_free": 1,
@@ -444,6 +512,8 @@
   {
    "tick": 35,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": "L1",
    "ccm_busy": null,
    "ladles_free": 1,
@@ -456,6 +526,8 @@
   {
    "tick": 36,
    "eaf_busy": "C4",
+   "eaf_phase": "charge",
+   "eaf_phase_progress": 0.0,
    "lrf_busy": "L1",
    "ccm_busy": null,
    "ladles_free": 0,
@@ -469,6 +541,8 @@
   {
    "tick": 37,
    "eaf_busy": "C4",
+   "eaf_phase": "charge",
+   "eaf_phase_progress": 0.666667,
    "lrf_busy": null,
    "ccm_busy": "L1",
    "ladles_free": 0,
@@ -483,6 +557,8 @@
   {
    "tick": 38,
    "eaf_busy": "C4",
+   "eaf_phase": "melt",
+   "eaf_phase_progress": 0.090909,
    "lrf_busy": null,
    "ccm_busy": "L1",
    "ladles_free": 0,
@@ -493,6 +569,8 @@
   {
    "tick": 39,
    "eaf_busy": "C4",
+   "eaf_phase": "melt",
+   "eaf_phase_progress": 0.272727,
    "lrf_busy": null,
    "ccm_busy": "L1",
    "ladles_free": 0,
@@ -503,6 +581,8 @@
   {
    "tick": 40,
    "eaf_busy": "C4",
+   "eaf_phase": "melt",
+   "eaf_phase_progress": 0.454545,
    "lrf_busy": null,
    "ccm_busy": "L1",
    "ladles_free": 0,
@@ -513,6 +593,8 @@
   {
    "tick": 41,
    "eaf_busy": "C4",
+   "eaf_phase": "melt",
+   "eaf_phase_progress": 0.636364,
    "lrf_busy": null,
    "ccm_busy": "L1",
    "ladles_free": 0,
@@ -523,6 +605,8 @@
   {
    "tick": 42,
    "eaf_busy": "C4",
+   "eaf_phase": "melt",
+   "eaf_phase_progress": 0.818182,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 1,
@@ -535,6 +619,8 @@
   {
    "tick": 43,
    "eaf_busy": "C4",
+   "eaf_phase": "refine",
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 1,
@@ -545,6 +631,8 @@
   {
    "tick": 44,
    "eaf_busy": "C4",
+   "eaf_phase": "refine",
+   "eaf_phase_progress": 0.5,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 1,
@@ -555,6 +643,8 @@
   {
    "tick": 45,
    "eaf_busy": "C4",
+   "eaf_phase": "tap",
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 1,
@@ -565,6 +655,8 @@
   {
    "tick": 46,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": "L2",
    "ccm_busy": null,
    "ladles_free": 1,
@@ -578,6 +670,8 @@
   {
    "tick": 47,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": "L2",
    "ccm_busy": null,
    "ladles_free": 1,
@@ -590,6 +684,8 @@
   {
    "tick": 48,
    "eaf_busy": "C5",
+   "eaf_phase": "charge",
+   "eaf_phase_progress": 0.0,
    "lrf_busy": "L2",
    "ccm_busy": null,
    "ladles_free": 0,
@@ -603,6 +699,8 @@
   {
    "tick": 49,
    "eaf_busy": "C5",
+   "eaf_phase": "charge",
+   "eaf_phase_progress": 0.666667,
    "lrf_busy": null,
    "ccm_busy": "L2",
    "ladles_free": 0,
@@ -617,6 +715,8 @@
   {
    "tick": 50,
    "eaf_busy": "C5",
+   "eaf_phase": "melt",
+   "eaf_phase_progress": 0.090909,
    "lrf_busy": null,
    "ccm_busy": "L2",
    "ladles_free": 0,
@@ -627,6 +727,8 @@
   {
    "tick": 51,
    "eaf_busy": "C5",
+   "eaf_phase": "melt",
+   "eaf_phase_progress": 0.272727,
    "lrf_busy": null,
    "ccm_busy": "L2",
    "ladles_free": 0,
@@ -637,6 +739,8 @@
   {
    "tick": 52,
    "eaf_busy": "C5",
+   "eaf_phase": "melt",
+   "eaf_phase_progress": 0.454545,
    "lrf_busy": null,
    "ccm_busy": "L2",
    "ladles_free": 0,
@@ -647,6 +751,8 @@
   {
    "tick": 53,
    "eaf_busy": "C5",
+   "eaf_phase": "melt",
+   "eaf_phase_progress": 0.636364,
    "lrf_busy": null,
    "ccm_busy": "L2",
    "ladles_free": 0,
@@ -657,6 +763,8 @@
   {
    "tick": 54,
    "eaf_busy": "C5",
+   "eaf_phase": "melt",
+   "eaf_phase_progress": 0.818182,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 1,
@@ -669,6 +777,8 @@
   {
    "tick": 55,
    "eaf_busy": "C5",
+   "eaf_phase": "refine",
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 1,
@@ -679,6 +789,8 @@
   {
    "tick": 56,
    "eaf_busy": "C5",
+   "eaf_phase": "refine",
+   "eaf_phase_progress": 0.5,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 1,
@@ -689,6 +801,8 @@
   {
    "tick": 57,
    "eaf_busy": "C5",
+   "eaf_phase": "tap",
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 1,
@@ -699,6 +813,8 @@
   {
    "tick": 58,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": "L1",
    "ccm_busy": null,
    "ladles_free": 1,
@@ -712,6 +828,8 @@
   {
    "tick": 59,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": "L1",
    "ccm_busy": null,
    "ladles_free": 1,
@@ -724,6 +842,8 @@
   {
    "tick": 60,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": "L1",
    "ccm_busy": null,
    "ladles_free": 1,
@@ -738,6 +858,8 @@
   {
    "tick": 61,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": "L1",
    "ladles_free": 1,
@@ -752,6 +874,8 @@
   {
    "tick": 62,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": "L1",
    "ladles_free": 1,
@@ -764,6 +888,8 @@
   {
    "tick": 63,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": "L1",
    "ladles_free": 1,
@@ -776,6 +902,8 @@
   {
    "tick": 64,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": "L1",
    "ladles_free": 1,
@@ -788,6 +916,8 @@
   {
    "tick": 65,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": "L1",
    "ladles_free": 1,
@@ -800,6 +930,8 @@
   {
    "tick": 66,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -813,6 +945,8 @@
   {
    "tick": 67,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -825,6 +959,8 @@
   {
    "tick": 68,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -837,6 +973,8 @@
   {
    "tick": 69,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -849,6 +987,8 @@
   {
    "tick": 70,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -861,6 +1001,8 @@
   {
    "tick": 71,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -873,6 +1015,8 @@
   {
    "tick": 72,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -885,6 +1029,8 @@
   {
    "tick": 73,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -897,6 +1043,8 @@
   {
    "tick": 74,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -909,6 +1057,8 @@
   {
    "tick": 75,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -921,6 +1071,8 @@
   {
    "tick": 76,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -933,6 +1085,8 @@
   {
    "tick": 77,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -945,6 +1099,8 @@
   {
    "tick": 78,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -957,6 +1113,8 @@
   {
    "tick": 79,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -969,6 +1127,8 @@
   {
    "tick": 80,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -981,6 +1141,8 @@
   {
    "tick": 81,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -993,6 +1155,8 @@
   {
    "tick": 82,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1005,6 +1169,8 @@
   {
    "tick": 83,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1017,6 +1183,8 @@
   {
    "tick": 84,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1029,6 +1197,8 @@
   {
    "tick": 85,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1041,6 +1211,8 @@
   {
    "tick": 86,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1053,6 +1225,8 @@
   {
    "tick": 87,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1065,6 +1239,8 @@
   {
    "tick": 88,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1077,6 +1253,8 @@
   {
    "tick": 89,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1089,6 +1267,8 @@
   {
    "tick": 90,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1103,6 +1283,8 @@
   {
    "tick": 91,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1115,6 +1297,8 @@
   {
    "tick": 92,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1127,6 +1311,8 @@
   {
    "tick": 93,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1139,6 +1325,8 @@
   {
    "tick": 94,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1151,6 +1339,8 @@
   {
    "tick": 95,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1163,6 +1353,8 @@
   {
    "tick": 96,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1175,6 +1367,8 @@
   {
    "tick": 97,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1187,6 +1381,8 @@
   {
    "tick": 98,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1199,6 +1395,8 @@
   {
    "tick": 99,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1211,6 +1409,8 @@
   {
    "tick": 100,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1223,6 +1423,8 @@
   {
    "tick": 101,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1235,6 +1437,8 @@
   {
    "tick": 102,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1247,6 +1451,8 @@
   {
    "tick": 103,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1259,6 +1465,8 @@
   {
    "tick": 104,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1271,6 +1479,8 @@
   {
    "tick": 105,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1283,6 +1493,8 @@
   {
    "tick": 106,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1295,6 +1507,8 @@
   {
    "tick": 107,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1307,6 +1521,8 @@
   {
    "tick": 108,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1319,6 +1535,8 @@
   {
    "tick": 109,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1331,6 +1549,8 @@
   {
    "tick": 110,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1343,6 +1563,8 @@
   {
    "tick": 111,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1355,6 +1577,8 @@
   {
    "tick": 112,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1367,6 +1591,8 @@
   {
    "tick": 113,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1379,6 +1605,8 @@
   {
    "tick": 114,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1391,6 +1619,8 @@
   {
    "tick": 115,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1403,6 +1633,8 @@
   {
    "tick": 116,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1415,6 +1647,8 @@
   {
    "tick": 117,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1427,6 +1661,8 @@
   {
    "tick": 118,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1439,6 +1675,8 @@
   {
    "tick": 119,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -1451,6 +1689,8 @@
   {
    "tick": 120,
    "eaf_busy": null,
+   "eaf_phase": null,
+   "eaf_phase_progress": 0.0,
    "lrf_busy": null,
    "ccm_busy": null,
    "ladles_free": 2,
@@ -3165,6 +3405,23 @@
    "name": "N4 double-count control detects via balance",
    "ok": true,
    "detail": "healthy residual=0.0 double-count residual=-186.935"
+  }
+ ],
+ "phase_tests": [
+  {
+   "name": "P1 per-heat phase order charge->melt->refine->tap, full cycle length",
+   "ok": true,
+   "detail": "heats=5 tapped=5"
+  },
+  {
+   "name": "P2 idle => no phase; tap event immediately follows the tap-band tick",
+   "ok": true,
+   "detail": "idle_clean=True taps_after_tap_band=True"
+  },
+  {
+   "name": "P3 band boundaries + zero total raises",
+   "ok": true,
+   "detail": "boundaries_ok=True"
   }
  ]
 }

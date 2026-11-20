@@ -87,6 +87,11 @@ end goal; desktop/browser for now. No-rush iterative cadence, one Go-gated micro
     ticks, zero console errors (`docs/evidence/s14/`). **Stage 1 objective work complete.**
   - NEXT: **Stage 2 — The Heat**: S2.0 heat-phase enum (mirror-first) → S2.1 EAF hero swap
     → S2.2 heat-cycle animation (SME non-negotiables in PLAN_FORGED S2.2).
+  - **S2.0 DONE** — heat-phase enum (`charge/melt/refine/tap` + `phase_progress`) added
+    mirror-first to `slice4_mirror.py` + 1:1 TS port: PURE DERIVATION from the existing
+    countdown (bands 15/55/20/10%, sme_pending design values) — tap timing, events,
+    counters, balance UNCHANGED (max raw balance 2.84e-14 identical). Mirror P1-P3 phase
+    contract tests PASS; parity dump regenerated; +3 parity tests (suite 30 files / 242).
 
 ## The game as it plays today
 Fullplant app (`web/src/ports/fullplant`, dev port 5178 via `start_digital_twin_v2.bat` —
@@ -106,8 +111,8 @@ EAF/LF/CCM, slice5 mills); each is a pure tick engine with a Python mirror + par
 - Unknown values are asked, never invented.
 
 ## Verified facts (measured, not remembered — re-measure if in doubt)
-- Test suite: `cd web && npx vitest run --root .` → **30 files / 239 tests green** (re-measured
-  20.11 at S1.4; +5 mound projection tests).
+- Test suite: `cd web && npx vitest run --root .` → **30 files / 242 tests green** (re-measured
+  20.11 at S2.0; +3 heat-phase parity tests).
 - Fresh-clone gate passed at S0.1 (stranger's clone builds and plays step 1).
 - Remote master head: S1.3 hero-swap commit (20.11) — in sync after push; `git log -1` for hash.
 - S1.3 perf (headless SwiftShader, relative deltas only): GLB download 16.5 MB, tris/frame 6.8k,

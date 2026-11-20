@@ -79,6 +79,8 @@ export interface EafState {
   busy_charge_id: string | null;
   remaining_ticks: number;
   bath_t: number; // live furnace charge (gap-fix 19.10): tonnage at heat start, 0.0 at tap
+  heat_phase: HeatPhase | null; // S2.0 enum: pure derivation from the countdown (null when idle)
+  phase_progress: number; // 0..1 within the current phase band
 }
 export interface LrfState {
   busy_ladle_id: string | null;
@@ -167,6 +169,8 @@ export type ScrapTiers = Record<string, ScrapTier>;
 export interface TickRecord {
   tick: number;
   eaf_busy: string | null;
+  eaf_phase: HeatPhase | null; // S2.0 enum (mirror records carry it per tick)
+  eaf_phase_progress: number;
   lrf_busy: string | null;
   ccm_busy: string | null;
   ladles_free: number;
@@ -180,6 +184,29 @@ export interface TickRecord {
 // kWh/tLS." TERI best-practices PDF: SEC range 415-675 kWh/t. Adopted game value 600 kWh/t
 // (within the cited band); label: source-backed band, engineering-estimate application.
 export const EAF_SEC_KWH_PER_T = 600.0;
+
+// S2.0 heat-phase enum (mirror HEAT_PHASE_BANDS): the shared contract driving the EAF
+// animation AND the cutaway cards. PURE DERIVATION from the existing cycle countdown —
+// no new timing rules: tap still fires exactly at remaining_ticks === 0. Bands shaped
+// like a real EAF heat (charge ~15% / melt ~55% / refine ~20% / tap ~10%); sme_pending.
+export type HeatPhase = 'charge' | 'melt' | 'refine' | 'tap';
+export const HEAT_PHASE_BANDS: ReadonlyArray<readonly [HeatPhase, number, number]> = [
+  ['charge', 0.0, 0.15],
+  ['melt', 0.15, 0.70],
+  ['refine', 0.70, 0.90],
+  ['tap', 0.90, 1.0],
+] as const;
+
+export function heatPhaseView(remainingTicks: number, totalTicks: number): { phase: HeatPhase; progress: number } {
+  if (!(totalTicks > 0)) throw new Error('eaf_heat_ticks must be positive');
+  const frac = Math.max(0, Math.min(1, (totalTicks - remainingTicks) / totalTicks));
+  for (const [name, a, b] of HEAT_PHASE_BANDS) {
+    if (frac < b || name === 'tap') {
+      return { phase: name, progress: Math.max(0, Math.min(1, (frac - a) / (b - a))) };
+    }
+  }
+  throw new Error('heat phase bands must cover [0,1]'); // unreachable: tap band closes at 1.0
+}
 
 // Python round(x, n) — half-to-even at the nth decimal (JS toFixed rounds half away from zero).
 export function pyRound(x: number, ndigits: number): number {
@@ -231,7 +258,7 @@ export function freshState(fx: Slice4Fixture): Slice4State {
     dri_materials: [], // dri_charge_material records (Slice 3 interface)
     // ladle cycle pool
     ladles: [], // [{ladle_id, status: free|busy, busy_charge_id, busy_since}]
-    eaf: { busy_charge_id: null, remaining_ticks: 0, bath_t: 0.0 },
+    eaf: { busy_charge_id: null, remaining_ticks: 0, bath_t: 0.0, heat_phase: null, phase_progress: 0.0 },
     lrf: { busy_ladle_id: null, remaining_ticks: 0 },
     ccm: { busy_ladle_id: null, remaining_ticks: 0 },
     billet_yard_t: 0.0,
@@ -366,6 +393,17 @@ export function tick(state: Slice4State, fx: Slice4Fixture, tiers: ScrapTiers): 
       }
       // else ladle waits at LRF (LRF queue) — recorded below at LRF stage
     }
+  }
+
+  // S2.0: derive the per-heat phase enum from the countdown (pure presentation contract;
+  // set unconditionally so restored pre-S2.0 states heal on their first tick).
+  if (eaf.busy_charge_id === null) {
+    eaf.heat_phase = null;
+    eaf.phase_progress = 0.0;
+  } else {
+    const pv = heatPhaseView(eaf.remaining_ticks, c.eaf_heat_ticks);
+    eaf.heat_phase = pv.phase;
+    eaf.phase_progress = pv.progress;
   }
 
   // 4) LRF: non-preemptive refine cycle per ladle.
@@ -539,6 +577,8 @@ export function run(
     records.push({
       tick: st.tick,
       eaf_busy: st.eaf.busy_charge_id,
+      eaf_phase: st.eaf.heat_phase,
+      eaf_phase_progress: pyRound(st.eaf.phase_progress, 6),
       lrf_busy: st.lrf.busy_ladle_id,
       ccm_busy: st.ccm.busy_ladle_id,
       ladles_free: st.ladles.filter((l) => l.status === 'free').length,
@@ -561,6 +601,63 @@ export interface NegativeTestResult {
 // Mirror run_negative_tests (L337-393): negative tests — broken rules must diverge from the
 // healthy path. Faithful port of the mirror's semantics, including the N4 arithmetic control
 // (dc = residual - billet_yard_t perturbs the formula, per docs/s4_gap_check.md weakness 3).
+// Mirror run_phase_tests (S2.0): positive contract tests — the enum is a pure view of the
+// countdown. P1 per-heat order/length, P2 idle cleanliness + tap-event placement, P3 boundaries.
+export function runPhaseTests(fx: Slice4Fixture, tiers: ScrapTiers): NegativeTestResult[] {
+  const results: NegativeTestResult[] = [];
+  const { state, records } = run(fx, tiers);
+  // P1
+  const heats = new Map<string, string[]>();
+  for (const r of records) {
+    if (r.eaf_busy !== null) {
+      const arr = heats.get(r.eaf_busy) ?? [];
+      arr.push(r.eaf_phase as string);
+      heats.set(r.eaf_busy, arr);
+    }
+  }
+  let orderOk = heats.size === state.counters.heats_tapped;
+  for (const phases of heats.values()) {
+    const seen: string[] = [];
+    for (const p of phases) if (seen.length === 0 || seen[seen.length - 1] !== p) seen.push(p);
+    if (seen.join(',') !== 'charge,melt,refine,tap' || phases.length !== fx.scenario.eaf_heat_ticks) orderOk = false;
+  }
+  results.push({
+    name: 'P1 per-heat phase order charge->melt->refine->tap, full cycle length',
+    ok: orderOk,
+    detail: `heats=${heats.size} tapped=${state.counters.heats_tapped}`,
+  });
+  // P2
+  const idleOk = records.every((r) => r.eaf_busy !== null || r.eaf_phase === null);
+  const tapTicks = records.filter((r) => r.events.some((e) => e.startsWith('EAF taps '))).map((r) => r.tick);
+  const prevOk = tapTicks.every((t) => records[t - 2].eaf_phase === 'tap'); // record index = tick-1
+  results.push({
+    name: 'P2 idle => no phase; tap event immediately follows the tap-band tick',
+    ok: idleOk && prevOk,
+    detail: `idle_clean=${pyBoolStr(idleOk)} taps_after_tap_band=${pyBoolStr(prevOk)}`,
+  });
+  // P3
+  let bOk =
+    heatPhaseView(10, 10).phase === 'charge' && heatPhaseView(10, 10).progress === 0.0 &&
+    heatPhaseView(9, 10).phase === 'charge' &&
+    heatPhaseView(8, 10).phase === 'melt' &&
+    heatPhaseView(4, 10).phase === 'melt' &&
+    heatPhaseView(3, 10).phase === 'refine' &&
+    heatPhaseView(2, 10).phase === 'refine' &&
+    heatPhaseView(1, 10).phase === 'tap';
+  try {
+    heatPhaseView(5, 0);
+    bOk = false;
+  } catch {
+    // expected: non-positive total raises
+  }
+  results.push({
+    name: 'P3 band boundaries + zero total raises',
+    ok: bOk,
+    detail: `boundaries_ok=${pyBoolStr(bOk)}`,
+  });
+  return results;
+}
+
 export function runNegativeTests(fx: Slice4Fixture, tiers: ScrapTiers): NegativeTestResult[] {
   const results: NegativeTestResult[] = [];
 

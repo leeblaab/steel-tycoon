@@ -18,6 +18,7 @@ import {
   tick,
   run,
   runNegativeTests,
+  runPhaseTests,
   loadScrapTiers,
   deepClone,
   pyRound,
@@ -312,4 +313,47 @@ test('no validateScenario in the mirror — port omits it (mirror has zero raise
   assert.strictEqual((globalThis as any).__s4_validate_expected, undefined);
   const mod = { freshState, tick, run, runNegativeTests, loadScrapTiers } as Record<string, unknown>;
   assert.ok(!('validateScenario' in mod));
+});
+
+// ---------- S2.0 heat-phase enum (pure derivation contract) ----------
+
+test('S2.0: per-tick eaf_phase + progress deep-equal the fresh mirror replay (all 120 ticks)', () => {
+  const { records } = run(FIXTURE, TIERS);
+  for (let i = 0; i < records.length; i++) {
+    assert.strictEqual(records[i].eaf_phase, DUMP.records[i].eaf_phase, `tick ${records[i].tick}: phase mismatch`);
+    assert.strictEqual(records[i].eaf_phase_progress, DUMP.records[i].eaf_phase_progress, `tick ${records[i].tick}: progress mismatch`);
+  }
+});
+
+test('S2.0 phase shape: charge x2 -> melt x5 -> refine x2 -> tap x1 per 10-tick heat; idle => null; tap event after tap band', () => {
+  const { records } = run(FIXTURE, TIERS);
+  const heats = new Map<string, string[]>();
+  for (const r of records) {
+    if (r.eaf_busy !== null) {
+      const arr = heats.get(r.eaf_busy) ?? [];
+      arr.push(r.eaf_phase as string);
+      heats.set(r.eaf_busy, arr);
+    } else {
+      assert.strictEqual(r.eaf_phase, null, `idle tick ${r.tick} carries a phase`);
+    }
+  }
+  assert.strictEqual(heats.size, 5);
+  for (const phases of heats.values()) {
+    assert.deepStrictEqual(phases, ['charge', 'charge', 'melt', 'melt', 'melt', 'melt', 'melt', 'refine', 'refine', 'tap']);
+  }
+  for (const r of records) {
+    if (r.events.some((e) => e.startsWith('EAF taps '))) {
+      assert.strictEqual(records[r.tick - 2].eaf_phase, 'tap', `tap at tick ${r.tick} not preceded by tap band`);
+    }
+  }
+});
+
+test('S2.0 runPhaseTests: all three contract tests PASS exactly as in the live mirror dump', () => {
+  const ts = runPhaseTests(FIXTURE, TIERS);
+  assert.strictEqual(ts.length, DUMP.phase_tests.length); // 3
+  for (let i = 0; i < ts.length; i++) {
+    assert.strictEqual(ts[i].name, DUMP.phase_tests[i].name, `phase test ${i}: name mismatch`);
+    assert.strictEqual(ts[i].ok, DUMP.phase_tests[i].ok, `phase test ${i}: ok mismatch`);
+    assert.strictEqual(ts[i].detail, DUMP.phase_tests[i].detail, `phase test ${i}: detail mismatch`);
+  }
 });

@@ -45,6 +45,24 @@ SCRAP_PATH = os.path.join(REPO, 'content', 'scrap', 'scrap_tiers.json')
 # the game value; label: source-backed band, engineering-estimate application.
 EAF_SEC_KWH_PER_T = 600.0
 
+# S2.0 heat-phase enum (PLAN_FORGED Stage 2): the shared contract driving the EAF
+# animation AND the cutaway cards. PURE DERIVATION from the existing cycle countdown —
+# no new timing rules: tap still fires exactly at remaining_ticks == 0, events/counters/
+# balance unchanged. Bands shaped like a real EAF heat (charge ~15% / melt ~55% /
+# refine ~20% / tap ~10% of tap-to-tap); design bands, sme_pending (SME calibrates).
+HEAT_PHASE_BANDS = (('charge', 0.0, 0.15), ('melt', 0.15, 0.70), ('refine', 0.70, 0.90), ('tap', 0.90, 1.0))
+
+def heat_phase_view(remaining_ticks, total_ticks):
+    """(phase, progress-in-phase) from the countdown. remaining==total -> charge 0.0;
+    remaining==1 -> tap band; remaining==0 is the tap tick itself (heat over -> idle,
+    handled by the caller). Raises on non-positive total (never silently defaults)."""
+    if not total_ticks > 0:
+        raise ValueError('eaf_heat_ticks must be positive')
+    frac = max(0.0, min(1.0, (total_ticks - remaining_ticks) / total_ticks))
+    for name, a, b in HEAT_PHASE_BANDS:
+        if frac < b or name == 'tap':
+            return name, max(0.0, min(1.0, (frac - a) / (b - a)))
+
 def load_fixture(path=FIXTURE_PATH):
     with open(path, encoding='utf-8') as f:
         return json.load(f)
@@ -62,7 +80,8 @@ def fresh_state(fx):
         'dri_materials': [],      # dri_charge_material records (Slice 3 interface)
         # ladle cycle pool
         'ladles': [],             # [{ladle_id, status: free|busy, busy_charge_id, busy_since}]
-        'eaf': {'busy_charge_id': None, 'remaining_ticks': 0, 'bath_t': 0.0},
+        'eaf': {'busy_charge_id': None, 'remaining_ticks': 0, 'bath_t': 0.0,
+                'heat_phase': None, 'phase_progress': 0.0},
         'lrf': {'busy_ladle_id': None, 'remaining_ticks': 0},
         'ccm': {'busy_ladle_id': None, 'remaining_ticks': 0},
         'billet_yard_t': 0.0,
@@ -186,6 +205,14 @@ def tick(state, fx, tiers):
                 s['lrf']['remaining_ticks'] = c['lrf_ticks_per_ladle']
                 ev.append(f"LRF refine starts for ladle {ladle['ladle_id']}")
             # else ladle waits at LRF (LRF queue) — recorded below at LRF stage
+
+    # S2.0: derive the per-heat phase enum from the countdown (pure presentation contract;
+    # set unconditionally so restored pre-S2.0 states heal on their first tick).
+    if eaf['busy_charge_id'] is None:
+        eaf['heat_phase'] = None
+        eaf['phase_progress'] = 0.0
+    else:
+        eaf['heat_phase'], eaf['phase_progress'] = heat_phase_view(eaf['remaining_ticks'], c['eaf_heat_ticks'])
 
     # 4) LRF: non-preemptive refine cycle per ladle.
     lrf = s['lrf']
@@ -323,6 +350,8 @@ def run(fx, tiers):
         records.append({
             'tick': state['tick'],
             'eaf_busy': state['eaf']['busy_charge_id'],
+            'eaf_phase': state['eaf']['heat_phase'],
+            'eaf_phase_progress': round(state['eaf']['phase_progress'], 6),
             'lrf_busy': state['lrf']['busy_ladle_id'],
             'ccm_busy': state['ccm']['busy_ladle_id'],
             'ladles_free': sum(1 for l in state['ladles'] if l['status'] == 'free'),
@@ -392,6 +421,47 @@ def run_negative_tests(fx, tiers):
 
     return results
 
+def run_phase_tests(fx, tiers):
+    """S2.0 phase-enum contract tests (positive): the enum is a pure view of the countdown."""
+    results = []
+    st, rec = run(fx, tiers)
+    # P1: per-heat phase order charge->melt->refine->tap, one full cycle per tapped heat.
+    heats = {}
+    for r in rec:
+        if r['eaf_busy'] is not None:
+            heats.setdefault(r['eaf_busy'], []).append(r['eaf_phase'])
+    order_ok = len(heats) == st['counters']['heats_tapped']
+    for cid, phases in heats.items():
+        seen = []
+        for p in phases:
+            if not seen or seen[-1] != p:
+                seen.append(p)
+        if seen != ['charge', 'melt', 'refine', 'tap'] or len(phases) != fx['scenario']['eaf_heat_ticks']:
+            order_ok = False
+    results.append(('P1 per-heat phase order charge->melt->refine->tap, full cycle length', order_ok,
+                    f"heats={len(heats)} tapped={st['counters']['heats_tapped']}"))
+    # P2: idle ticks carry no phase; every tap event lands immediately after a tap-band tick.
+    idle_ok = all(r['eaf_phase'] is None for r in rec if r['eaf_busy'] is None)
+    tap_ticks = [r['tick'] for r in rec if any(e.startswith('EAF taps ') for e in r['events'])]
+    prev_ok = all(rec[t - 2]['eaf_phase'] == 'tap' for t in tap_ticks)  # record index = tick-1
+    results.append(('P2 idle => no phase; tap event immediately follows the tap-band tick', idle_ok and prev_ok,
+                    f"idle_clean={idle_ok} taps_after_tap_band={prev_ok}"))
+    # P3: band boundaries at the 10-tick fixture cadence + invalid total raises.
+    b_ok = (heat_phase_view(10, 10) == ('charge', 0.0)
+            and heat_phase_view(9, 10)[0] == 'charge'   # frac 0.1
+            and heat_phase_view(8, 10)[0] == 'melt'     # frac 0.2
+            and heat_phase_view(4, 10)[0] == 'melt'     # frac 0.6
+            and heat_phase_view(3, 10)[0] == 'refine'   # frac 0.7
+            and heat_phase_view(2, 10)[0] == 'refine'   # frac 0.8
+            and heat_phase_view(1, 10)[0] == 'tap')     # frac 0.9
+    try:
+        heat_phase_view(5, 0)
+        b_ok = False
+    except ValueError:
+        pass
+    results.append(('P3 band boundaries + zero total raises', b_ok, f"boundaries_ok={b_ok}"))
+    return results
+
 if __name__ == '__main__':
     fx = load_fixture()
     tiers = load_scrap_tiers()
@@ -406,4 +476,7 @@ if __name__ == '__main__':
     print(f"balance error at end: {state['balance_error']}")
     print("negative tests:")
     for name, ok, detail in run_negative_tests(fx, tiers):
+        print(f"  {'PASS' if ok else 'FAIL'} {name} — {detail}")
+    print("phase contract tests (S2.0):")
+    for name, ok, detail in run_phase_tests(fx, tiers):
         print(f"  {'PASS' if ok else 'FAIL'} {name} — {detail}")

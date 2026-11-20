@@ -43,6 +43,7 @@ for _ in range(fx['scenario']['ticks']):
     raw_max = max(raw_max, abs(st['balance_error']))
 
 neg = m.run_negative_tests(fx, tiers)
+phase = m.run_phase_tests(fx, tiers)
 
 out = {
     'win': state['win'],
@@ -58,6 +59,7 @@ out = {
     'bath_series': bath_series,
     'consumed_series': consumed_series,
     'negative_tests': [{'name': n, 'ok': bool(o), 'detail': d} for n, o, d in neg],
+    'phase_tests': [{'name': n, 'ok': bool(o), 'detail': d} for n, o, d in phase],
 }
 path = os.path.join(HERE, 'mirror_dump.json')
 with open(path, 'w', encoding='utf-8') as f:

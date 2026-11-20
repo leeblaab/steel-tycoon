@@ -58,3 +58,10 @@ gate = F-06 chapter swaps).
   PRESENTATION design value, SME calibrates at sensory gate — not a sim rule). +5 tests
   (suite 239). Live probe 20/20 sampled frames scale == projection, zero console errors.
   Evidence: docs/evidence/s14/. Sensory gate: PENDING Yasser. Stage 1 objective work complete.
+- **S2.0 (20.11) — heat-phase enum contract:** `eaf.heat_phase` ∈ charge/melt/refine/tap|null +
+  `eaf.phase_progress` 0..1, PURE DERIVATION from remaining_ticks/eaf_heat_ticks (bands
+  charge [0,0.15) melt [0.15,0.70) refine [0.70,0.90) tap [0.90,1.0); sme_pending design bands
+  shaped like a real heat). No new timing rules — tap fires exactly at remaining==0; events,
+  counters, balance byte-identical (max raw 2.84e-14). Set unconditionally each tick so
+  pre-S2.0 saves heal on first tick. Mirror P1-P3 + TS runPhaseTests pinned vs regenerated
+  dump; suite 242. Drives S2.2 animation AND the Stage-6 cutaway cards (one contract).
