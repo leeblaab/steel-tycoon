@@ -140,10 +140,10 @@ function Conveyor({ rec }: { rec: TickRecord }) {
   );
 }
 
-// ---------- Jetty GLB (ComfyUI, contains gantry crane + ship together) ----------
-// jetty.glb: single welded mesh normalized to ~1 unit across (bbox ~0.98), up-axis Y.
-// Replaces the old Kenney ship.glb + 4 procedural PortalCrane meshes as ONE assembly
-// (Yasser, 25.10). Same GlbModel + Box3 ground-lift pattern as slice4.
+// ---------- Jetty hero (S1.3 swap, F-06): procedural pier + Kenney crane/ship ----------
+// jetty_pier.glb: built at FINAL scene size (scale 1), model origin at the QUAY EDGE;
+// pier extends -x into the water, ship alongside. Named pivots: pivot_crane, pivot_ship.
+// Same GlbModel + Box3 ground-lift pattern as slice4 (min y = 0 -> no lift).
 function GlbModel({ url }: { url: string }) {
   const [gltf, setGltf] = useState<THREE.Group | null>(null);
   useEffect(() => {
@@ -154,9 +154,9 @@ function GlbModel({ url }: { url: string }) {
   return gltf;
 }
 
-const JETTY_GLB_URL = new URL('./assets/jetty.glb', import.meta.url).href;
-// ~1 unit across model -> tune here to fit the jetty/water footprint.
-const JETTY_MODEL_SCALE = 8;
+const JETTY_GLB_URL = new URL('./assets/jetty_pier.glb', import.meta.url).href;
+// Hero is built at final scene size (1 unit = 1 scene unit) — no normalize knob.
+const JETTY_MODEL_SCALE = 1;
 
 function Jetty({ rec }: { rec: TickRecord }) {
   const gltf = GlbModel({ url: JETTY_GLB_URL });

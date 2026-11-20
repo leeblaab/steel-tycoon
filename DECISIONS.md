@@ -13,7 +13,8 @@ contracts carried forward from frozen docs.
 | F-03 | Stream-color material language is the PRIMARY visual grammar; zone tints demoted to secondary pad color | per-zone rainbow identity |
 | F-04 | Art bar = "readable industrial diorama"; SME gates on "reads as a real plant's flow and equipment", never photoreal; NO day/night, NO DOF | — |
 | F-05 | Treatment order: lighting + palette + fog applied to the CURRENT scene first; before-screenshot captured for measurable after | — |
-| F-06 | Nothing sacred: every old hero GLB (incl. rebuilt 21 MB jetty.glb) dies at its chapter gate; swap = add new + delete old + validate budget in ONE gated commit; one hero per gate | rebuild-all approval |
+| F-06 | Nothing sacred: every old hero GLB (incl. rebuilt 21 MB jetty.glb) dies at its chapter gate; swap = add new + delete old + validate budget in ONE gated commit; one hero per gate; repo keeps shrinking | rebuild-all approval |
+| F-06a | 20.11 (Yasser, "we can do the same for all"): ALL remaining legacy hero GLBs (lrf, feed, any other) retire at the chapter gate that replaces them — same add+delete+validate one-commit discipline; no standalone rebuild passes | piecemeal hero retirement |
 | F-07 | Breadth freeze: no S2 scheduling engine, no seventh chapter, no extra economy systems until the six chapters are connected and readable (Stage 5 guard: dispatch revenue counter ONLY) | — |
 | F-08 | Mill routing (rebar vs wire rod) = visuals first, real player decision only when the order book exists; billet→mill interface stays tonnage-only | — |
 | F-09 | Gate discipline: sensory gate ("Yasser plays it, says it reads right") + per stage one objective perf gate + one "still playable" smoke; a closed stage never reopens | — |
@@ -41,3 +42,14 @@ contracts carried forward from frozen docs.
 None promoted yet. Verification candidates tracked in PLAN_FORGED stage work
 (clone-build → fixed at S0.1; commissioning fix = S0.3; persistence v2 = S0.5; GLB size
 gate = F-06 chapter swaps).
+
+## Stage gate records (measured, not remembered)
+- **S1.3 (20.11) — hero swap #1 DRP + jetty:** per-hero budgets PASS (DRP 668 tris / 59 KB;
+  jetty 1,730 tris / 126 KB; named pivots both). Scene gates: GLB download 77,341→16,466 KB;
+  tris/frame 1,401,783→6,771; visible meshes 143 ≤ 150 (GL draws incl. shadow pass 232.6 —
+  the ≤150 budget reads as VISIBLE/main-pass draws); headless SwiftShader fps 6→51; suite
+  30 files / 234 tests; full-campaign smoke zero console errors. Evidence: docs/evidence/s13/.
+  Conventions settled: heroes built at FINAL scene size (1 unit = 1 scene unit, scale 1 —
+  no normalize-then-scale knob); Blender scripts use design Y-up coords via L()/S() converters;
+  GLB min-y = 0 (both scenes seat models by bbox-min, anything below 0 floats the hero).
+  Sensory gate: PENDING Yasser.

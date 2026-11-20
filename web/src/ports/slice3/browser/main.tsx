@@ -136,11 +136,11 @@ function EafModel() {
 }
 
 // ---------- DRP unit (isolated per-object-type component — model swap point) ----------
-// ---------- DRP unit: GLB swap (25.10) — "DRP NEW FULL.glb" (ComfyUI), was the ~90-box
-// Primetals-style MIDREX composition. Compressed 19.8MB -> 1.56MB (weld/simplify/quantize).
-// Single welded mesh, normalized units (~1 across) like slice1 jetty -> DRP_MODEL_SCALE knob.
-const DRP_GLB_URL = new URL('./assets/drp.glb', import.meta.url).href;
-const DRP_MODEL_SCALE = 8; // tune to fit the old ~7.2 x 6.4 m pad
+// ---------- DRP unit: S1.3 hero swap (F-06) — procedural Blender-Python shaft ----------
+// drp_shaft.glb: 668 tris / 59 KB, built at FINAL scene size to fit the 7.2 x 6.4 pad,
+// top 9.3 (lamp/label anchors unchanged). Named pivots: pivot_charge_conveyor, pivot_bustle_ring.
+const DRP_GLB_URL = new URL('./assets/drp_shaft.glb', import.meta.url).href;
+const DRP_MODEL_SCALE = 1; // hero built at final size — no normalize knob
 
 function DrpUnit({ rec }: { rec: TickRecord }) {
   const tripped = rec.drp_tripped;

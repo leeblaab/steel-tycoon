@@ -111,7 +111,7 @@ function LabelCameraBridge() { const { camera } = useThree(); CAM.current = came
  *  neither the jetty's neighbour nodes nor anything else could be clicked. Per-node
  *  footprints sized to the visible geometry, generous per Yasser's request. */
 const NODE_FOOTPRINT: Record<string, [number, number]> = {
-  jetty: [10, 8],       // enlarged GLB berth (scale 21)
+  jetty: [12, 12],      // S1.3 procedural pier + ship berth (scale 1, origin at quay edge)
   scrap_yard: [9, 9],   // yard pad is 7x7; footprint slightly larger for fat fingers
   conv_ore_drp: [4, 4], // belt strip + head tower (S1.2) — tappable conveyor card
 };
@@ -630,16 +630,16 @@ function Slice1({ at }: { at: [number, number, number] }) {
     <group position={at}>
       <mesh position={[-12, 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]}><planeGeometry args={[14, 16]} /><meshStandardMaterial color="#1d3a52" /></mesh>
       {jetty ? (
-        // Berth geometry reaches from the quay edge into the water rect (x -19..-5). Model
-        // enlarged x3 (7 -> 21) per Yasser round-2 observation 3.2. The GLB's own extent is
-        // ~60 m wide at scale 21, so its centre sits over the quay (local x=-4): the berth
-        // structure spans into the water and the ship ends up inside the water rect, not on
-        // land (Yasser round-2 observation 2.1 red marker). Green glow marks build-complete;
-        // invisible hit box keeps it tappable (footprint generous, observation 3.3).
+        // S1.3 hero swap (F-06): procedural pier + Kenney kitbash crane/ship, built at
+        // FINAL scene size (scale 1). Model origin = quay edge, placed at local x=-5 so
+        // the pier reaches into the water rect (x -19..-5) and the ship lies alongside
+        // inside the water. Named pivots: pivot_crane (rail travel), pivot_ship (berth
+        // arrival/departure). Green glow marks build-complete; invisible hit box keeps
+        // it tappable (footprint generous, observation 3.3).
         <>
-          <Glb url={`${S1}jetty.glb`} scale={21} pos={[-4, 0, 0]} />
-          <BuiltGlow center={[-8, 0]} w={12} h={9} />
-          <NodeHit nodeId="jetty" center={[-8, 0]} size={[10, 8]} />
+          <Glb url={`${S1}jetty_pier.glb`} scale={1} pos={[-5, 0, 0]} />
+          <BuiltGlow center={[-10, 0]} w={14} h={10} />
+          <NodeHit nodeId="jetty" center={[-10.5, 0]} size={[12, 12]} />
         </>
       ) : (
         <GhostSlot pos={[-8, 0, 0]} size={[6, 5]} active={nextNode === 'jetty'} />
@@ -691,7 +691,7 @@ function Slice3({ at }: { at: [number, number, number] }) {
   const driBufferBuilt = SESSION.builtNode('conv_dri_eaf');
   return (
     <group position={at}>
-      {drp && <Reveal built={drp}><Glb url={`${S3}drp.glb`} scale={8} pos={[-8, 0, 0]} /></Reveal>}
+      {drp && <Reveal built={drp}><Glb url={`${S3}drp_shaft.glb`} scale={1} pos={[-8, 0, 0]} /></Reveal>}
       {drp && <>
       <mesh position={[-4, 0.35, 0]}><boxGeometry args={[3.0, 0.3, 1.2]} /><meshStandardMaterial color="#4a525c" metalness={0.5} roughness={0.5} /></mesh>
       <FlowPulse from={[-5.4, 0.7, 0]} to={[-1.2, 2.4, 0]} active={() => { const s = SESSION.stateOf('slice3') as any; return !!s && Array.isArray(s.buffer) && s.buffer.some((l: any) => l.usable_t > 0); }} color="#d9a13f" />

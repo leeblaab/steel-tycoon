@@ -20,7 +20,7 @@ export interface ViewHome {
 }
 
 export function ViewCamera({ home }: { home: ViewHome }) {
-  const { camera, gl } = useThree();
+  const { camera, gl, scene } = useThree();
   const st = useRef({ az: (home.azDeg * Math.PI) / 180, el: (Math.min(75, Math.max(15, home.elDeg)) * Math.PI) / 180, dist: home.dist });
   const tgt = useRef(new THREE.Vector3(...home.target));
 
@@ -32,8 +32,11 @@ export function ViewCamera({ home }: { home: ViewHome }) {
       toneMapping: g.toneMapping, exposure: g.toneMappingExposure,
       shadowMapEnabled: g.shadowMap?.enabled, shadowAutoUpdate: g.shadowMap?.autoUpdate,
       camPos: (camera as any).position?.toArray?.() ?? null,
+      // S1.3 perf gate: visible-mesh count = main-pass draw-call proxy (the GL-level
+      // probe counts shadow-pass draws too; this separates the ≤150 visible-draw budget).
+      sceneMeshes: (() => { let n = 0; (scene as any).traverse((o: any) => { if (o.isMesh && o.visible) n++; }); return n; })(),
     });
-  }, [gl, camera]);
+  }, [gl, camera, scene]);
 
   useEffect(() => {
     const canvas = gl.domElement;

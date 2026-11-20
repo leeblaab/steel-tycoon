@@ -69,17 +69,17 @@ end goal; desktop/browser for now. No-rush iterative cadence, one Go-gated micro
     closure 1e-6) — Python mirror ALL PASS incl. negatives; parity test pinned vs dump.
   - **S1.2 DONE** (`c8b3c92` core + `c4e39f3` integration, pushed): belt is a real transfer
     edge (yard→ore_buffer→drp_intake) riding GameSession (build→tick→save/restore).
-  - **S1.2 visual layer — CODE COMPLETE + VERIFIED, COMMIT PENDING** (uncommitted working
-    tree: `main.tsx` OreBelt instanced-token renderer cap 48 + NODE_FOOTPRINT,
-    `session.ts` beltVisualSnapshot/tickIntervalMs, `shared/ore_belt.ts` beltTokenView
-    projection, session test +2). Live-browser evidence: token mesh created on belt build,
-    instanced count == min(ledger, 48) every sampled frame (0/0→1/1→2/2 over ~8s), zero
-    console errors (`web/shots/s12_belt_tokens.png`). NOTE: the probe script's own PASS/FAIL
-    line has a broken assertion — do NOT chase it; trust the per-frame timeline print. The
-    working probe is `web/scripts/probe_ore_belt_tokens6.mjs` (serve-time ctor-hook + rAF
-    scan); variants 1–5 are dead drafts, delete them in the commit.
-  - NEXT fresh session: commit the visual layer (+ tidy probes/shots), then **S1.3 procedural
-    DRP hero swap** → S1.4 mound fill.
+  - **S1.2 visual layer DONE** (`38aca98`, pushed): OreBelt instanced tokens riding
+    GameSession; live-browser verified (token count == min(ledger,48) every sampled frame).
+  - **S1.3 DONE (code + objective gates; SME sensory verdict PENDING)** — hero swap #1
+    per F-06: procedural DRP shaft (`tools/blender/drp_shaft.py`, 668 tris / 59 KB) +
+    jetty rebuild (procedural pier + Kenney crane/ship kitbash, 1,730 tris / 126 KB),
+    both built at FINAL scene size (scale 1, named pivots). Old `drp.glb` (20.8 MB) +
+    `jetty.glb` (21.0 MB) DELETED in the same commit; all three consumers re-pointed
+    (fullplant + slice1 + slice3). Gates measured: suite 30/234, all 3 ports build,
+    full-campaign smoke zero console errors, GLB download 77.3→16.5 MB, tris/frame
+    1.40M→6.8k, visible meshes 143 (≤150), headless fps 6→51. Evidence: `docs/evidence/s13/`.
+  - NEXT: Yasser sensory verdict on S1.3 → **S1.4 ore-yard mound fill** (scale ∝ inventory).
 
 ## The game as it plays today
 Fullplant app (`web/src/ports/fullplant`, dev port 5178 via `start_digital_twin_v2.bat` —
@@ -99,10 +99,12 @@ EAF/LF/CCM, slice5 mills); each is a pure tick engine with a Python mirror + par
 - Unknown values are asked, never invented.
 
 ## Verified facts (measured, not remembered — re-measure if in doubt)
-- Test suite: `cd web && npx vitest run --root .` → **30 files / 234 tests green** (S1.2 visual
-  layer in working tree, re-measured 19.11).
+- Test suite: `cd web && npx vitest run --root .` → **30 files / 234 tests green** (re-measured
+  20.11 at the S1.3 swap).
 - Fresh-clone gate passed at S0.1 (stranger's clone builds and plays step 1).
-- Remote master head: `c4e39f3` — remote and local are IN SYNC (pushed 19.11 while online).
+- Remote master head: S1.3 hero-swap commit (20.11) — in sync after push; `git log -1` for hash.
+- S1.3 perf (headless SwiftShader, relative deltas only): GLB download 16.5 MB, tris/frame 6.8k,
+  visible meshes 143, fps 51. Baseline + after JSONs in `docs/evidence/s13/`.
 
 ## Key docs
 | Doc | Role |
