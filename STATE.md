@@ -127,6 +127,19 @@ end goal; desktop/browser for now. No-rush iterative cadence, one Go-gated micro
     production gating on feed stock is a later explicit rule change.
   - NEXT: **S3.2 state lights + amber rings** (existing `starved`/`wait` events + feed
     shortfall). Gate: starve the DRP on purpose → plant visibly amber where it hurts.
+  - **S3.2 DONE (code + objective gates; SME sensory verdict PENDING)** — state grammar
+    live: `shared/state_lights.ts` pure projection (idle desaturated / running green pulse /
+    blocked-starved AMBER #ffb347; feed shortfall overrides busy). ONE instanced draw for
+    all 4 machine rings (DRP/EAF/CCM/bar mill) — per-instance color+scale, unbuilt hidden.
+    Wired to EXISTING signals: zone inspection tone + S3.1 feed shortfall/empty EAF scrap
+    interface (`feedAmberSignal`). slice3 inspector extended: last heat SKIPPED → 'waiting'
+    (card + ring agree; auto-recovers on next charged heat). Draw budget kept: smoke 3→2,
+    decorative DRI tank shell removed → tap-time 149 ≤150. GATE PROVEN LIVE: deliberate
+    DRP starvation (buffer emptied before scripted heat tick 120) → "heat SKIPPED: buffer
+    short" → ring green→amber, screenshot-verified. Suite 33 files / 269; 0 console errors.
+    Evidence: `docs/evidence/s32/`. **STAGE 3 COMPLETE.**
+  - NEXT: **Stage 4 — Cast** per docs/PLAN_FORGED.md (read the stage before starting).
+    Sensory verdicts pending: S1.4, S2.1, S2.2, S3.1, S3.2 (Yasser AFK batch).
 
 ## The game as it plays today
 Fullplant app (`web/src/ports/fullplant`, dev port 5178 via `start_digital_twin_v2.bat` —
@@ -146,8 +159,8 @@ EAF/LF/CCM, slice5 mills); each is a pure tick engine with a Python mirror + par
 - Unknown values are asked, never invented.
 
 ## Verified facts (measured, not remembered — re-measure if in doubt)
-- Test suite: `cd web && npx vitest run --root .` → **32 files / 259 tests green** (re-measured
-  20.11 at S3.1; +7 meltshop-feed parity/negative tests).
+- Test suite: `cd web && npx vitest run --root .` → **33 files / 269 tests green** (re-measured
+  20.11 at S3.2; +5 state-light grammar, +4 slice3 starvation tone, +1 feed-amber signal).
 - Fresh-clone gate passed at S0.1 (stranger's clone builds and plays step 1).
 - Remote master head: S1.3 hero-swap commit (20.11) — in sync after push; `git log -1` for hash.
 - S1.3 perf (headless SwiftShader, relative deltas only): GLB download 16.5 MB, tris/frame 6.8k,

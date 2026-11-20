@@ -122,14 +122,21 @@ export function inspectSlice3Slot(slot: SlotDef, st: S3StateView): InspectionCar
   const tripped = st.drp_tripped_until > st.tick;
   const charged = st.heats.filter((h) => h.status === 'charged').length;
   const skipped = st.heats.filter((h) => h.status === 'skipped').length;
+  // S3.2: the most recent heat SKIPPED (buffer short) is a real wait state — surface it
+  // as 'waiting' so the zone card AND the amber state ring agree. Recovers automatically
+  // when the next heat charges (last-heat projection, not cumulative history).
+  const lastHeat = st.heats.length ? st.heats[st.heats.length - 1] : null;
+  const starved = lastHeat?.status === 'skipped';
   return {
     slot_id: slot.id,
     title: 'DRP + DRI buffer — what it is doing now',
-    tone: tripped ? 'waiting' : st.buffer_t > 0 ? 'busy' : 'idle',
+    tone: tripped || starved ? 'waiting' : st.buffer_t > 0 ? 'busy' : 'idle',
     lines: [
       tripped
         ? `DRP tripped — discharge halted until tick ${st.drp_tripped_until}.`
-        : 'DRP running — discharging into the DRI buffer.',
+        : starved
+          ? 'DRP running — but the last EAF heat was SKIPPED: DRI buffer short.'
+          : 'DRP running — discharging into the DRI buffer.',
       `DRI buffer: ${st.buffer_t.toFixed(1)} t ready for EAF feed.`,
       `Heats charged: ${charged}${skipped ? ` · skipped: ${skipped}` : ''}.`,
     ],

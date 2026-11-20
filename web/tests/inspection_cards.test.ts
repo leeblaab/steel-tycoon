@@ -5,7 +5,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, it, expect } from 'vitest';
 import { parseFactoryLayout } from '../src/shared/factory_layout.ts';
-import { inspectSlice4Slot, inspectSlice5Slot } from '../src/shared/inspection_cards.ts';
+import { inspectSlice4Slot, inspectSlice5Slot, inspectSlice3Slot } from '../src/shared/inspection_cards.ts';
 
 const LAYOUT_PATH = 'C:/AI_LAB/SteelX/content/layout/factory_layout_v1.json';
 const layout = parseFactoryLayout(JSON.parse(readFileSync(LAYOUT_PATH, 'utf8')));
@@ -95,5 +95,31 @@ describe('card projection reads only fields the ports actually emit', () => {
     expect(st.mill).toHaveProperty('batch_t');
     expect(st.counters).toHaveProperty('mill_wait_ticks');
     expect(st.counters).toHaveProperty('mill_starved_ticks');
+  });
+});
+
+// S3.2: the slice3 card must surface the EXISTING starved signal (last heat skipped)
+// as 'waiting' — the same projection the amber state ring reads. Last-heat semantics:
+// recovery is automatic once the next heat charges.
+describe('slice3 starvation tone (S3.2 state lights)', () => {
+  // Mirrors GameSession.cardFor's synthesized zone slot (session.ts: {id:`${slice}.zone`, inspect_key}).
+  const s3slot = { id: 'slice3.zone', inspect_key: 'dri_buffer' } as any;
+  const base = { tick: 120, buffer_t: 2, drp_tripped_until: 0 };
+  it('last heat skipped -> waiting + SKIPPED line', () => {
+    const card = inspectSlice3Slot(s3slot, { ...base, heats: [{ status: 'charged' }, { status: 'skipped', failure_cause: 'buffer short' }] } as any);
+    expect(card.tone).toBe('waiting');
+    expect(card.lines.join(' ')).toContain('SKIPPED');
+  });
+  it('recovery: next heat charged -> busy again (buffer > 0)', () => {
+    const card = inspectSlice3Slot(s3slot, { ...base, buffer_t: 25, heats: [{ status: 'skipped' }, { status: 'charged' }] } as any);
+    expect(card.tone).toBe('busy');
+  });
+  it('tripped DRP -> waiting regardless of heats', () => {
+    const card = inspectSlice3Slot(s3slot, { ...base, drp_tripped_until: 200, heats: [{ status: 'charged' }] } as any);
+    expect(card.tone).toBe('waiting');
+  });
+  it('no heats + empty buffer -> idle', () => {
+    const card = inspectSlice3Slot(s3slot, { ...base, buffer_t: 0, heats: [] } as any);
+    expect(card.tone).toBe('idle');
   });
 });

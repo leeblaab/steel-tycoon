@@ -100,3 +100,17 @@ gate = F-06 chapter swaps).
   Fill levels: scrap bin (yard_stock_t/5000 ops cap), DRI tank (buffer_t/fixture capacity),
   EAF interface gauges (200 t presentation ref, sme_pending). Gates: mirror N1-N5, 60-tick
   three-engine parity, suite 259/32, gauges 12/12, restore byte-exact, tap-time meshes 150.
+- **S3.2 (20.11) — state lights + amber rings:** presentation-only projection of EXISTING
+  sim signals (no new sim rules): zone inspection tone + feed shortfall. State grammar per
+  PLAN_FORGED §2: idle desaturated / running stream-green pulse / blocked-starved amber
+  (#ffb347 palette). All 4 rings = ONE InstancedMesh draw (per-instance color/scale;
+  unbuilt machines scale ~0) — draw-budget discipline held: smoke 3→2 quads, decorative
+  DRI tank shell removed (fill-only gauge remains) → tap-time 149 ≤150. slice3 inspector
+  now surfaces the existing skipped-heat signal as 'waiting' (last-heat projection,
+  auto-recovery; card and ring read the SAME source). EAF amber = shortfall event this
+  tick OR empty eaf_scrap interface (persistent, honest). Gate proven live: deliberate
+  buffer starvation before scripted heat tick → SKIPPED event → DRP ring green→amber
+  (screenshot-verified). Session API notes: builtNode(name) returns BOOLEAN; node IDs are
+  'drp'/'eaf'/'cc'/'bar_mill' (commissioning.ts SLICE_BUILD_NODES); cardFor synthesizes
+  zone slots {id:`${slice}.zone`, inspect_key} — no dri_buffer slot in factory_layout.
+  Known pre-existing: LabelLayer chips/banners overlap at some camera angles (later pass).

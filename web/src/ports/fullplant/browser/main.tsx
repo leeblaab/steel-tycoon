@@ -22,6 +22,8 @@ import { equipmentIndex, DRAFTED_CARD, type EquipEntry } from './equip_index.ts'
 import { STREAM, ZONE_PAD, LIGHTING, STATE } from './palette.ts';
 import { beltTokenView, yardMoundView } from '../../../shared/ore_belt.ts';
 import { eafPoseView, BORE_RAISED, LADLE_HOME_X } from '../../../shared/eaf_heat_pose.ts';
+import { stateLightView, feedAmberSignal } from '../../../shared/state_lights.ts';
+import { feedShortfallsThisTick } from '../../../shared/meltshop_feed.ts';
 
 // S0.4 visual-pass A/B bisect (dev-only): URL params override the rig so each suspect gets
 // one headless shot without code churn. ?tone=0 -> NoToneMapping, ?exposure=X, ?fog=0 -> no
@@ -389,6 +391,52 @@ function OreYardMound() {
 }
 
 // ---------- S3.1 fill levels (PLAN_FORGED: every inventory = fill level) ----------
+// S3.2 state lights: ONE instanced draw for all machine rings (draw-budget discipline).
+// Per-instance color/scale from the pure stateLightView projection of EXISTING signals:
+// zone inspection tone + S3.1 feed shortfall. Unbuilt machines scale to ~0 (hidden).
+const RING_DEFS = [
+  { id: 'drp', pos: [-14, 10] as const, r: 4.6, built: () => SESSION.builtNode('drp'), read: () => SESSION.cardFor('slice3')?.tone, shortfall: false },
+  { id: 'eaf', pos: [9, 2] as const, r: 3.6, built: () => SESSION.builtNode('eaf'), read: () => SESSION.cardFor('slice4')?.tone, shortfall: true },
+  { id: 'ccm', pos: [19, 2] as const, r: 3.0, built: () => SESSION.builtNode('cc'), read: () => SESSION.cardFor('slice4')?.tone, shortfall: false },
+  { id: 'mill', pos: [34, -8] as const, r: 4.2, built: () => SESSION.builtNode('bar_mill'), read: () => SESSION.cardFor('slice5')?.tone, shortfall: false },
+];
+function StateRings() {
+  const mesh = React.useMemo(() => {
+    const m = new THREE.InstancedMesh(new THREE.RingGeometry(1, 1.14, 40),
+      new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true, opacity: 0.85, side: THREE.DoubleSide }), RING_DEFS.length);
+    m.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    m.frustumCulled = false;
+    return m;
+  }, []);
+  const tmp = React.useMemo(() => ({
+    m: new THREE.Matrix4(), q: new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0)),
+    p: new THREE.Vector3(), s: new THREE.Vector3(), c: new THREE.Color(),
+  }), []);
+  useRafLoop(() => {
+    const t = performance.now() / 1000;
+    const hook: Record<string, unknown> = {};
+    RING_DEFS.forEach((d, i) => {
+      const built = d.built();
+      const feed = SESSION.feed;
+      const shortfall = !!(built && d.shortfall && feed && feedAmberSignal(
+        feedShortfallsThisTick(feed) > 0, feed.registry.inventories['eaf_scrap']?.usable_t ?? 0));
+      const view = stateLightView(built ? d.read() : null, shortfall);
+      const pulse = view.pulse ? 0.72 + 0.28 * (0.5 + 0.5 * Math.sin(t * 2.6)) : 1;
+      tmp.p.set(d.pos[0], 0.05, d.pos[1]);
+      tmp.s.setScalar(built ? d.r : 0.0001);
+      tmp.m.compose(tmp.p, tmp.q, tmp.s);
+      mesh.setMatrixAt(i, tmp.m);
+      tmp.c.set(view.color).multiplyScalar(view.level * pulse);
+      mesh.setColorAt(i, tmp.c);
+      hook[d.id] = { color: view.color, amber: view.amber, built };
+    });
+    mesh.instanceMatrix.needsUpdate = true;
+    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+    (window as any).__steelxRings = hook; // dev probe hook
+  });
+  return <primitive object={mesh} />;
+}
+
 // Generic live gauge: inner mesh scale.y = clamped fraction, seated on its base.
 // Fill-only (no shell) by design — the visible-draw budget is tight (150 worst-case).
 // Absolute scale set per frame (no smoothing) -> rAF-restart safe.
@@ -744,8 +792,8 @@ function Slice3({ at }: { at: [number, number, number] }) {
       <FlowPulse from={[-5.4, 0.7, 0]} to={[-1.2, 2.4, 0]} active={() => { const s = SESSION.stateOf('slice3') as any; return !!s && Array.isArray(s.buffer) && s.buffer.some((l: any) => l.usable_t > 0); }} color="#d9a13f" />
       </>}
       {driBufferBuilt && <>
-      <mesh castShadow position={[0, 2, 0]}><cylinderGeometry args={[1.6, 1.6, 4, 20]} /><meshStandardMaterial color="#39424e" metalness={0.5} roughness={0.5} transparent opacity={0.4} /></mesh>
-      {/* S3.1: DRI buffer fill level = slice3 buffer_t / capacity (live gauge inside the tank) */}
+      {/* S3.1: DRI buffer fill level = slice3 buffer_t / capacity (live gauge; fill-only,
+          the decorative shell was removed for the S3.2 draw budget) */}
       <FillGauge cyl pos={[0, 0.05, 0]} size={[2.9, 3.9, 2.9]} color={STREAM.dri} hookId="dri_buffer"
         frac={() => {
           const s3 = SESSION.stateOf('slice3') as any;
@@ -805,8 +853,8 @@ function EafHeatCycle() {
     // restrained spark shower at ladle impact (10 instanced tetra, presentation-only arcs)
     const sparks: any = new THREE.InstancedMesh(new THREE.TetrahedronGeometry(0.05), new THREE.MeshBasicMaterial({ color: '#ffc46b' }), 10);
     sparks.instanceMatrix.setUsage(THREE.DynamicDrawUsage); sparks.visible = false;
-    // smoke: 3 billboard quads, visible only while melting/tapping (draw budget: 150 worst-case)
-    const smoke: any[] = [0, 1, 2].map(() => {
+    // smoke: 2 billboard quads, visible only while melting/tapping (draw budget: 150 worst-case)
+    const smoke: any[] = [0, 1].map(() => {
       const q: any = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 0.9), new THREE.MeshBasicMaterial({ color: '#767c82', transparent: true, opacity: 0, depthWrite: false }));
       q.visible = false; return q;
     });
@@ -1196,6 +1244,7 @@ function Scene() {
         {SESSION.sliceBuildDone('slice3') && <Slice3 at={posOf('slice3')} />}
         {SESSION.sliceBuildDone('slice4') && <Slice4 at={posOf('slice4')} />}
         {SESSION.sliceBuildDone('slice5') && <Slice5 at={posOf('slice5')} />}
+        <StateRings />
       </Canvas>
       <LabelLayer />
       <EquipPane />
