@@ -34,6 +34,9 @@ PAL = {
     'hull_dark': '#2a3038',
     'deck': '#565d66',
     'house_white': '#9aa3ad',
+    'copper': '#b87333',       # bus bars / copper conductors
+    'graphite': '#23262b',     # electrodes (near-black, plan utilities grammar)
+    'refractory': '#2a3038',   # furnace rim / ladle shell
 }
 
 
@@ -51,6 +54,13 @@ def L(x, y, z):
 def S(x, y, z):
     """Design size (x, HEIGHT, z) -> Blender size (x, z, height)."""
     return (x, z, y)
+
+
+def R(rx, ry, rz):
+    """Design euler (three.js Y-up) -> Blender euler (Z-up): (rx, -rz, ry).
+    Verified: design rotZ(a) -> Blender rotY(-a) (incline gallery);
+    design rotY(a) -> Blender rotZ(a) (horizontal arm); design rotX shared."""
+    return (rx, -rz, ry)
 
 
 def srgb_to_linear(c):
@@ -124,6 +134,29 @@ def pivot(name, loc):
     o.name = name
     o.empty_display_size = 0.3
     return o
+
+
+def merge_static_by_material(hero_label, exclude=()):
+    """Join UNPARENTED static meshes that share a material into one mesh per material
+    (1 draw call each) — the visible-draw budget gate. Pivot-parented parts (animation)
+    and named exclusions (runtime-moving/emissive parts) stay separate. Deterministic;
+    call BEFORE export_glb. Tri count unchanged; node count drops."""
+    groups = {}
+    for o in list(bpy.data.objects):
+        if o.type != 'MESH' or o.parent is not None or o.name in exclude:
+            continue
+        if not o.data.materials:
+            continue
+        groups.setdefault(o.data.materials[0].name, []).append(o)
+    for matname, objs in groups.items():
+        if len(objs) < 2:
+            continue
+        bpy.ops.object.select_all(action='DESELECT')
+        for o in objs:
+            o.select_set(True)
+        bpy.context.view_layer.objects.active = objs[0]
+        bpy.ops.object.join()
+        bpy.context.object.name = f'{hero_label}_static_{matname}'
 
 
 def export_glb(filepath):

@@ -23,7 +23,7 @@ import math
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from steelx_hero_lib import (  # noqa: E402
     PAL, L, S, mat, clear_scene, box, cyl, cone, torus, pivot,
-    export_glb, stats, budget_gate, render_preview, outdir_from_args,
+    merge_static_by_material, export_glb, stats, budget_gate, render_preview, outdir_from_args,
 )
 import bpy  # noqa: E402
 
@@ -98,6 +98,7 @@ box('dri_discharge_chute', S(1.2, 0.4, 0.5), L(0.5, 0.5, 0), M_steel_d)
 box('access_ladder', S(0.1, 7.0, 0.3), L(SX + 1.32, 4.0, 0.9), M_steel_d)
 
 glb = os.path.join(outdir, 'drp_shaft.glb')
+merge_static_by_material('drp')  # statics -> 1 draw/material; pivot parts stay named
 export_glb(glb)
 st = stats(glb)
 budget_gate(st, 'DRP')

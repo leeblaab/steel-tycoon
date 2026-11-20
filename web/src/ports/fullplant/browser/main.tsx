@@ -739,7 +739,7 @@ function Slice4({ at }: { at: [number, number, number] }) {
   return (
     <group position={at}>
       {feed && <Reveal built={feed}><Glb url={`${S4}feed.glb`} scale={4.5} pos={[-10, 0, 0]} /></Reveal>}
-      {eaf4 && <><Glb url={`${S4}eaf.glb`} scale={3} pos={[-5, 0, 0]} />
+      {eaf4 && <><Glb url={`${S4}eaf_hero.glb`} scale={1} pos={[-5, 0, 0]} />
       <EafGlow pos={[-5, 1.0, 0]} active={() => !!(SESSION.stateOf('slice4') as any)?.eaf?.busy_charge_id} /></>}
       {lf && <Reveal built={lf}><Glb url={`${S4}lrf.glb`} scale={3} pos={[0, 0, 0]} /></Reveal>}
       {cc && <><Glb url={`${S4}ccm.glb`} scale={6} pos={[5, 0, 0]} />

@@ -134,7 +134,7 @@ function GlbModel({ url }: { url: string }) {
   return gltf;
 }
 
-const EAF_GLB_URL = new URL('./assets/eaf.glb', import.meta.url).href;
+const EAF_GLB_URL = new URL('./assets/eaf_hero.glb', import.meta.url).href;
 const LRF_GLB_URL = new URL('./assets/lrf.glb', import.meta.url).href;
 const CCM_GLB_URL = new URL('./assets/ccm.glb', import.meta.url).href;
 const FEED_GLB_URL = new URL('./assets/feed.glb', import.meta.url).href;
@@ -146,7 +146,7 @@ const MODEL_SCALE = 3; // uniform x/y/z (play-test: full 3x, no height-only stre
 function EafModel({ hot }: { hot: boolean }) {
   const gltf = GlbModel({ url: EAF_GLB_URL });
   const scaled = gltf ? gltf.clone() : null;
-  if (scaled) scaled.scale.setScalar(MODEL_SCALE * 1.5);
+  if (scaled) scaled.scale.setScalar(1); // S2.1 hero built at final scene size (no normalize knob)
   // lift AFTER scaling: Box3.setFromObject reads world transforms -> bbox bottom at y=0
   const minY = scaled ? new THREE.Box3().setFromObject(scaled).min.y : 0;
   return (

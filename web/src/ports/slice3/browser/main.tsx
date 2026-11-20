@@ -121,12 +121,12 @@ function GlbModel({ url }: { url: string }) {
   return gltf;
 }
 
-// EAF reuses slice4's approved model at the same scale (MODEL_SCALE=3 x1.5).
-const EAF_GLB_URL = new URL('./assets/eaf.glb', import.meta.url).href;
+// EAF reuses slice4's S2.1 procedural hero (shared asset, built at final scene size).
+const EAF_GLB_URL = new URL('../../slice4/browser/assets/eaf_hero.glb', import.meta.url).href;
 function EafModel() {
   const gltf = GlbModel({ url: EAF_GLB_URL });
   const scaled = gltf ? gltf.clone() : null;
-  if (scaled) scaled.scale.setScalar(4.5);
+  if (scaled) scaled.scale.setScalar(1); // hero at final size — no normalize knob
   const minY = scaled ? new THREE.Box3().setFromObject(scaled).min.y : 0;
   return (
     <group position={[0, -minY, 0]}>
@@ -253,7 +253,7 @@ function Eaf({ rec, mode }: { rec: TickRecord; mode: string }) {
   return (
     <>
       <Building pos={[LAYOUT.feeder.x, 0, 0]} size={[1.6, 1.0, 1.6]} label="EAF Feed" color={skipped ? '#7a3030' : '#4a525c'} accent={charged ? '#3fd97a' : skipped ? '#e07070' : undefined} />
-      {/* EAF block -> slice4's approved eaf.glb (same MODEL_SCALE*1.5 + Box3 lift as slice4) */}
+      {/* EAF block -> slice4's S2.1 procedural hero (shared asset, scale 1 + Box3 lift) */}
       <group position={[LAYOUT.eaf.x, 0, 0]}>
         <EafModel />
       </group>

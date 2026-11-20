@@ -92,6 +92,15 @@ end goal; desktop/browser for now. No-rush iterative cadence, one Go-gated micro
     countdown (bands 15/55/20/10%, sme_pending design values) — tap timing, events,
     counters, balance UNCHANGED (max raw balance 2.84e-14 identical). Mirror P1-P3 phase
     contract tests PASS; parity dump regenerated; +3 parity tests (suite 30 files / 242).
+  - **S2.1 DONE (code + objective gates; SME sensory verdict PENDING)** — hero swap #2:
+    procedural EAF (`tools/blender/eaf_hero.py`, 712 tris / 59 KB; pivots pivot_vessel /
+    pivot_roof, electrode_a/b/c, ladle/ladle_car/ladle_bath, tap_spout, state_light).
+    Old `eaf.glb` ×2 DELETED same commit (−3.2 MB); fullplant + slice3 + slice4 re-pointed
+    (slice3 shares slice4's asset). NEW CONVENTION: `merge_static_by_material` at export —
+    statics join to 1 draw/material, pivot/animatable parts stay named (visible meshes
+    173→141 ≤ 150 after the EAF's 30 parts blew the budget). Suite green, 3 ports build,
+    campaign smoke 0 errors. Evidence: `docs/evidence/s21/`.
+  - NEXT: **S2.2 heat-cycle animation** driven by the S2.0 enum (SME non-negotiables).
 
 ## The game as it plays today
 Fullplant app (`web/src/ports/fullplant`, dev port 5178 via `start_digital_twin_v2.bat` —

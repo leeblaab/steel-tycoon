@@ -20,7 +20,7 @@ import math
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from steelx_hero_lib import (  # noqa: E402
     PAL, L, S, mat, clear_scene, box, cyl, pivot,
-    export_glb, stats, budget_gate, render_preview, outdir_from_args,
+    merge_static_by_material, export_glb, stats, budget_gate, render_preview, outdir_from_args,
 )
 import bpy  # noqa: E402
 from mathutils import Vector, Matrix  # noqa: E402
@@ -110,6 +110,7 @@ p_ship.scale = (1.09, 1.09, 1.09)
 parent_to(ship_objs, p_ship)
 
 glb = os.path.join(outdir, 'jetty_pier.glb')
+merge_static_by_material('jetty')  # pier statics -> 1 draw/material; crane/ship pivots stay
 export_glb(glb)
 st = stats(glb)
 budget_gate(st, 'JETTY')

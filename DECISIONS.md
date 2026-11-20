@@ -65,3 +65,11 @@ gate = F-06 chapter swaps).
   counters, balance byte-identical (max raw 2.84e-14). Set unconditionally each tick so
   pre-S2.0 saves heal on first tick. Mirror P1-P3 + TS runPhaseTests pinned vs regenerated
   dump; suite 242. Drives S2.2 animation AND the Stage-6 cutaway cards (one contract).
+- **S2.1 (20.11) — EAF hero swap #2:** procedural EAF 712 tris / 59 KB (adapts audit_2 A4
+  structure: tilt pivot at vessel CG h1.85, swing-roof mast pivot, electrode triangle
+  90/210/330°, trunnion ring, tap spout, ladle on car, transformer + bus bars). Old eaf.glb
+  ×2 deleted (−3.2 MB); slice3 shares slice4's asset via relative URL. Convention added:
+  merge_static_by_material at export (statics → 1 draw/material; pivot-parented + named
+  runtime parts excluded) — visible meshes 141 ≤ 150. Readability lesson: electrode columns
+  must extend well above the roof to read as a triangle; put camera-side furniture at +Z
+  (home cam az 0). Sensory gate: PENDING Yasser.
