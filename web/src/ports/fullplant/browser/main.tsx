@@ -20,7 +20,7 @@ import { currentStep } from './onboarding.ts';
 import { SLOT_LOCAL, stepCardView } from './onboarding_cards.ts';
 import { equipmentIndex, DRAFTED_CARD, type EquipEntry } from './equip_index.ts';
 import { STREAM, ZONE_PAD, LIGHTING, STATE } from './palette.ts';
-import { beltTokenView } from '../../../shared/ore_belt.ts';
+import { beltTokenView, yardMoundView } from '../../../shared/ore_belt.ts';
 
 // S0.4 visual-pass A/B bisect (dev-only): URL params override the rig so each suspect gets
 // one headless shot without code churn. ?tone=0 -> NoToneMapping, ?exposure=X, ?fog=0 -> no
@@ -368,6 +368,25 @@ function OreBelt() {
 }
 const _m4 = new THREE.Matrix4();
 
+// ---------- S1.4 ore-yard mound fill (PLAN_FORGED: every inventory = fill level) ----------
+// The conical ore mound IS the yard_ore ledger tonnage — pure projection via the same
+// beltVisualSnapshot the tokens read (structuredClone per frame; renderer can never mutate
+// the sim). Scrap stays a static bin beside it: scrap is truck-fed, only ore rides the belt.
+function OreYardMound() {
+  const meshRef = React.useRef<any>(null); // any: fullplant's ambient three stub is incomplete (file convention)
+  const geo = React.useMemo(() => new THREE.ConeGeometry(1, 1, 12), []);
+  const mat = React.useMemo(() => new THREE.MeshStandardMaterial({ color: STREAM.ore, roughness: 1.0, flatShading: true }), []);
+  useRafLoop(() => {
+    const m = meshRef.current; if (!m) return;
+    (window as any).__steelxMound = m; // dev probe hook (same pattern as __steelxSession)
+    const snap = SESSION.beltVisualSnapshot();
+    const v = yardMoundView(snap ? snap.state : null);
+    m.scale.set(v.radius, v.height, v.radius);
+    m.position.set(4, v.height / 2 + 0.03, 0); // cone origin is its center -> seat base on pad
+  });
+  return <mesh ref={meshRef} castShadow geometry={geo} material={mat} position={[4, 0.15, 0]} />;
+}
+
 /** Stream-color ground strips connecting adjacent zones along the material route
  *  (PLAN_FORGED §2: "stream-color ground strips + arrows drawn between zones").
  *  One thin quad per route leg, colored by the MATERIAL that travels it. */
@@ -647,9 +666,11 @@ function Slice1({ at }: { at: [number, number, number] }) {
       {yard ? (
         <>
           <mesh position={[4, 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}><planeGeometry args={[7, 7]} /><meshStandardMaterial color="#232c36" /></mesh>
-          {[-1.5, 0.5].map((dx) => (
-            <mesh key={dx} castShadow position={[4 + dx, 0.9, 0]}><boxGeometry args={[2.2, 1.8, 4.5]} /><meshStandardMaterial color="#6f7c8a" metalness={0.6} roughness={0.45} /></mesh>
-          ))}
+          {/* S1.4: live ore mound (scale = yard_ore inventory) + static scrap bin + stacker boom */}
+          <OreYardMound />
+          <mesh castShadow position={[5.7, 0.75, -1.9]}><boxGeometry args={[1.7, 1.5, 2.4]} /><meshStandardMaterial color={STREAM.scrap} metalness={0.3} roughness={0.7} /></mesh>
+          <mesh castShadow position={[2.3, 1.6, 1.8]}><boxGeometry args={[0.18, 3.2, 0.18]} /><meshStandardMaterial color="#4a525c" metalness={0.4} roughness={0.6} /></mesh>
+          <mesh castShadow position={[3.15, 3.1, 0.9]} rotation={[0, Math.atan2(1.7, -1.8), 0]}><boxGeometry args={[0.14, 0.14, 2.6]} /><meshStandardMaterial color="#4a525c" metalness={0.4} roughness={0.6} /></mesh>
           <NodeHit nodeId="scrap_yard" center={[4, 0]} size={[9, 9]} />
         </>
       ) : (

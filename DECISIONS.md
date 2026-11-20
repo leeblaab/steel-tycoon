@@ -52,4 +52,9 @@ gate = F-06 chapter swaps).
   Conventions settled: heroes built at FINAL scene size (1 unit = 1 scene unit, scale 1 —
   no normalize-then-scale knob); Blender scripts use design Y-up coords via L()/S() converters;
   GLB min-y = 0 (both scenes seat models by bbox-min, anything below 0 floats the hero).
-  Sensory gate: PENDING Yasser.
+  Sensory gate: PASSED (Yasser "Perfect", 20.11) — S1.3 CLOSED.
+- **S1.4 (20.11) — ore-yard mound fill:** yardMoundView pure projection (frac = yard_ore /
+  MOUND_REF_T, clamped; height 0.25+2.15·frac, radius 0.8+1.4·frac; MOUND_REF_T = 5000 t is a
+  PRESENTATION design value, SME calibrates at sensory gate — not a sim rule). +5 tests
+  (suite 239). Live probe 20/20 sampled frames scale == projection, zero console errors.
+  Evidence: docs/evidence/s14/. Sensory gate: PENDING Yasser. Stage 1 objective work complete.

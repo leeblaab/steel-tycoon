@@ -159,3 +159,26 @@ export function beltTokenView(st: OreBeltState, frac: number): BeltStripView {
     tokens,
   };
 }
+
+// ---- S1.4 ore-yard mound fill (pure projection, same discipline as beltTokenView) ----
+// The mound IS the yard_ore inventory: height/radius grow with tonnage, clamped at a
+// presentation reference (design value — SME calibrates at the sensory gate, not a sim
+// rule). null state = belt not built yet -> minimum mound, never negative.
+export const MOUND_REF_T = 5000.0; // yard tonnes at which the mound reads "full"
+
+export interface YardMoundView {
+  frac: number;   // 0..1 clamped fill fraction
+  height: number; // world units (cone scale.y)
+  radius: number; // world units (cone scale.x/z)
+}
+
+export function yardMoundView(st: OreBeltState | null, refT: number = MOUND_REF_T): YardMoundView {
+  if (!(refT > 0)) throw new Error('mound reference tonnage must be positive');
+  const yards = st ? (st.registry.inventories[YARD_INV]?.usable_t ?? 0.0) : 0.0;
+  const frac = Math.max(0, Math.min(1, yards / refT));
+  return {
+    frac,
+    height: 0.25 + frac * 2.15,
+    radius: 0.8 + frac * 1.4,
+  };
+}

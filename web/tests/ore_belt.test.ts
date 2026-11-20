@@ -7,6 +7,7 @@ import { describe, it, expect } from 'vitest';
 import {
   freshOreBeltState, stepOreBelt, commissionDrp, beltDepositYard,
   beltRatePerTick, planBeltLoad, beltLedgerView, beltInvariants,
+  yardMoundView, MOUND_REF_T,
   YARD_INV, BUFFER_INV, DRP_INTAKE_INV,
 } from '../src/shared/ore_belt.ts';
 
@@ -110,5 +111,57 @@ describe('yard credit rides the slice1 arrival stream', () => {
     st = stepOreBelt(st);
     v = beltLedgerView(st);
     expect(v.buffer_t).toBe(50);
+  });
+});
+
+describe('S1.4 yard mound projection (pure data — the mound IS the inventory)', () => {
+  it('null state (belt not built yet) -> minimum mound, never negative', () => {
+    const v = yardMoundView(null);
+    expect(v.frac).toBe(0);
+    expect(v.height).toBeCloseTo(0.25, 10);
+    expect(v.radius).toBeCloseTo(0.8, 10);
+  });
+
+  it('fill fraction is tonnage / reference, clamped to [0,1]', () => {
+    let st = freshOreBeltState();
+    expect(yardMoundView(st).frac).toBe(0);
+    st = beltDepositYard(st, MOUND_REF_T / 2);
+    expect(yardMoundView(st).frac).toBeCloseTo(0.5, 10);
+    st = beltDepositYard(st, MOUND_REF_T * 10); // way over reference
+    const v = yardMoundView(st);
+    expect(v.frac).toBe(1);
+    expect(v.height).toBeCloseTo(2.4, 10);
+    expect(v.radius).toBeCloseTo(2.2, 10);
+  });
+
+  it('height and radius are monotone in tonnage', () => {
+    let st = freshOreBeltState();
+    let prevH = 0, prevR = 0;
+    for (const t of [100, 400, 1000, 1500, 1900]) { // deposits ADD: cumulative 100..4900 stays under ref
+      st = beltDepositYard(st, t);
+      const v = yardMoundView(st);
+      expect(v.height).toBeGreaterThan(prevH);
+      expect(v.radius).toBeGreaterThan(prevR);
+      prevH = v.height; prevR = v.radius;
+    }
+  });
+
+  it('mound shrinks as the belt drains the yard (tracks the live ledger)', () => {
+    let st = freshOreBeltState(600, 25, 1);
+    st = beltDepositYard(st, 2000);
+    const before = yardMoundView(st).frac;
+    for (let i = 0; i < 20; i++) st = stepOreBelt(st); // 25 t/tick leaves the yard
+    const after = yardMoundView(st).frac;
+    expect(after).toBeLessThan(before);
+    expect(after).toBeCloseTo((2000 - 20 * 25) / MOUND_REF_T, 6);
+  });
+
+  it('projection never mutates the ledger; bad reference throws', () => {
+    const st = beltDepositYard(freshOreBeltState(), 1234);
+    const snap = JSON.stringify(st);
+    yardMoundView(st);
+    expect(JSON.stringify(st)).toBe(snap);
+    expect(() => yardMoundView(st, 0)).toThrow(/positive/);
+    expect(() => yardMoundView(st, -5)).toThrow(/positive/);
   });
 });

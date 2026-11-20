@@ -71,15 +71,22 @@ end goal; desktop/browser for now. No-rush iterative cadence, one Go-gated micro
     edge (yard→ore_buffer→drp_intake) riding GameSession (build→tick→save/restore).
   - **S1.2 visual layer DONE** (`38aca98`, pushed): OreBelt instanced tokens riding
     GameSession; live-browser verified (token count == min(ledger,48) every sampled frame).
-  - **S1.3 DONE (code + objective gates; SME sensory verdict PENDING)** — hero swap #1
-    per F-06: procedural DRP shaft (`tools/blender/drp_shaft.py`, 668 tris / 59 KB) +
+  - **S1.3 CLOSED** (sensory verdict PASSED — Yasser "Perfect", 20.11; F-09 no reopening)
+    — hero swap #1 per F-06: procedural DRP shaft (`tools/blender/drp_shaft.py`, 668 tris / 59 KB) +
     jetty rebuild (procedural pier + Kenney crane/ship kitbash, 1,730 tris / 126 KB),
     both built at FINAL scene size (scale 1, named pivots). Old `drp.glb` (20.8 MB) +
     `jetty.glb` (21.0 MB) DELETED in the same commit; all three consumers re-pointed
     (fullplant + slice1 + slice3). Gates measured: suite 30/234, all 3 ports build,
     full-campaign smoke zero console errors, GLB download 77.3→16.5 MB, tris/frame
     1.40M→6.8k, visible meshes 143 (≤150), headless fps 6→51. Evidence: `docs/evidence/s13/`.
-  - NEXT: Yasser sensory verdict on S1.3 → **S1.4 ore-yard mound fill** (scale ∝ inventory).
+  - **S1.4 DONE (code + objective gates; SME sensory verdict PENDING)** — ore-yard mound
+    fill: `yardMoundView` pure projection (shared/ore_belt.ts, MOUND_REF_T = 5000 t design
+    value), rAF-driven cone mound in the raw yard (scale = yard_ore ledger tonnage), static
+    scrap bin + stacker boom (scrap is truck-fed, only ore rides the belt). +5 projection
+    tests. Live probe: mound scale == projection on all 20 sampled frames while the plant
+    ticks, zero console errors (`docs/evidence/s14/`). **Stage 1 objective work complete.**
+  - NEXT: **Stage 2 — The Heat**: S2.0 heat-phase enum (mirror-first) → S2.1 EAF hero swap
+    → S2.2 heat-cycle animation (SME non-negotiables in PLAN_FORGED S2.2).
 
 ## The game as it plays today
 Fullplant app (`web/src/ports/fullplant`, dev port 5178 via `start_digital_twin_v2.bat` —
@@ -99,8 +106,8 @@ EAF/LF/CCM, slice5 mills); each is a pure tick engine with a Python mirror + par
 - Unknown values are asked, never invented.
 
 ## Verified facts (measured, not remembered — re-measure if in doubt)
-- Test suite: `cd web && npx vitest run --root .` → **30 files / 234 tests green** (re-measured
-  20.11 at the S1.3 swap).
+- Test suite: `cd web && npx vitest run --root .` → **30 files / 239 tests green** (re-measured
+  20.11 at S1.4; +5 mound projection tests).
 - Fresh-clone gate passed at S0.1 (stranger's clone builds and plays step 1).
 - Remote master head: S1.3 hero-swap commit (20.11) — in sync after push; `git log -1` for hash.
 - S1.3 perf (headless SwiftShader, relative deltas only): GLB download 16.5 MB, tris/frame 6.8k,
