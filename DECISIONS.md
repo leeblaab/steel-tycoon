@@ -73,3 +73,15 @@ gate = F-06 chapter swaps).
   runtime parts excluded) — visible meshes 141 ≤ 150. Readability lesson: electrode columns
   must extend well above the roof to read as a triangle; put camera-side furniture at +Z
   (home cam az 0). Sensory gate: PENDING Yasser.
+- **S2.2 (20.11) — heat-cycle animation:** eafPoseView pure targets (shared, +10 tests) +
+  EafHeatCycle renderer. SME non-negotiables verified live: roof swings SIDEWAYS about the
+  mast on charge (electrodes ride it), bore-down on melt, heavy tilt ≤35° (1.1 s smoothing
+  time constant — never snaps), stream gated on tilt+ladle position, sparks/smoke restrained,
+  ladle glows + travels EAF→LF. Conventions settled: (a) pose projections take wall-clock
+  frac + totalTicks — a 1-tick phase band has phase_progress≡0 and would never animate
+  without sub-tick interpolation; paused holds frac=1 (end-of-tick pose, no oscillation);
+  (b) rAF smoothing dt MUST come from performance.now clamped ≥0 — useRafLoop restarts on
+  every parent re-render and resets its t, a loop-time delta goes negative and diverges the
+  pose; (c) probes pause the HUD pump via the real pause BUTTON (direct speed assignment
+  doesn't re-render → interval keeps running), and restart exhausted scripted scenarios via
+  loop.resume(entry.module.fresh()). Stage 2 objective gates all green; sensory PENDING.

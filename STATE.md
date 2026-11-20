@@ -100,7 +100,19 @@ end goal; desktop/browser for now. No-rush iterative cadence, one Go-gated micro
     statics join to 1 draw/material, pivot/animatable parts stay named (visible meshes
     173→141 ≤ 150 after the EAF's 30 parts blew the budget). Suite green, 3 ports build,
     campaign smoke 0 errors. Evidence: `docs/evidence/s21/`.
-  - NEXT: **S2.2 heat-cycle animation** driven by the S2.0 enum (SME non-negotiables).
+  - **S2.2 DONE (code + objective gates; SME sensory verdict PENDING)** — heat-cycle
+    animation driven by the S2.0 enum: `shared/eaf_heat_pose.ts` pure pose targets (+10
+    tests) + `EafHeatCycle` renderer (roof swings SIDEWAYS on charge, electrodes bore on
+    melt, heavy ~35° tilt on tap with 1.1 s smoothing, fat incandescent stream + near-white
+    core, restrained sparks, smoke, ladle glows + travels to LF). Sub-tick wall-clock frac
+    interpolation (1-tick tap band would otherwise never animate); paused = hold pose.
+    Live probe timeline verified ALL phases (roof 69°, tilt 26.8°→35°, stream gated, ladle
+    2.15→4.54→LF glow 1.79); 148 meshes ≤150; 0 console errors; suite 31 files / 252.
+    Evidence: `docs/evidence/s22/`. **STAGE 2 objective work complete.**
+  - NEXT: **Stage 3 — The Route**: S3.1 handoffs #2/#3 (scrap yard→EAF, DRI stockpile→EAF;
+    mirror-first registry transfers + fill levels on all yards/buffers) → S3.2 state lights
+    + amber rings wired to existing `starved`/`wait` events. Sensory verdicts pending for
+    S1.4, S2.1, S2.2 (Yasser AFK during the batch; play and judge on return).
 
 ## The game as it plays today
 Fullplant app (`web/src/ports/fullplant`, dev port 5178 via `start_digital_twin_v2.bat` —
@@ -120,8 +132,8 @@ EAF/LF/CCM, slice5 mills); each is a pure tick engine with a Python mirror + par
 - Unknown values are asked, never invented.
 
 ## Verified facts (measured, not remembered — re-measure if in doubt)
-- Test suite: `cd web && npx vitest run --root .` → **30 files / 242 tests green** (re-measured
-  20.11 at S2.0; +3 heat-phase parity tests).
+- Test suite: `cd web && npx vitest run --root .` → **31 files / 252 tests green** (re-measured
+  20.11 at S2.2; +10 heat-pose projection tests).
 - Fresh-clone gate passed at S0.1 (stranger's clone builds and plays step 1).
 - Remote master head: S1.3 hero-swap commit (20.11) — in sync after push; `git log -1` for hash.
 - S1.3 perf (headless SwiftShader, relative deltas only): GLB download 16.5 MB, tris/frame 6.8k,

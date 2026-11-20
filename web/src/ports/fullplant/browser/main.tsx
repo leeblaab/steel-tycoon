@@ -21,6 +21,7 @@ import { SLOT_LOCAL, stepCardView } from './onboarding_cards.ts';
 import { equipmentIndex, DRAFTED_CARD, type EquipEntry } from './equip_index.ts';
 import { STREAM, ZONE_PAD, LIGHTING, STATE } from './palette.ts';
 import { beltTokenView, yardMoundView } from '../../../shared/ore_belt.ts';
+import { eafPoseView, BORE_RAISED, LADLE_HOME_X } from '../../../shared/eaf_heat_pose.ts';
 
 // S0.4 visual-pass A/B bisect (dev-only): URL params override the rig so each suspect gets
 // one headless shot without code churn. ?tone=0 -> NoToneMapping, ?exposure=X, ?fog=0 -> no
@@ -725,6 +726,141 @@ function Slice3({ at }: { at: [number, number, number] }) {
   );
 }
 
+// ---------- S2.2 heat-cycle animation (PLAN_FORGED SME non-negotiables) ----------
+// Driven by the S2.0 enum via eafPoseView (pure targets, shared + tested). The renderer
+// smooths toward targets: roof/bore ~0.35 s, the vessel tilt ~1.1 s time constant —
+// hundreds of tonnes never snap. Stream = fat incandescent outer + near-white core from
+// the tilted spout to the ladle mouth; restrained spark shower at impact; smoke rises;
+// the ladle glows from inside and travels to LF once it carries metal. Presentation only:
+// nothing here feeds back into the sim.
+const _v3a = new THREE.Vector3();
+const _up = new THREE.Vector3(0, 1, 0);
+const _m4s = new THREE.Matrix4();
+function EafHeatCycle() {
+  const [gltf, setGltf] = useState<THREE.Group | null>(null);
+  useEffect(() => {
+    let alive = true;
+    new GLTFLoader().load(`${S4}eaf_hero.glb`, (g: { scene: THREE.Group }) => { if (alive) setGltf(g.scene); },
+      undefined, (err: unknown) => console.error('EAF hero load failed:', err));
+    return () => { alive = false; };
+  }, []);
+  const rig: any = React.useMemo(() => {
+    if (!gltf) return null;
+    const root: any = gltf.clone();
+    const find = (n: string): any => root.getObjectByName(n) ?? null;
+    const nodes: any = {
+      vessel: find('pivot_vessel'), roof: find('pivot_roof'),
+      electrodes: ['electrode_a', 'electrode_b', 'electrode_c'].map(find),
+      ladle: find('ladle'), ladleCar: find('ladle_car'), bath: find('ladle_bath'),
+      lamp: find('state_light'),
+    };
+    // bind positions: bore/travel are OFFSETS from the authored pose (inverse-cancel
+    // parenting baked world coords into local position — never set absolute values).
+    for (const el of nodes.electrodes) if (el) el.userData.bindY = el.position.y;
+    for (const n of [nodes.ladle, nodes.ladleCar, nodes.bath]) if (n) n.userData.bindX = n.position.x;
+    root.traverse((o: any) => { if (o.isMesh) o.castShadow = true; });
+    // animated materials must be cloned (GLB clones share material instances)
+    let bathMat: any = null;
+    if (nodes.bath) { bathMat = nodes.bath.material.clone(); bathMat.emissive = new THREE.Color('#ff9a3c'); bathMat.emissiveIntensity = 0; nodes.bath.material = bathMat; }
+    let lampMat: any = null;
+    if (nodes.lamp) { lampMat = nodes.lamp.material.clone(); lampMat.emissive = new THREE.Color('#3fd97a'); lampMat.emissiveIntensity = 0.15; nodes.lamp.material = lampMat; }
+    // tap stream: unit-height cylinders, group origin at the spout tip, -Y toward ladle
+    const stream: any = new THREE.Group();
+    const outer: any = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.12, 1, 8), new THREE.MeshBasicMaterial({ color: '#ff9a3c' }));
+    const core: any = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.055, 1, 6), new THREE.MeshBasicMaterial({ color: '#fff3e0' }));
+    outer.position.y = -0.5; core.position.y = -0.5;
+    stream.add(outer, core); stream.visible = false;
+    // restrained spark shower at ladle impact (10 instanced tetra, presentation-only arcs)
+    const sparks: any = new THREE.InstancedMesh(new THREE.TetrahedronGeometry(0.05), new THREE.MeshBasicMaterial({ color: '#ffc46b' }), 10);
+    sparks.instanceMatrix.setUsage(THREE.DynamicDrawUsage); sparks.visible = false;
+    // smoke: 4 billboard quads, visible only while melting/tapping
+    const smoke: any[] = [0, 1, 2, 3].map(() => {
+      const q: any = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 0.9), new THREE.MeshBasicMaterial({ color: '#767c82', transparent: true, opacity: 0, depthWrite: false }));
+      q.visible = false; return q;
+    });
+    const arc: any = new THREE.PointLight('#ff7a3f', 0, 9);
+    arc.position.set(0, 2.3, 0);
+    const holder: any = new THREE.Group();
+    holder.add(root, stream, sparks, ...smoke, arc);
+    return { holder, nodes, bathMat, lampMat, stream, sparks, smoke, arc,
+      disp: { roof: 0, bore: BORE_RAISED, tilt: 0, ladleX: LADLE_HOME_X, glow: 0 }, lastT: 0 };
+  }, [gltf]);
+  useRafLoop((t) => {
+    if (!rig) return;
+    const s4: any = SESSION.stateOf('slice4');
+    const eaf = s4?.eaf;
+    const ladles: any[] = s4?.ladles ?? [];
+    const ladle = eaf?.busy_charge_id
+      ? ladles.find((l) => l.busy_charge_id === eaf.busy_charge_id)
+      : ladles.find((l) => (l.metal_t ?? 0) > 0);
+    const total = (SESSION.slices as any).slice4?.entry?.fixture?.scenario?.eaf_heat_ticks ?? 10;
+    // wall-clock frac within the current tick (belt-token pattern); paused = hold the
+    // end-of-tick pose so the heavy tilt never oscillates while the player looks around.
+    const tickMs = SESSION.tickIntervalMs();
+    const frac = SESSION.speed === 'pause' ? 1 : Math.min(0.999, (performance.now() % tickMs) / tickMs);
+    const pose = eafPoseView(eaf, ladle, { frac, totalTicks: total });
+    // dt from wall clock, NOT the rAF loop's t: useRafLoop restarts on every parent
+    // re-render (each sim tick) and resets t — a loop-time delta would go negative
+    // there and the smoothing coefficient would diverge the pose.
+    const now = performance.now() / 1000;
+    const dt = Math.max(0, Math.min(0.1, rig.lastT ? now - rig.lastT : 0.016)); rig.lastT = now;
+    const d = rig.disp;
+    const k = (tau: number) => 1 - Math.exp(-dt / tau);
+    d.roof += (pose.roofSwing - d.roof) * k(0.35);
+    d.bore += (pose.bore - d.bore) * k(0.35);
+    d.tilt += (pose.tilt - d.tilt) * k(1.1);   // heavy tilt — never a snap
+    d.ladleX += (pose.ladleTargetX - d.ladleX) * k(1.5);
+    d.glow += (pose.glow - d.glow) * k(0.6);
+    // apply to the named pivots/parts
+    if (rig.nodes.roof) rig.nodes.roof.rotation.y = d.roof;
+    if (rig.nodes.vessel) rig.nodes.vessel.rotation.z = -d.tilt; // spout (+x) swings down
+    for (const el of rig.nodes.electrodes) if (el) el.position.y = el.userData.bindY + d.bore;
+    const dx = d.ladleX - LADLE_HOME_X;
+    for (const n of [rig.nodes.ladle, rig.nodes.ladleCar, rig.nodes.bath]) if (n) n.position.x = n.userData.bindX + dx;
+    if (rig.bathMat) rig.bathMat.emissiveIntensity = d.glow;
+    // spout tip rotates with the vessel about the trunnion axis (0, 1.85)
+    const ca = Math.cos(-d.tilt), sa = Math.sin(-d.tilt);
+    const px = 1.825 * ca - (1.75 - 1.85) * sa;
+    const py = 1.85 + 1.825 * sa + (1.75 - 1.85) * ca;
+    const showStream = pose.stream && d.tilt > 0.2 && d.ladleX < 3.0;
+    rig.stream.visible = showStream;
+    rig.sparks.visible = showStream;
+    if (showStream) {
+      _v3a.set(d.ladleX - px, 1.32 - py, 0);
+      const len = _v3a.length();
+      rig.stream.position.set(px, py, 0);
+      rig.stream.quaternion.setFromUnitVectors(_up, _v3a.normalize());
+      rig.stream.scale.set(1, len, 1);
+      for (let i = 0; i < 10; i++) {
+        const life = (t * 1.4 + i * 0.37) % 1;
+        const ang = i * 2.4;
+        const sc = Math.max(0.05, 1 - life);
+        _m4s.makeScale(sc, sc, sc);
+        _m4s.setPosition(d.ladleX + Math.cos(ang) * life * 0.5, 1.32 + life * 0.6 - life * life * 1.2, Math.sin(ang) * life * 0.5);
+        rig.sparks.setMatrixAt(i, _m4s);
+      }
+      rig.sparks.instanceMatrix.needsUpdate = true;
+    }
+    // smoke rises from the ladle while tapping, from the roof while power on
+    const smokeOn = showStream || pose.powerOn;
+    rig.smoke.forEach((q: any, i: number) => {
+      q.visible = smokeOn;
+      if (!smokeOn) return;
+      const life = (t * 0.35 + i * 0.25) % 1;
+      const sx = showStream ? d.ladleX : 0;
+      const sy = showStream ? 1.4 : 3.0;
+      q.position.set(sx + Math.sin(i * 2.1 + t * 0.4) * 0.25, sy + life * 2.2, 0.2);
+      q.material.opacity = 0.16 * (1 - life);
+      if (CAM.current) q.quaternion.copy((CAM.current as any).quaternion);
+    });
+    rig.arc.intensity = pose.powerOn ? 5 + Math.sin(t * 6) * 1.5 : 0;
+    if (rig.lampMat) rig.lampMat.emissiveIntensity = pose.powerOn ? 1.2 + Math.sin(t * 3) * 0.4 : (eaf?.busy_charge_id ? 0.8 : 0.15);
+    (window as any).__steelxEaf = { phase: eaf?.heat_phase ?? null, progress: eaf?.phase_progress ?? 0,
+      disp: { ...d }, stream: showStream, tiltDeg: (d.tilt * 180) / Math.PI, roofDeg: (d.roof * 180) / Math.PI };
+  });
+  return rig ? <primitive object={rig.holder} /> : null;
+}
+
 // ---------- Slice 4: feed + EAF + LRF + CCM GLBs + billet-yard gantry ----------
 const YARD_SCALE = 0.6;
 const BAY_Z = (i: number) => 3.6 + i * 3.2 * YARD_SCALE;
@@ -739,8 +875,7 @@ function Slice4({ at }: { at: [number, number, number] }) {
   return (
     <group position={at}>
       {feed && <Reveal built={feed}><Glb url={`${S4}feed.glb`} scale={4.5} pos={[-10, 0, 0]} /></Reveal>}
-      {eaf4 && <><Glb url={`${S4}eaf_hero.glb`} scale={1} pos={[-5, 0, 0]} />
-      <EafGlow pos={[-5, 1.0, 0]} active={() => !!(SESSION.stateOf('slice4') as any)?.eaf?.busy_charge_id} /></>}
+      {eaf4 && <group position={[-5, 0, 0]}><EafHeatCycle /></group>}
       {lf && <Reveal built={lf}><Glb url={`${S4}lrf.glb`} scale={3} pos={[0, 0, 0]} /></Reveal>}
       {cc && <><Glb url={`${S4}ccm.glb`} scale={6} pos={[5, 0, 0]} />
       <FlowPulse from={[-2.5, 0.8, 0]} to={[3.5, 0.8, 0]} active={() => !!(SESSION.stateOf('slice4') as any)?.ccm?.busy_ladle_id} color="#e07070" /></>}
@@ -833,16 +968,6 @@ function FlowPulse({ from, to, active, color }: { from: [number, number, number]
       <meshBasicMaterial color={color} transparent opacity={0.85} />
     </mesh>
   );
-}
-
-/** EAF hot glow while melting — reads busy_charge_id / charged heats each frame. */
-function EafGlow({ pos, active }: { pos: [number, number, number]; active: () => boolean }) {
-  const ref = useRef<THREE.PointLight>(null);
-  useRafLoop((t) => {
-    const l = ref.current; if (!l) return;
-    l.intensity = active() ? 6 + Math.sin(t * 5) * 2 : 0;
-  });
-  return <pointLight ref={ref} position={pos} color="#ff7a3f" distance={9} intensity={0} />;
 }
 
 /** Plain rAF loop helper (avoids the useFrame-import black-screen pitfall). */
