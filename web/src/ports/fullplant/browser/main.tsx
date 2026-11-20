@@ -23,6 +23,7 @@ import { STREAM, ZONE_PAD, LIGHTING, STATE } from './palette.ts';
 import { beltTokenView, yardMoundView } from '../../../shared/ore_belt.ts';
 import { eafPoseView, BORE_RAISED, LADLE_HOME_X } from '../../../shared/eaf_heat_pose.ts';
 import { stateLightView, feedAmberSignal } from '../../../shared/state_lights.ts';
+import { casterPoseView, billetYardView, lastCastAgeTicks, TORCH_HOME_X, BILLET_SLOTS } from '../../../shared/caster_pose.ts';
 import { feedShortfallsThisTick } from '../../../shared/meltshop_feed.ts';
 
 // S0.4 visual-pass A/B bisect (dev-only): URL params override the rig so each suspect gets
@@ -870,15 +871,19 @@ function EafHeatCycle() {
     const s4: any = SESSION.stateOf('slice4');
     const eaf = s4?.eaf;
     const ladles: any[] = s4?.ladles ?? [];
-    const ladle = eaf?.busy_charge_id
-      ? ladles.find((l) => l.busy_charge_id === eaf.busy_charge_id)
-      : ladles.find((l) => (l.metal_t ?? 0) > 0);
+    // S4.2: the hero ladle represents the CASTING ladle first (car continues to the
+    // turret), then the charge under the spout, then any hot ladle in transit.
+    const castingLadle = s4?.ccm?.busy_ladle_id ? ladles.find((l) => l.ladle_id === s4.ccm.busy_ladle_id) : null;
+    const ladle = castingLadle
+      ?? (eaf?.busy_charge_id ? ladles.find((l) => l.busy_charge_id === eaf.busy_charge_id) : null)
+      ?? ladles.find((l) => (l.metal_t ?? 0) > 0);
+    const casting = !!castingLadle;
     const total = (SESSION.slices as any).slice4?.entry?.fixture?.scenario?.eaf_heat_ticks ?? 10;
     // wall-clock frac within the current tick (belt-token pattern); paused = hold the
     // end-of-tick pose so the heavy tilt never oscillates while the player looks around.
     const tickMs = SESSION.tickIntervalMs();
     const frac = SESSION.speed === 'pause' ? 1 : Math.min(0.999, (performance.now() % tickMs) / tickMs);
-    const pose = eafPoseView(eaf, ladle, { frac, totalTicks: total });
+    const pose = eafPoseView(eaf, ladle, { frac, totalTicks: total, casting });
     // dt from wall clock, NOT the rAF loop's t: useRafLoop restarts on every parent
     // re-render (each sim tick) and resets t — a loop-time delta would go negative
     // there and the smoothing coefficient would diverge the pose.
@@ -897,6 +902,7 @@ function EafHeatCycle() {
     for (const el of rig.nodes.electrodes) if (el) el.position.y = el.userData.bindY + d.bore;
     const dx = d.ladleX - LADLE_HOME_X;
     for (const n of [rig.nodes.ladle, rig.nodes.ladleCar, rig.nodes.bath]) if (n) n.position.x = n.userData.bindX + dx;
+    (window as any).__steelxLadle = { x: d.ladleX, glow: d.glow, casting }; // S4.2 probe hook
     if (rig.bathMat) rig.bathMat.emissiveIntensity = d.glow;
     // spout tip rotates with the vessel about the trunnion axis (0, 1.85)
     const ca = Math.cos(-d.tilt), sa = Math.sin(-d.tilt);
@@ -944,6 +950,94 @@ function EafHeatCycle() {
 // ---------- Slice 4: feed + EAF + LRF + CCM GLBs + billet-yard gantry ----------
 const YARD_SCALE = 0.6;
 const BAY_Z = (i: number) => 3.6 + i * 3.2 * YARD_SCALE;
+
+// ---------- S4.2: animated caster hero (turret indexes, mold oscillates, torch travels) ----------
+function CcmHero({ pos }: { pos: [number, number, number] }) {
+  const [gltf, setGltf] = React.useState<any>(null);
+  React.useEffect(() => {
+    let alive = true;
+    new GLTFLoader().load(`${S4}ccm_hero.glb`, (g: { scene: THREE.Group }) => { if (alive) setGltf(g.scene); },
+      undefined, (err: unknown) => console.error(`GLB load failed (ccm_hero):`, err));
+    return () => { alive = false; };
+  }, []);
+  const rig = React.useMemo(() => {
+    if (!gltf) return null;
+    const root: any = gltf.clone();
+    const find = (n: string): any => root.getObjectByName(n) ?? null;
+    const nodes: any = { turret: find('pivot_turret'), mold: find('pivot_mold'), torch: find('torch_head') };
+    if (nodes.torch) nodes.torch.userData.bindX = nodes.torch.position.x;
+    if (nodes.mold) nodes.mold.userData.bindY = nodes.mold.position.y;
+    root.traverse((o: any) => { if (o.isMesh) o.castShadow = true; });
+    // strand glow overlay on the roller-table line — visible ONLY while casting
+    const strand: any = new THREE.Mesh(new THREE.BoxGeometry(2.9, 0.14, 0.29),
+      new THREE.MeshStandardMaterial({ color: '#ff9a3c', emissive: '#ff9a3c', emissiveIntensity: 0.8 }));
+    strand.position.set(1.05, 0.95, 0); strand.visible = false;
+    root.add(strand);
+    const holder: any = new THREE.Group(); holder.add(root);
+    return { holder, nodes, strand, disp: { turret: Math.PI }, lastT: 0 };
+  }, [gltf]);
+  useRafLoop(() => {
+    if (!rig) return;
+    const s4: any = SESSION.stateOf('slice4');
+    const now = performance.now() / 1000;
+    const pose = casterPoseView(s4?.ccm, now);
+    const dt = Math.max(0, Math.min(0.1, rig.lastT ? now - rig.lastT : 0.016)); rig.lastT = now;
+    // heavy turret indexing — never a snap (hundreds of tonnes of ladle+steel)
+    rig.disp.turret += (pose.turretTarget - rig.disp.turret) * (1 - Math.exp(-dt / 1.4));
+    if (rig.nodes.turret) rig.nodes.turret.rotation.y = rig.disp.turret;
+    if (rig.nodes.mold) rig.nodes.mold.position.y = rig.nodes.mold.userData.bindY + pose.moldOsc;
+    if (rig.nodes.torch) rig.nodes.torch.position.x = rig.nodes.torch.userData.bindX + (pose.torchX - TORCH_HOME_X);
+    rig.strand.visible = pose.casting;
+    (window as any).__steelxCaster = { casting: pose.casting, turret: rig.disp.turret, moldOsc: pose.moldOsc, torchX: pose.torchX };
+  });
+  if (!rig) return null;
+  return <primitive object={rig.holder} position={pos} />;
+}
+
+// ---------- S4.2: billet rows — ONE instanced draw, hot->cold fade from sim billet age ----------
+// Replaces the 18 static billet meshes (frees 17 draws). Per-instance emissive: the
+// shader multiplies totalEmissiveRadiance by diffuseColor.rgb (which already carries
+// instanceColor) — hot slots glow orange, cold slots fade to dark steel.
+const BILLET_COLD = new THREE.Color('#3a3f46');
+const BILLET_HOT = new THREE.Color('#ff9a3c');
+function BilletRows() {
+  const mesh = React.useMemo(() => {
+    const mat: any = new THREE.MeshStandardMaterial({ color: '#ffffff', metalness: 0.5, roughness: 0.45, emissive: '#ff9a3c', emissiveIntensity: 0.55 });
+    mat.onBeforeCompile = (sh: any) => {
+      sh.fragmentShader = sh.fragmentShader.replace('#include <emissivemap_fragment>',
+        '#include <emissivemap_fragment>\n totalEmissiveRadiance *= diffuseColor.rgb;');
+    };
+    const m = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), mat, BILLET_SLOTS);
+    m.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    m.castShadow = true; m.frustumCulled = false;
+    return m;
+  }, []);
+  const tmp = React.useMemo(() => ({ m: new THREE.Matrix4(), p: new THREE.Vector3(), q: new THREE.Quaternion(), s: new THREE.Vector3(), c: new THREE.Color() }), []);
+  // slice4 events are PER-TICK (no history) — remember the last cast-completion tick
+  // seen live; billet age = current tick minus that (presentation-side tracker).
+  const lastCast = React.useRef(-1);
+  useRafLoop(() => {
+    const s4: any = SESSION.stateOf('slice4');
+    const tick = s4?.tick ?? 0;
+    if (lastCastAgeTicks(s4?.events, tick) < 1e6) lastCast.current = tick;
+    const age = lastCast.current >= 0 ? Math.max(0, tick - lastCast.current) : 1e9;
+    const view = billetYardView(s4?.billet_yard_t ?? 0, age);
+    for (let i = 0; i < BILLET_SLOTS; i++) {
+      const bay = Math.floor(i / 9), k = i % 9;
+      tmp.p.set(-0.85 * YARD_SCALE + (k % 3) * 0.85 * YARD_SCALE, 0.42, BAY_Z(bay) - 1.1 * YARD_SCALE + Math.floor(k / 3) * 1.1 * YARD_SCALE);
+      tmp.s.set(i < view.count ? 6 * YARD_SCALE : 0.0001, i < view.count ? 0.15 : 0.0001, i < view.count ? 0.15 : 0.0001);
+      tmp.m.compose(tmp.p, tmp.q, tmp.s);
+      mesh.setMatrixAt(i, tmp.m);
+      tmp.c.copy(BILLET_COLD).lerp(BILLET_HOT, view.heat[i]);
+      mesh.setColorAt(i, tmp.c);
+    }
+    mesh.instanceMatrix.needsUpdate = true;
+    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+    (window as any).__steelxBillets = { count: view.count, newestHeat: view.count ? view.heat[view.count - 1] : 0, age };
+  });
+  return <primitive object={mesh} />;
+}
+
 function Slice4({ at }: { at: [number, number, number] }) {
   const steel = <meshStandardMaterial color="#4a5563" metalness={0.6} roughness={0.45} />;
   // guided-build reveal per node (same rule as slice1/slice3)
@@ -965,7 +1059,7 @@ function Slice4({ at }: { at: [number, number, number] }) {
           frac={() => (SESSION.feedVisualSnapshot()?.state.registry.inventories['eaf_dri']?.usable_t ?? 0) / 200} />
       </>}
       {lf && <Reveal built={lf}><Glb url={`${S4}lrf.glb`} scale={3} pos={[0, 0, 0]} /></Reveal>}
-      {cc && <><Glb url={`${S4}ccm_hero.glb`} scale={1} pos={[5, 0, 0]} />
+      {cc && <><CcmHero pos={[5, 0, 0]} />
       <FlowPulse from={[-2.5, 0.8, 0]} to={[3.5, 0.8, 0]} active={() => !!(SESSION.stateOf('slice4') as any)?.ccm?.busy_ladle_id} color="#e07070" /></>}
       {/* billet yard gantry (same construction as slices' yards), compact here */}
       {yard4 && <group position={[10, 0, -3.5]}>
@@ -982,12 +1076,8 @@ function Slice4({ at }: { at: [number, number, number] }) {
             {[-1.1, 1.1].map((dx) => <mesh key={dx} position={[dx, 0.28, 0]}><boxGeometry args={[0.34, 0.24, 2.6]} /><meshStandardMaterial color="#39424e" metalness={0.55} roughness={0.5} /></mesh>)}
           </group>
         ))}
-        {Array.from({ length: 18 }).map((_, i) => {
-          const bay = Math.floor(i / 9), k = i % 9;
-          return <mesh key={i} castShadow position={[-0.85 * YARD_SCALE + (k % 3) * 0.85 * YARD_SCALE, 0.42, BAY_Z(bay) - 1.1 * YARD_SCALE + Math.floor(k / 3) * 1.1 * YARD_SCALE]}>
-            <boxGeometry args={[6 * YARD_SCALE, 0.15, 0.15]} /><meshStandardMaterial color="#c9a15a" metalness={0.5} roughness={0.45} />
-          </mesh>;
-        })}
+        {/* S4.2: instanced billet rows with sim-age hot->cold fade (was 18 static meshes) */}
+        <BilletRows />
       </group>}
       <LABEL3 at={at} items={[...(feed ? [['Feed', -10, 6]] : []), ...(eaf4 ? [['EAF (S4)', -5, 6]] : []), ...(lf ? [['LRF', 0, 6]] : []), ...(cc ? [['CCM', 5, 8]] : []), ...(yard4 ? [['Billet Yard', 10, 5]] : [])] as Array<[string, number, number]>} />
     </group>

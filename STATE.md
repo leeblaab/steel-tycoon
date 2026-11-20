@@ -152,6 +152,21 @@ end goal; desktop/browser for now. No-rush iterative cadence, one Go-gated micro
     269/33; 0 errors; screenshot-verified (reads as a caster). Evidence docs/evidence/s41/.
   - NEXT: **S4.2** billet rows instanced + emissive hot→cold fade tied to sim billet age;
     ladle car EAF→LF→caster on rails. Gate: a full heat runs charge→tap→cast visibly.
+  - **S4.2 DONE (code + objective gates; SME sensory verdict PENDING)** — cast chapter
+    complete: `shared/caster_pose.ts` pure projections (casterPoseView from ccm.busy_ladle_id;
+    billetYardView + lastCastAgeTicks from billet_yard_t + "CCM casts ladle" events).
+    CcmHero animates the S4.1 pivots live (heavy turret indexing tau 1.4 s, mold oscillation
+    ±0.045 @0.9 Hz while casting, torch traverse, strand glow only while casting). BilletRows:
+    18 static meshes → ONE InstancedMesh with per-instance emissive (shader: emissive ×
+    diffuseColor.rgb carrying instanceColor) hot→cold fade; slice4 events are PER-TICK, so
+    a renderer-side ref remembers the last cast tick. Ladle car continues EAF→LF→caster
+    (casting-ladle-first selection; LADLE_CCM_X 9.5). GATE PROVEN: full heat charge→melt→
+    tap→cast walked tick-by-tick, ladle reached x>8.5, billet gradient newest=1→cooled,
+    max meshes 134 ≤150 (17 draws freed), suite 34 files / 280, 0 errors. Evidence
+    docs/evidence/s42/ (5 phase screenshots; vision-model rate-limited at capture time —
+    objective hooks verified, sensory pass pending with Yasser). **STAGE 4 COMPLETE.**
+  - NEXT: **Stage 5 — Mills & Shipment** per docs/PLAN_FORGED.md: S5.1 EXTEND existing
+    slice5 mirror event outputs (do NOT rebuild the engine), mirror-first.
 
 ## The game as it plays today
 Fullplant app (`web/src/ports/fullplant`, dev port 5178 via `start_digital_twin_v2.bat` —
@@ -171,8 +186,8 @@ EAF/LF/CCM, slice5 mills); each is a pure tick engine with a Python mirror + par
 - Unknown values are asked, never invented.
 
 ## Verified facts (measured, not remembered — re-measure if in doubt)
-- Test suite: `cd web && npx vitest run --root .` → **33 files / 269 tests green** (re-measured
-  20.11 at S3.2; +5 state-light grammar, +4 slice3 starvation tone, +1 feed-amber signal).
+- Test suite: `cd web && npx vitest run --root .` → **34 files / 280 tests green** (re-measured
+  20.11 at S4.2; +11 caster-pose/billet-fade/ladle-continuation tests).
 - Fresh-clone gate passed at S0.1 (stranger's clone builds and plays step 1).
 - Remote master head: S1.3 hero-swap commit (20.11) — in sync after push; `git log -1` for hash.
 - S1.3 perf (headless SwiftShader, relative deltas only): GLB download 16.5 MB, tris/frame 6.8k,

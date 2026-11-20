@@ -127,3 +127,14 @@ gate = F-06 chapter swaps).
   live pivot verification. Blender render_preview PNG silently missing on this host
   (GLB export fine) — in-game screenshots are the visual gate, don't chase the preview.
   sme_pending: curve radius, stand count, ladle sizes.
+- **S4.2 (20.11) — cast chapter animations + billet fade:** pure projections over EXISTING
+  slice4 signals (no sim changes): casterPoseView (turret 0/PI by ccm.busy_ladle_id, mold
+  sin oscillation while casting, torch traverse), billetYardView (18 slots, 10 t/slot,
+  48-tick cool window, 6-tick stagger — design values sme_pending), lastCastAgeTicks.
+  KEY FACTS: slice4 state.events is PER-TICK (no history) → renderer ref remembers last
+  cast-completion tick; ladle selection must be casting-ladle-FIRST (else the hero ladle
+  represents the new empty charge and never travels to the caster). Per-instance emissive
+  on InstancedMesh: onBeforeCompile multiply totalEmissiveRadiance by diffuseColor.rgb
+  (already carries instanceColor) — robust, no varying-availability assumptions. Billet
+  instancing freed 17 draws (18 statics → 1): tap-time 134. Gate proven tick-by-tick:
+  charge→melt→tap→cast + ladle x>8.5 + heat gradient + fade. Stage 4 COMPLETE.

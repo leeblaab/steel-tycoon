@@ -28,6 +28,7 @@ export const BORE_RAISED = -0.35;
 export const BORE_IN = 0.45;
 export const LADLE_HOME_X = 2.15;
 export const LADLE_LF_X = 5.0;
+export const LADLE_CCM_X = 9.5; // S4.2: ladle car continues EAF -> LF -> caster turret seat
 export const STREAM_TILT_GATE = 0.35; // tap-progress fraction before steel flows
 
 export function easeInOutCubic(t: number): number {
@@ -38,7 +39,7 @@ export function easeInOutCubic(t: number): number {
 export function eafPoseView(
   eaf: { heat_phase?: HeatPhase | null; phase_progress?: number; busy_charge_id?: string | null } | null | undefined,
   ladle: { metal_t?: number; refined?: boolean } | null | undefined,
-  opts?: { frac?: number; totalTicks?: number },
+  opts?: { frac?: number; totalTicks?: number; casting?: boolean },
 ): EafPose {
   const phase = eaf?.heat_phase ?? null;
   // Sub-tick interpolation (same wall-clock frac pattern as beltTokenView): a phase band
@@ -51,7 +52,8 @@ export function eafPoseView(
   const bandTicks = phase ? Math.max(1, Math.round(BAND_WIDTH[phase] * total)) : 1;
   const p = Math.max(0, Math.min(1, (eaf?.phase_progress ?? 0) + frac / bandTicks));
   const hotLadle = (ladle?.metal_t ?? 0) > 0;
-  const ladleTargetX = hotLadle ? LADLE_LF_X : LADLE_HOME_X;
+  // S4.2: once the CCM is casting THIS ladle, the car continues to the turret seat.
+  const ladleTargetX = opts?.casting ? LADLE_CCM_X : hotLadle ? LADLE_LF_X : LADLE_HOME_X;
   // hot ladle glows in transit; during tap the bath heats up as steel lands
   const glow = hotLadle ? 1.8 : phase === 'tap' ? p * 1.2 : 0;
   switch (phase) {
