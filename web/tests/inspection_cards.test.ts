@@ -66,6 +66,36 @@ describe('slice5 inspection card (pure projection)', () => {
     const st = { tick: 10, mill: { busy: false, remaining_ticks: 0, batch_t: 0 }, counters: { mill_wait_ticks: 0, mill_starved_ticks: 5 } };
     expect(inspectSlice5Slot(slot('s5_rebar_mill'), st).tone).toBe('waiting');
   });
+
+  it('S5.2 dispatch revenue counter ONLY: shipped tonnage + revenue lines projected', () => {
+    const st = {
+      tick: 130,
+      mill: { busy: false, remaining_ticks: 0, batch_t: 0 },
+      counters: { mill_wait_ticks: 3, mill_starved_ticks: 0, dispatched_t_total: 98.0, revenue_usd: 62230.0 },
+    };
+    const text = inspectSlice5Slot(slot('s5_rebar_mill'), st).lines.join(' ');
+    expect(text).toContain('98.0 t dispatched');
+    expect(text).toContain('$62,230');
+  });
+
+  it('S5.1 mill phase line appears only while rolling with a known phase', () => {
+    const rolling = {
+      tick: 41,
+      mill: { busy: true, remaining_ticks: 4, batch_t: 45.2, phase: 'cooling' },
+      counters: { mill_wait_ticks: 0, mill_starved_ticks: 0 },
+    };
+    const text = inspectSlice5Slot(slot('s5_rebar_mill'), rolling).lines.join(' ');
+    expect(text).toContain('Mill process stage: cooling');
+    const idle = { ...rolling, mill: { busy: false, remaining_ticks: 0, batch_t: 0, phase: null } };
+    expect(inspectSlice5Slot(slot('s5_rebar_mill'), idle).lines.join(' ')).not.toContain('Mill process stage');
+  });
+
+  it('pre-S5.2 state view without new fields still projects (heal defaults)', () => {
+    const st = { tick: 5, mill: { busy: false, remaining_ticks: 0, batch_t: 0 }, counters: { mill_wait_ticks: 0, mill_starved_ticks: 0 } };
+    const text = inspectSlice5Slot(slot('s5_rebar_mill'), st).lines.join(' ');
+    expect(text).toContain('0.0 t dispatched');
+    expect(text).toContain('$0');
+  });
 });
 
 describe('card projection reads only fields the ports actually emit', () => {
@@ -95,6 +125,11 @@ describe('card projection reads only fields the ports actually emit', () => {
     expect(st.mill).toHaveProperty('batch_t');
     expect(st.counters).toHaveProperty('mill_wait_ticks');
     expect(st.counters).toHaveProperty('mill_starved_ticks');
+    // S5.2 card reads these engine-native fields (exist since v1; revenue on dispatch outflow).
+    expect(st.counters).toHaveProperty('dispatched_t_total');
+    expect(st.counters).toHaveProperty('revenue_usd');
+    // S5.1 additive phase contract the card optionally reads.
+    expect(st.mill).toHaveProperty('phase');
   });
 });
 

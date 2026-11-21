@@ -81,24 +81,41 @@ export function inspectSlice4Slot(slot: SlotDef, st: S4StateView): InspectionCar
 
 export interface S5StateView {
   tick: number;
-  mill: { busy: boolean; remaining_ticks: number; batch_t: number };
-  counters: { mill_wait_ticks: number; mill_starved_ticks: number };
+  mill: { busy: boolean; remaining_ticks: number; batch_t: number; phase?: string | null };
+  counters: {
+    mill_wait_ticks: number;
+    mill_starved_ticks: number;
+    // S5.2 dispatch revenue counter ONLY (F-07: display only — no wallet/upgrades/spend).
+    // Fields exist in the slice5 engine since v1; optional here so pre-S5.2 views still project.
+    dispatched_t_total?: number;
+    revenue_usd?: number;
+  };
 }
 
 export function inspectSlice5Slot(slot: SlotDef, st: S5StateView): InspectionCardData {
   switch (slot.inspect_key) {
     case 'mill': {
+      const lines = [
+        st.mill.busy
+          ? `Rolling a batch — ${st.mill.batch_t.toFixed(1)} t on the mill, ${st.mill.remaining_ticks} ticks left.`
+          : 'Idle — no batch on the rolls.',
+        `Batches waiting for the mill: ${st.counters.mill_wait_ticks} wait-ticks.`,
+        `Starved ticks (mill ready but nothing delivered): ${st.counters.mill_starved_ticks}.`,
+      ];
+      // S5.1 phase grammar (pure derivation from the roll countdown; absent = pre-S5.1 view).
+      if (st.mill.busy && st.mill.phase) {
+        lines.push(`Mill process stage: ${st.mill.phase} (reheat → rolling → cooling → shear).`);
+      }
+      // S5.2: dispatch revenue counter ONLY — tonnage × price at the actual dispatch
+      // outflow (price ladder midpoint, sme_pending). Display only; no wallet systems.
+      const shipped = st.counters.dispatched_t_total ?? 0;
+      lines.push(`Shipped from the mill: ${shipped.toFixed(1)} t dispatched.`);
+      lines.push(`Dispatch revenue so far: $${Math.round(st.counters.revenue_usd ?? 0).toLocaleString('en-US')}.`);
       return {
         slot_id: slot.id,
         title: 'Rebar Mill — what it is doing now',
         tone: st.mill.busy ? 'busy' : st.counters.mill_starved_ticks > 0 ? 'waiting' : 'idle',
-        lines: [
-          st.mill.busy
-            ? `Rolling a batch — ${st.mill.batch_t.toFixed(1)} t on the mill, ${st.mill.remaining_ticks} ticks left.`
-            : 'Idle — no batch on the rolls.',
-          `Batches waiting for the mill: ${st.counters.mill_wait_ticks} wait-ticks.`,
-          `Starved ticks (mill ready but nothing delivered): ${st.counters.mill_starved_ticks}.`,
-        ],
+        lines,
       };
     }
     default:

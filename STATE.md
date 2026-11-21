@@ -167,6 +167,18 @@ end goal; desktop/browser for now. No-rush iterative cadence, one Go-gated micro
     objective hooks verified, sensory pass pending with Yasser). **STAGE 4 COMPLETE.**
   - NEXT: **Stage 5 — Mills & Shipment** per docs/PLAN_FORGED.md: S5.1 EXTEND existing
     slice5 mirror event outputs (do NOT rebuild the engine), mirror-first.
+  - **S5.1 DONE (code + parity gates; Qwen4-max audit REPORT-ID 1 PENDING)** — slice5
+    mirror event-output extension, commit `0f56557` (pushed): mill phase grammar
+    reheat→rolling→cooling→shear derived from the roll countdown (S2.0 heat-phase pattern,
+    no new timing rules); additive events/counters `reheat_discharges`/`shear_cuts`/
+    `bundles_strapped` + pure views `mill_phase_view`/`mill_process_view`/`product_yard_view`;
+    two routes per F-08 (rebar LIVE 6 stands, wire_rod defined-but-idle 10 stands) with
+    validation + pre-S5.1 state heal; tonnage-only, dispatch/revenue/balance UNCHANGED;
+    fixture seed11_120 extended. Focused parity 24/24, suite **34 files / 289 tests green**,
+    fullplant build OK — evidence `docs/evidence/s51/`. Mailbox: `inbox/CODER_REPORT.md`
+    (REPORT-ID 1) awaiting `inbox/AUDIT.md` verdict from pinned cron auditor.
+  - NEXT: **S5.2 Dispatch revenue counter ONLY** (tonnage × price at dispatch; NO wallet/
+    upgrades/spend — F-07 breadth freeze guard), after audit verdict lands.
 
 ## The game as it plays today
 Fullplant app (`web/src/ports/fullplant`, dev port 5178 via `start_digital_twin_v2.bat` —
