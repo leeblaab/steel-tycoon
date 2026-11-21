@@ -268,8 +268,8 @@ EAF/LF/CCM, slice5 mills); each is a pure tick engine with a Python mirror + par
 - Unknown values are asked, never invented.
 
 ## Verified facts (measured, not remembered — re-measure if in doubt)
-- Test suite: `cd web && npx vitest run --root .` → **35 files / 301 tests green** (re-measured
-  21.11 post-S5.4; +9 mill_flow projection tests since S5.3b).
+- Test suite: `cd web && npx vitest run --root .` → **36 files / 308 tests green** (re-measured
+  21.11 end-of-session; +7 ship_flow projection tests since S5.4).
 - Fresh-clone gate passed at S0.1 (stranger's clone builds and plays step 1).
 - Remote master head: S1.3 hero-swap commit (20.11) — in sync after push; `git log -1` for hash.
 - S1.3 perf (headless SwiftShader, relative deltas only): GLB download 16.5 MB, tris/frame 6.8k,
