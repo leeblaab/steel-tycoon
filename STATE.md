@@ -189,8 +189,40 @@ end goal; desktop/browser for now. No-rush iterative cadence, one Go-gated micro
     (idle close-up, mid-roll hot bar, zone fit — docs/evidence/s53/). Scoping decision
     AWAITING YASSER SIGN-OFF: reheat furnace folded INTO the rebar-mill hero (no separate
     layout slot; wire-rod hero deferred per "V3 covers the rebar branch only").
-  - NEXT: sensory pass with Yasser on the S5.3 hero, then S5.4 per PLAN_FORGED; Qwen4-max
-    audit REPORT-ID 1 verdict still pending in `inbox/`.
+  - **AUDIT OF 2 = PASS (21.11, auditor cron)** — REPORT-ID 1 closed as superseded by S5.1
+    commit `0f56557` + S5.2 `04c7d91`; both verified against PLAN_FORGED (phases pure-derived,
+    additive-only, revenue = 98.0 t x $635 B500B midpoint = $62,230 fixture match). Non-blocking
+    nits logged: S5.5 relabel "Shipped from the mill" (counter is plant-wide), REPORT-ID 3 must
+    cover S5.3, STATE length/suite-count housekeeping (fixed here).
+  - **S5.3b DONE (uncommitted; SME sensory PASSES with one fix applied)** — hero swaps #5/#6:
+    procedural gantry yards (`tools/blender/hero_gantry_yard.py` -> `gantry_yard_billet.glb` +
+    `gantry_yard_product.glb`, 876 tris / 69.2 kB each, budget PASS) replace the inline yard
+    code in slice5 main.tsx (-191/+88 lines: deleted YardCrane/BilletYardModel/makeGantrySide/
+    ProductRack/GantryCrane/ProductYardModel; ONE shared `GantryYardHero` component). Yasser
+    pass-2 fix applied: `YARD_SCALE_H = 1/3` re-pinned by hero centre (`YARD_CZ = 5.88`, hero
+    geometry runs z=0..11.76 forward from origin). Slice5 relit to the fullplant golden-hour
+    rig (warm sun 3.2, hemisphere fill, ACESFilmic tone mapping, shadows). Mid-run browser
+    screenshot-verify at :4173 (tick ~32/38): all checks YES — coherent yards (floor+rails+
+    rack bays+crane bridge on rails), no scattered/floating parts, both smaller than mill and
+    flanking it, stock shown iff telemetry says so. Evidence `docs/evidence/s54_pre/`
+    (yard_heroes_scaled.png, yard_heroes_clean_build.png). Suite 34/292 green after final
+    clean build (`index-qy9K4r8F.js`). TEMP DEBUG scene-capture hook added during probing was
+    REMOVED; clean-build hash matches pre-hook.
+  - **S5.3c DONE (uncommitted until this commit; SME sensory PASSES)** — dispatch crane box
+    stand-in REPLACED by a moving flatbed truck fleet (Yasser: "this dispatch crane looks
+    ugly ... replace with 2 or 3 moving trucks"): procedural `tools/blender/hero_truck.py` ->
+    `flatbed_truck.glb` (264 tris / 22.5 kB; cab+flatbed+bundle named nodes, 6 wheels —
+    WHEEL_R=0.30, axles x=-0.75/-0.45/+0.45 fixed over two vision passes). main.tsx: deleted
+    `DispatchCraneModel` + flying-box `DispatchMove` + `LAYOUT.crane`; new `TruckFleet` = 3
+    GLB clones (clone per load-bearing truck), frame-eased route productYard(3)->orders(9.5)
+    fanning to dock z, wheel-roll while moving, layby parking (`TRUCK_PARK_X`/`TRUCK_LAYBY_Z`)
+    when idle; sim UNTOUCHED (moves still from tick deltas + crane_busy_order). Suite 34/292
+    green after swap; GLB bundles + fetches 200; mid-run screenshot: fleet visible in the
+    dispatch area. NOTE: R3F scene-graph probes unreliable in prod builds — verify visually,
+    not via fiber walks (see DECISIONS S5.3b).
+  - NEXT: **S5.4 mill nod animations** per PLAN_FORGED (glowing bar threads stands getting
+    longer as it thins; cooling-bed walk-out with glow fading to black; reheat discharge glow;
+    bundle strapping) — Yasser Go'd S5.4 + "once done proceed to next" (S5.5), AFK during batch.
 
 ## The game as it plays today
 Fullplant app (`web/src/ports/fullplant`, dev port 5178 via `start_digital_twin_v2.bat` —
@@ -210,8 +242,8 @@ EAF/LF/CCM, slice5 mills); each is a pure tick engine with a Python mirror + par
 - Unknown values are asked, never invented.
 
 ## Verified facts (measured, not remembered — re-measure if in doubt)
-- Test suite: `cd web && npx vitest run --root .` → **34 files / 280 tests green** (re-measured
-  20.11 at S4.2; +11 caster-pose/billet-fade/ladle-continuation tests).
+- Test suite: `cd web && npx vitest run --root .` → **34 files / 292 tests green** (re-measured
+  21.11 post-S5.3b; +12 caster-pose/billet-fade/ladle-continuation/parity/revenue tests since S4.2).
 - Fresh-clone gate passed at S0.1 (stranger's clone builds and plays step 1).
 - Remote master head: S1.3 hero-swap commit (20.11) — in sync after push; `git log -1` for hash.
 - S1.3 perf (headless SwiftShader, relative deltas only): GLB download 16.5 MB, tris/frame 6.8k,
@@ -226,4 +258,4 @@ EAF/LF/CCM, slice5 mills); each is a pure tick engine with a Python mirror + par
 | `docs/gameplay.md`, `docs/economy_spec.md`, `docs/sim_loop_spec.md`, `docs/foundations_definitions.md` | live contracts/specs |
 | `docs/audit_1_architecture_qwen.md`, `docs/audit_2_visuals_qwen.md` | external audit evidence (findings not all verified) |
 | `docs/Raodmap V3.md`, `RoadMap_V2.md`, old session prompts | FROZEN history — never plan from these |
-- [ ] AUDIT S5.1 report-1
+- [x] AUDIT S5.1 report-1 — closed as superseded by AUDIT OF 2 (PASS, 21.11)

@@ -19,7 +19,7 @@ const LAYOUT = {
   carrier:    { x: -5.5, z: 0 },   // carrier path billet yard -> mill
   mill:       { x: -2, z: 0 },
   productYard:{ x: 3, z: 0 },
-  crane:      { x: 6, z: 0 },      // dispatch crane column
+  dispatch:   { x: 6, z: 0 },      // S5.4-prep #7: was 'crane' (box stand-in) — now truck route midpoint
   orders:     { x: 9.5, z: 0 },    // order docks O1/O2/O3 in a vertical line
 };
 
@@ -84,101 +84,80 @@ function GlbModel({ url }: { url: string }) {
   return gltf;
 }
 
-// ---------- Billet yard: slice4's gantry-yard construction ported (25.10) ----------
-// Same look as slice4's billet yard (side structures + runway rails, racks, billets along X,
-// overhead crane with pick/carry loop while the mill runs). Slice5 LAYOUT uses z:0 for the
-// yard plot instead of slice4's beside-the-CCM plot.
-const YARD_SCALE = 0.6; // same knob as slice4 (whole yard at 60% of trial-2 size)
-const YARD_BAYS = [0, 1, 2, 3, 4]; // five storage bays along Z
-const bayZ = (i: number) => LAYOUT.billetYard.z + 3.6 + i * 3.2 * YARD_SCALE;
+// ---------- Gantry yards: S5.4-prep hero swaps #5/#6 (FORGED F-01 procedural heroes) ----------
+// The old inline construction (YardGantrySide/BilletRack/YardCrane + makeGantrySide/
+// ProductRack/GantryCrane duplicates) had MIXED scale math — posts placed in bay coords but
+// scaled 0.6x, crane group offset [0,-1,-6] buried the bridge: "random parts thrown
+// everywhere" (Yasser 21.11). Replaced by ONE coherent GLB per yard built at final size
+// (tools/blender/hero_gantry_yard.py): floor + runway rails on real columns + 5 rack bays +
+// gantry crane riding the rails, all aligned by construction. Same hero-swap seam as S5.3.
+// Yasser 21.11 pass 2: heroes read ~3x too big next to the mill and sat off-centre (hero
+// geometry runs z=0..11.76 forward from its origin while LAYOUT pins sit at z=0) — scaled
+// 1/3 and re-pinned so each yard's centre lands on its layout point.
+const YARD_BILLET_GLB_URL = new URL('./assets/gantry_yard_billet.glb', import.meta.url).href;
+const YARD_PRODUCT_GLB_URL = new URL('./assets/gantry_yard_product.glb', import.meta.url).href;
+const YARD_BAYS = [0, 1, 2, 3, 4];                 // five storage bays (hero stock_b0..b4)
+const YARD_SCALE_H = 1 / 3;                        // hero size knob (Yasser: a third of built size)
+const BAY_PITCH_H = 1.92, BAY_Z0_H = 2.16;         // hero design constants (anim stays in model-local units)
+// hero design extents X -2.88..2.88, Z 0..11.76 -> centre offset for re-pinning:
+const YARD_CX = 0, YARD_CZ = 5.88;                 // (must match build-script constants)
+// bridge-local rest heights: hero world y minus BRIDGE_Y (4.32) — hook 3.55, payload 3.16
+const HOOK_LOCAL_Y = -0.77, PAYLOAD_LOCAL_Y = -1.16;
 
-function YardGantrySide({ x }: { x: number }) {
-  const steel = <meshStandardMaterial color="#4a5563" metalness={0.6} roughness={0.45} />;
-  return (
-    <group position={[x, 0, 0]} scale={YARD_SCALE}>
-      {[bayZ(0) - LAYOUT.billetYard.z, bayZ(YARD_BAYS.length - 1) - LAYOUT.billetYard.z].map((z) => (
-        <mesh key={z} castShadow position={[0, 2.4, z]}><boxGeometry args={[0.3, 4.8, 0.3]} />{steel}</mesh>
-      ))}
-      <mesh castShadow position={[0, 4.9, 6.4]}><boxGeometry args={[0.35, 0.3, 15.2]} />{steel}</mesh>
-    </group>
-  );
-}
+function GantryYardHero({ url, rec, tonnage, capacity, label, accent, busy }: {
+  url: string; rec: TickRecord; tonnage: number; capacity: number;
+  label: string; accent: [string, string]; busy: boolean;
+}) {
+  const gltf = GlbModel({ url });
+  const rig = useMemo(() => {
+    if (!gltf) return null;
+    const root: THREE.Group = gltf.clone();
+    root.scale.setScalar(YARD_SCALE_H);            // size knob lives on the model, not the anim
+    const crane = root.getObjectByName('crane_bridge');
+    const payload = root.getObjectByName('crane_payload');
+    const hook = root.getObjectByName('crane_hook');
+    // move the whole crane as one unit: re-parent its parts under the bridge node
+    const group = new THREE.Group();
+    for (const nm of ['truck_-2.6', 'truck_2.6', 'rope_-0.18', 'rope_0.18', 'crane_hook', 'crane_payload']) {
+      const o = root.getObjectByName(nm);
+      if (o && crane) { o.position.sub(crane.position); group.add(o); }
+    }
+    if (crane) crane.add(group);
+    if (payload) payload.visible = false;
+    // per-bay stock nodes for tonnage-driven show/hide
+    const bays = YARD_BAYS.map((i) => root.getObjectByName(`stock_b${i}`)).filter(Boolean) as THREE.Object3D[];
+    root.traverse((o: THREE.Object3D) => { if (o instanceof THREE.Mesh) o.castShadow = true; });
+    return { holder: root, crane, hook, payload, bays, phase: 0, hookDy: 0 };
+  }, [gltf]);
 
-function BilletRack({ z }: { z: number }) {
-  const steel = <meshStandardMaterial color="#39424e" metalness={0.55} roughness={0.5} />;
-  return (
-    <group position={[0, 0, z]} scale={YARD_SCALE}>
-      {[-1.1, 1.1].map((dx) => (
-        <mesh key={dx} position={[dx, 0.28, 0]}><boxGeometry args={[0.34, 0.24, 2.6]} />{steel}</mesh>
-      ))}
-    </group>
-  );
-}
-
-function YardCrane({ active }: { active: boolean }) {
-  const bridge = useRef<THREE.Group>(null!);
-  const hookGroup = useRef<THREE.Group>(null!);
-  const carried = useRef<THREE.Mesh>(null!);
-  const phase = useRef(0);
+  const fill = Math.min(1, tonnage / capacity);
   useFrame((_, dt) => {
-    if (active) phase.current = (phase.current + dt * 0.45) % 1;
-    const t = phase.current;
-    bridge.current.position.z = active ? (3.6 + t * 12.8) * YARD_SCALE : (3.6 + 12.8) * YARD_SCALE;
-    const topY = 4.2, lowY = 0.75;
-    const liftY = active ? (t < 0.5 ? THREE.MathUtils.lerp(topY, lowY, t * 2) : THREE.MathUtils.lerp(lowY, topY, (t - 0.5) * 2)) : topY;
-    hookGroup.current.position.y = liftY - bridge.current.position.y;
-    carried.current.visible = active && t > 0.5;
-    if (carried.current.visible) carried.current.position.y = liftY - bridge.current.position.y - 0.35;
+    if (!rig) return;
+    // stock level: whole bays visible from bay 0 up (presentation of sim tonnes)
+    const lit = Math.ceil(fill * YARD_BAYS.length - 1e-9);
+    rig.bays.forEach((b, i) => { b.visible = i < lit; });
+    // crane travel + hoist loop while the zone is active; parks at middle bay otherwise.
+    // Hook/payload ride in the bridge's LOCAL space: local y = hero world y - BRIDGE_Y(4.32).
+    if (busy) rig.phase = (rig.phase + dt * 0.45) % 1;
+    const t = rig.phase;
+    if (rig.crane) {
+      rig.crane.position.z = busy ? BAY_Z0_H + t * (YARD_BAYS.length - 1) * BAY_PITCH_H : BAY_Z0_H + 2 * BAY_PITCH_H;
+      const dy = busy ? (t < 0.5 ? THREE.MathUtils.lerp(0, -2.8, t * 2) : THREE.MathUtils.lerp(-2.8, 0, (t - 0.5) * 2)) : 0;
+      if (rig.hook) rig.hook.position.y = HOOK_LOCAL_Y + dy;
+      if (rig.payload) {
+        const carry = busy && t > 0.5 && t < 0.98;
+        rig.payload.visible = carry;
+        rig.payload.position.y = PAYLOAD_LOCAL_Y + dy;
+      }
+    }
   });
-  const steel = <meshStandardMaterial color="#c9a13f" metalness={0.5} roughness={0.45} />;
-  return (
-    <group position={[0, -1, -6]}>
-      <group ref={bridge} position={[0, 4.4, (3.6 + 12.8) * YARD_SCALE]}>
-        <mesh castShadow><boxGeometry args={[6.4 * YARD_SCALE, 0.4, 0.5]} />{steel}</mesh>
-        {[-3.2, 3.2].map((dx) => <mesh key={dx} position={[dx * YARD_SCALE, -0.28, 0]}><boxGeometry args={[0.6, 0.35, 0.7]} />{steel}</mesh>)}
-        <group ref={hookGroup} position={[0, -3.65, 0]}>
-          <mesh position={[0, 1.05, 0]}><boxGeometry args={[0.8, 0.5, 0.9]} /><meshStandardMaterial color="#8a6d1f" metalness={0.5} roughness={0.45} /></mesh>
-          <mesh position={[0, 0.35, 0]}><boxGeometry args={[0.06, 1.2, 0.06]} /><meshStandardMaterial color="#8a8f98" metalness={0.6} roughness={0.4} /></mesh>
-          <mesh position={[0, -0.35, 0]}><boxGeometry args={[0.7, 0.22, 0.5]} /><meshStandardMaterial color="#c9a13f" metalness={0.5} roughness={0.45} /></mesh>
-        </group>
-        <mesh ref={carried} visible={false} position={[0, -4, 0]}>
-          <boxGeometry args={[6 * YARD_SCALE, 0.15, 0.15]} />
-          <meshStandardMaterial color="#c9a15a" metalness={0.5} roughness={0.45} />
-        </mesh>
-      </group>
-    </group>
-  );
-}
 
-function BilletYardModel({ rec }: { rec: TickRecord }) {
-  // fill level from sim tonnes: same capacity convention as the old stack blocks (10 t each)
-  const capacity = 450; // 5 bays x 9 billets x 10 t — tune knob if slice5 scenario cap differs
-  const frac = Math.min(1, rec.billet_yard_t / capacity);
-  const total = YARD_BAYS.length * 9;
-  const filled = Math.round(frac * total);
-  const billets: { x: number; y: number; z: number }[] = [];
-  for (let i = 0; i < filled; i++) {
-    const bay = Math.floor(i / 9), k = i % 9, col = Math.floor(k / 3), row = k % 3;
-    billets.push({ x: -0.85 * YARD_SCALE + row * 0.85 * YARD_SCALE, y: 0.42, z: bayZ(bay) - 1.1 * YARD_SCALE + col * 1.1 * YARD_SCALE });
-  }
+  const pos = label === 'Billet Yard' ? LAYOUT.billetYard : LAYOUT.productYard;
   return (
-    <group position={[LAYOUT.billetYard.x, 0, LAYOUT.billetYard.z]}>
-      <Building pos={[0, 0, 0]} size={[0.001, 6.5, 0.001]} label="Billet Yard" color="#2a3038" accent={rec.billet_yard_t > 0 ? '#c98a3a' : '#5a6572'} />
-      {/* yard floor plate */}
-      <mesh position={[0, 0.02, 6.4 * YARD_SCALE]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[5 * YARD_SCALE, 16 * YARD_SCALE]} />
-        <meshStandardMaterial color="#232c36" />
-      </mesh>
-      {[-2.6, 2.6].map((dx) => <YardGantrySide key={dx} x={dx * YARD_SCALE} />)}
-      {YARD_BAYS.map((b) => <BilletRack key={`r${b}`} z={bayZ(b)} />)}
-      {billets.map((b, i) => (
-        <mesh key={i} castShadow position={[b.x, b.y, b.z]}>
-          <boxGeometry args={[6 * YARD_SCALE, 0.15, 0.15]} />
-          <meshStandardMaterial color="#c9a15a" metalness={0.5} roughness={0.45} />
-        </mesh>
-      ))}
-      {/* crane animates while the mill is drawing from the yard */}
-      <YardCrane active={rec.mill_busy || rec.billet_yard_t > 0 && rec.mill_in_process_t > 0} />
+    <group position={[pos.x, 0, pos.z]}>
+      <Building pos={[0, 0, 0]} size={[0.001, 2.6, 0.001]} label={label} color="#2a3038" accent={tonnage > 0 ? accent[0] : accent[1]} />
+      {/* pin the hero by its CENTRE: layout point = middle of the yard footprint */}
+      {rig && <primitive object={rig.holder} position={[-YARD_CX * YARD_SCALE_H, 0, -YARD_CZ * YARD_SCALE_H]} />}
     </group>
   );
 }
@@ -235,114 +214,91 @@ function RebarMillModel({ rec }: { rec: TickRecord }) {
   );
 }
 
-// ---------- Generic gantry yard (slice4 billet-yard construction reused; 25.10) ----------
-// Product yard and dispatch-crane zone use the same gantry/rack/billet structure as the
-// billet yard, with per-zone color + capacity knobs. One shared crane animation component.
-function makeGantrySide(name: string) {
-  return function GantrySide({ x }: { x: number }) {
-    const steel = <meshStandardMaterial color="#4a5563" metalness={0.6} roughness={0.45} />;
-    return (
-      <group position={[x, 0, 0]} scale={YARD_SCALE}>
-        {[bayZ(0), bayZ(YARD_BAYS.length - 1)].map((z) => (
-          <mesh key={z} castShadow position={[0, 2.4, z]}><boxGeometry args={[0.3, 4.8, 0.3]} />{steel}</mesh>
-        ))}
-        <mesh castShadow position={[0, 4.9, 6.4]}><boxGeometry args={[0.35, 0.3, 15.2]} />{steel}</mesh>
-      </group>
-    );
-  };
-}
-const ProductGantrySide = makeGantrySide('product');
 
-function ProductRack({ z }: { z: number }) {
-  const steel = <meshStandardMaterial color="#39424e" metalness={0.55} roughness={0.5} />;
-  return (
-    <group position={[0, 0, z]} scale={YARD_SCALE}>
-      {[-1.1, 1.1].map((dx) => (
-        <mesh key={dx} position={[dx, 0.28, 0]}><boxGeometry args={[0.34, 0.24, 2.6]} />{steel}</mesh>
-      ))}
-    </group>
-  );
-}
+// S5.4-prep hero swap #7: the dispatch-crane box stand-in is GONE (ugly next to the yard
+// heroes, Yasser 21.11). Dispatch is now a FLEET OF 3 flatbed trucks (tools/blender/
+// hero_truck.py, 264 tris / 22.5 KB) driving each dispatch move from the product yard to
+// the order dock lane. The sim resource stays abstract `dispatch_crane` (engine untouched,
+// F-07 breadth freeze) — visual grammar only. Trucks idle parked in a layby at x=6; one is
+// assigned per move (round-robin), drives along the ground (no payload arc), spins its
+// wheels, carries the green bundle node while loaded, returns empty after delivery.
+const TRUCK_GLB_URL = new URL('./assets/flatbed_truck.glb', import.meta.url).href;
+const TRUCK_LAYBY_Z = 4.6;                          // idle parking row (south of the route)
+const TRUCK_PARK_X = [5.2, 6.1, 7.0];               // three layby slots
 
-function GantryCrane({ active }: { active: boolean }) {
-  const bridge = useRef<THREE.Group>(null!);
-  const hookGroup = useRef<THREE.Group>(null!);
-  const carried = useRef<THREE.Mesh>(null!);
-  const phase = useRef(0);
-  useFrame((_, dt) => {
-    if (active) phase.current = (phase.current + dt * 0.45) % 1;
-    const t = phase.current;
-    bridge.current.position.z = active ? (3.6 + t * 12.8) * YARD_SCALE : (3.6 + 12.8) * YARD_SCALE;
-    const topY = 4.2, lowY = 0.75;
-    const liftY = active ? (t < 0.5 ? THREE.MathUtils.lerp(topY, lowY, t * 2) : THREE.MathUtils.lerp(lowY, topY, (t - 0.5) * 2)) : topY;
-    hookGroup.current.position.y = liftY - bridge.current.position.y;
-    carried.current.visible = active && t > 0.5;
-    if (carried.current.visible) carried.current.position.y = liftY - bridge.current.position.y - 0.35;
+interface MoveInfo { orderIdx: number; tonnage: number }
+
+// Deterministic reconstruction of every dispatch move from the recorded ticks — no RNG,
+// no playback state: which tick a move starts, for which dock lane, and its tonnage.
+function buildDispatchMoves(): Map<number, MoveInfo> {
+  const moves = new Map<number, MoveInfo>();
+  let prevT = 0;
+  RESULT.records.forEach((r, i) => {
+    if (r.crane_busy_task_type === 'dispatch' && r.product_yard_t < prevT - 1e-9) {
+      moves.set(i, { orderIdx: ['O1', 'O2', 'O3'].indexOf(r.crane_busy_order ?? ''), tonnage: prevT - r.product_yard_t });
+    }
+    prevT = r.product_yard_t;
   });
-  const steel = <meshStandardMaterial color="#c9a13f" metalness={0.5} roughness={0.45} />;
-  return (
-    <group position={[0, -1, -6]}>
-      <group ref={bridge} position={[0, 4.4, (3.6 + 12.8) * YARD_SCALE]}>
-        <mesh castShadow><boxGeometry args={[6.4 * YARD_SCALE, 0.4, 0.5]} />{steel}</mesh>
-        {[-3.2, 3.2].map((dx) => <mesh key={dx} position={[dx * YARD_SCALE, -0.28, 0]}><boxGeometry args={[0.6, 0.35, 0.7]} />{steel}</mesh>)}
-        <group ref={hookGroup} position={[0, -3.65, 0]}>
-          <mesh position={[0, 1.05, 0]}><boxGeometry args={[0.8, 0.5, 0.9]} /><meshStandardMaterial color="#8a6d1f" metalness={0.5} roughness={0.45} /></mesh>
-          <mesh position={[0, 0.35, 0]}><boxGeometry args={[0.06, 1.2, 0.06]} /><meshStandardMaterial color="#8a8f98" metalness={0.6} roughness={0.4} /></mesh>
-          <mesh position={[0, -0.35, 0]}><boxGeometry args={[0.7, 0.22, 0.5]} /><meshStandardMaterial color="#c9a13f" metalness={0.5} roughness={0.45} /></mesh>
-        </group>
-        <mesh ref={carried} visible={false} position={[0, -4, 0]}>
-          <boxGeometry args={[6 * YARD_SCALE, 0.15, 0.15]} />
-          <meshStandardMaterial color="#5fd08f" metalness={0.4} roughness={0.5} />
-        </mesh>
-      </group>
-    </group>
-  );
+  return moves;
 }
+const DISPATCH_MOVES = buildDispatchMoves();
 
-function ProductYardModel({ rec }: { rec: TickRecord }) {
-  // same gantry construction as the billet yard; product stock = green bundles on racks,
-  // fill driven by sim tonnes against the scenario capacity (real number, not invented)
-  const frac = Math.min(1, rec.product_yard_t / SCENARIO.product_yard.capacity_t);
-  const total = YARD_BAYS.length * 9;
-  const filled = Math.round(frac * total);
-  const bundles: { x: number; y: number; z: number }[] = [];
-  for (let i = 0; i < filled; i++) {
-    const bay = Math.floor(i / 9), k = i % 9, col = Math.floor(k / 3), row = k % 3;
-    bundles.push({ x: -0.85 * YARD_SCALE + row * 0.85 * YARD_SCALE, y: 0.42, z: bayZ(bay) - 1.1 * YARD_SCALE + col * 1.1 * YARD_SCALE });
+// Which truck drives the move active at record idx i, and its [0..1] route progress.
+// Sub-tick smoothness comes from the TruckFleet frame loop (position eased per frame),
+// so this stays a pure tick->state map — no hooks inside.
+function truckStateAt(idx: number): { slot: number; startIdx: number; orderIdx: number } | null {
+  const span = SCENARIO.dispatch_crane.move_ticks;
+  for (let s = Math.max(0, idx - span + 1); s <= idx; s++) {
+    const m = DISPATCH_MOVES.get(s);
+    if (!m) continue;
+    return { slot: [...DISPATCH_MOVES.keys()].indexOf(s) % 3, startIdx: s, orderIdx: m.orderIdx };
   }
-  return (
-    <group position={[LAYOUT.productYard.x, 0, LAYOUT.productYard.z]}>
-      <Building pos={[0, 0, 0]} size={[0.001, 6.5, 0.001]} label="Product Yard" color="#2a3038" accent={rec.product_yard_t > 0 ? '#4fae7d' : '#5a6572'} />
-      <mesh position={[0, 0.02, 6.4 * YARD_SCALE]} rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[5 * YARD_SCALE, 16 * YARD_SCALE]} />
-        <meshStandardMaterial color="#232c36" />
-      </mesh>
-      {[-2.6, 2.6].map((dx) => <ProductGantrySide key={dx} x={dx * YARD_SCALE} />)}
-      {YARD_BAYS.map((b) => <ProductRack key={`pr${b}`} z={bayZ(b)} />)}
-      {bundles.map((b, i) => (
-        <mesh key={i} castShadow position={[b.x, b.y, b.z]}>
-          <boxGeometry args={[6 * YARD_SCALE, 0.15, 0.15]} />
-          <meshStandardMaterial color="#4fae7d" metalness={0.4} roughness={0.5} />
-        </mesh>
-      ))}
-      {/* crane animates while dispatch/reclaim work touches the product yard */}
-      <GantryCrane active={rec.crane_busy_task_type !== null} />
-    </group>
-  );
+  return null;
 }
 
-// Dispatch crane: box stand-in behind the seam (see BilletYardModel note — swap this component only).
-function DispatchCraneModel({ rec }: { rec: TickRecord }) {
-  const busy = rec.crane_busy_task_type !== null;
-  const reclaiming = rec.crane_busy_task_type === 'reclaiming' || rec.competing_queued;
+function TruckFleet({ rec }: { rec: TickRecord }) {
+  const gltf = GlbModel({ url: TRUCK_GLB_URL });
+  const rigs = useMemo(() => {
+    if (!gltf) return null;
+    return [0, 1, 2].map(() => {
+      const root: THREE.Group = gltf.clone();
+      const wheels = ['fl', 'fr', 'ml', 'mr', 'rl', 'rr'].map((n) => root.getObjectByName(`wheel_${n}`)).filter(Boolean) as THREE.Object3D[];
+      const bundle = root.getObjectByName('bundle');
+      if (bundle) bundle.visible = false;
+      root.traverse((o: THREE.Object3D) => { if (o instanceof THREE.Mesh) o.castShadow = true; });
+      return { root, wheels, bundle, travel: 0 };
+    });
+  }, [gltf]);
+
+  const idx = RESULT.records.indexOf(rec);
+  useFrame((_, dt) => {
+    if (!rigs) return;
+    const st = truckStateAt(idx);
+    // frame-eased progress within the active move (playback advances one record / 160 ms)
+    const span = SCENARIO.dispatch_crane.move_ticks;
+    const targetT = st ? Math.min(1, (idx - st.startIdx + 1) / span) : 0;
+    rigs.forEach((rig, slot) => {
+      rig.travel = rig.travel + (targetT - rig.travel) * Math.min(1, dt * 8);
+      const driving = !!st && st.slot === slot;
+      const t = driving ? rig.travel : 0;
+      // route: product yard -> dock lane (x lerps, z fans out to the order lane)
+      const oz = driving && st.orderIdx >= 0 ? (st.orderIdx - 1) * 2.6 : 0;
+      const x = driving ? LAYOUT.productYard.x + (LAYOUT.orders.x - LAYOUT.productYard.x) * t : TRUCK_PARK_X[slot];
+      const z = driving ? oz * t : TRUCK_LAYBY_Z;
+      rig.root.position.set(x, 0, z);
+      // face the travel direction (outbound: +x with a z fan toward the dock lane)
+      rig.root.rotation.y = driving ? Math.atan2(oz, LAYOUT.orders.x - LAYOUT.productYard.x) : Math.PI;
+      // honest wheel roll while moving (0.3 m radius -> rad/s from route speed)
+      rig.wheels.forEach((w) => { w.rotation.x -= dt * (driving ? 4 : 0); });
+      if (rig.bundle) rig.bundle.visible = driving && t < 0.999;
+    });
+  });
+
   return (
     <>
-      <Building pos={[LAYOUT.crane.x, 0, 0]} size={[1.2, 3.4, 1.2]} label="Dispatch Crane" color={busy ? (rec.crane_busy_task_type === 'reclaiming' ? '#8a6a3c' : '#1f4d73') : '#333b45'} accent={reclaiming ? '#e0b34f' : busy ? '#5a9fd4' : '#5a6572'} />
-      {/* jib arm toward the product yard; tilts while a task runs */}
-      <mesh position={[LAYOUT.crane.x - 1.8, 3.3, 0]} rotation={[0, 0, busy ? -0.12 : 0]}>
-        <boxGeometry args={[4.2, 0.18, 0.18]} />
-        <meshStandardMaterial color={reclaiming ? '#e0b34f' : '#6f7c8a'} />
-      </mesh>
+      {/* dispatch-yard label anchor (accent band shows crane-resource busy state honestly) */}
+      <Building pos={[LAYOUT.dispatch.x, 0, TRUCK_LAYBY_Z]} size={[0.001, 2.2, 0.001]} label="Dispatch" color="#2a3038" accent={rec.crane_busy_task_type ? '#5a9fd4' : '#5a6572'} />
+      {rigs && rigs.map((rig, i) => <primitive key={i} object={rig.root} />)}
     </>
   );
 }
@@ -370,30 +326,15 @@ function CarrierMove({ rec, prev }: { rec: TickRecord; prev: TickRecord }) {
   return <mesh position={[x, y, 0]}><boxGeometry args={[0.7, 0.5, 0.7]} /><meshStandardMaterial color="#e8a94f" emissive="#7a5320" emissiveIntensity={0.4} /></mesh>;
 }
 
-function DispatchMove({ rec, prev }: { rec: TickRecord; prev: TickRecord }) {
-  // reconstruct the in-flight dispatch payload from tick deltas (tonnes leave the yard at start)
-  const started = rec.product_yard_t < prev.product_yard_t - 1e-9 && rec.crane_busy_task_type === 'dispatch';
-  const completed = prev.crane_busy_task_type === 'dispatch' && rec.crane_busy_task_type !== 'dispatch';
-  if (!started && !completed) return null;
-  const ton = started ? prev.product_yard_t - rec.product_yard_t : 0.001;
-  const frac = useLerp(rec.tick, 160 * SCENARIO.dispatch_crane.move_ticks);
-  const t = completed ? 1 : frac;
-  const oid = rec.crane_busy_order ?? '';
-  const orderIdx = ['O1', 'O2', 'O3'].indexOf(oid);
-  const oz = orderIdx >= 0 ? (orderIdx - 1) * 2.6 : 0;
-  const x = LAYOUT.productYard.x + (LAYOUT.orders.x - LAYOUT.productYard.x) * t;
-  const z = oz * t;
-  const y = 1.4 + Math.sin(Math.PI * t) * 0.9;
-  if (started) LABELS.push({ id: 'dispatch', label: `${ton.toFixed(1)} t → ${oid}`, world: [x, y + 0.45, z], cls: 'tonlabel' });
-  return <mesh position={[x, y, z]}><boxGeometry args={[0.6, 0.45, 0.6]} /><meshStandardMaterial color="#5fd08f" emissive="#1f6b45" emissiveIntensity={0.5} /></mesh>;
-}
+// Dispatch payload is now carried by the truck itself (TruckFleet bundle node) — the old
+// flying-box arc was deleted with the crane stand-in (hero swap #7).
 
 // Competing reclaiming task: crane is preempted/reserved honestly — dispatch waits (non-preemptive
 // cycle; priority only reorders the queue). Shown as an amber pulse on the crane + queue badge.
 function CompetingBadge({ rec }: { rec: TickRecord }) {
   const active = rec.crane_busy_task_type === 'reclaiming' || rec.competing_queued;
   if (!active) return null;
-  LABELS.push({ id: 'competing', label: rec.crane_busy_task_type === 'reclaiming' ? 'crane busy: reclaiming (priority 1)' : 'reclaiming queued (priority 1)', world: [LAYOUT.crane.x, 4.3, 0], cls: 'tonlabel' });
+  LABELS.push({ id: 'competing', label: rec.crane_busy_task_type === 'reclaiming' ? 'crane busy: reclaiming (priority 1)' : 'reclaiming queued (priority 1)', world: [LAYOUT.dispatch.x, 4.3, TRUCK_LAYBY_Z], cls: 'tonlabel' });
   return null;
 }
 
@@ -425,21 +366,33 @@ function Scene({ idx }: { idx: number }) {
   const dist = Math.max(20, 21 / (2 * Math.tan((45 * Math.PI / 180) / 2)) * (aspect < 1.6 ? 1.6 / aspect : 1));
   const { pos } = useOrbitCamera(target, dist, 0, 35);
   return (
-    <Canvas camera={{ position: pos, fov: 45 }}>
+    <Canvas camera={{ position: pos, fov: 45 }} shadows
+      gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1 }}>
       <LabelCameraBridge />
       <ViewCamera home={{ target, azDeg: 0, elDeg: 35, dist, minDist: 8, maxDist: 55 }} />
-      <ambientLight intensity={0.35} />
-      <directionalLight position={[12, 18, 8]} intensity={1.4} />
-      <mesh position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]}><planeGeometry args={[26, 14]} /><meshStandardMaterial color="#17202a" /></mesh>
+      {/* S5.4-prep: same golden-hour rig as fullplant (palette.ts LIGHTING) — the slice twin was
+          ambient-only dark while the full game read daylight; Yasser 21.11. Fog skipped: the
+          slice plot is ~26 wide, fog_near 120 would be dead weight. */}
+      <color attach="background" args={[new THREE.Color('#3d4a58')]} />
+      <hemisphereLight color="#a8c4de" groundColor="#7a5f4b" intensity={1.1} />
+      <directionalLight
+        position={[-30, 42, 60]} color="#ffe2b8" intensity={3.2} castShadow
+        shadow-mapSize={[1024, 1024]}
+        shadow-camera-left={-25} shadow-camera-right={25}
+        shadow-camera-top={25} shadow-camera-bottom={-25}
+        shadow-camera-far={160} shadow-bias={-0.0005} />
+      <mesh position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow><planeGeometry args={[26, 14]} /><meshStandardMaterial color="#17202a" roughness={0.95} /></mesh>
       {/* carrier rail + dispatch gantry path cues */}
       <mesh position={[(LAYOUT.billetYard.x + LAYOUT.mill.x) / 2, 0.06, 0]} rotation={[-Math.PI / 2, 0, 0]}><planeGeometry args={[LAYOUT.mill.x - LAYOUT.billetYard.x + 2, 0.8]} /><meshStandardMaterial color="#232c36" /></mesh>
-      <BilletYardModel rec={rec} />
+      <GantryYardHero url={YARD_BILLET_GLB_URL} rec={rec} tonnage={rec.billet_yard_t} capacity={450}
+        label="Billet Yard" accent={['#c98a3a', '#5a6572']}
+        busy={rec.mill_busy || (rec.billet_yard_t > 0 && rec.mill_in_process_t > 0)} />
       <RebarMillModel rec={rec} />
-      <ProductYardModel rec={rec} />
-      <DispatchCraneModel rec={rec} />
+      <GantryYardHero url={YARD_PRODUCT_GLB_URL} rec={rec} tonnage={rec.product_yard_t} capacity={SCENARIO.product_yard.capacity_t}
+        label="Product Yard" accent={['#4fae7d', '#5a6572']} busy={rec.crane_busy_task_type !== null} />
+      <TruckFleet rec={rec} />
       <OrderDocks rec={rec} />
       <CarrierMove rec={rec} prev={prev} />
-      <DispatchMove rec={rec} prev={prev} />
       <CompetingBadge rec={rec} />
     </Canvas>
   );

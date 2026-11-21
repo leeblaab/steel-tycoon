@@ -138,3 +138,19 @@ gate = F-06 chapter swaps).
   (already carries instanceColor) — robust, no varying-availability assumptions. Billet
   instancing freed 17 draws (18 statics → 1): tap-time 134. Gate proven tick-by-tick:
   charge→melt→tap→cast + ladle x>8.5 + heat gradient + fade. Stage 4 COMPLETE.
+
+- **S5.1+S5.2 audit (21.11) — AUDIT OF 2 PASS:** REPORT-ID 1 closed as superseded by S5.1
+  `0f56557` + S5.2 `04c7d91`. Auditor nits accepted for later: S5.5 relabels "Shipped from the
+  mill" (counter is plant-wide dispatch via crane); REPORT-ID 3 must cover S5.3; i18n deferred
+  (game-phase concern); no fullplant HUD shipment strip before S5.5 (F-07).
+- **S5.3 scoping (awaiting Yasser sign-off):** reheat furnace folded INTO the rebar-mill hero
+  (no separate layout slot); wire-rod hero deferred — V3 covers the rebar branch only (F-08).
+- **S5.3b (21.11) — yard hero swaps #5/#6 + slice5 relight:** one shared `GantryYardHero`
+  component replaces six inline yard constructs; both yards from ONE procedural script
+  (`hero_gantry_yard.py`) with per-instance stock/truck node names. SME pass-2 fix law:
+  scale the model ROOT and re-pin by hero CENTRE (yard hero geometry runs z=0..11.76 forward
+  of its origin while layout pins sit at centre — `YARD_SCALE_H=1/3`, `YARD_CZ=5.88`).
+  Slice5 lighting = fullplant golden-hour rig verbatim (warm sun 3.2, hemisphere fill, ACES
+  tone mapping, shadows). R3F scene-graph extraction from devtools is not reliably reachable
+  in production builds (no __r3f canvas handle; blob/data-URL imports CSP-blocked) — verify
+  visual claims via mid-run screenshots + vision passes instead.
