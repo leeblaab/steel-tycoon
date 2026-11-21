@@ -179,6 +179,18 @@ end goal; desktop/browser for now. No-rush iterative cadence, one Go-gated micro
     (REPORT-ID 1) awaiting `inbox/AUDIT.md` verdict from pinned cron auditor.
   - NEXT: **S5.2 Dispatch revenue counter ONLY** (tonnage × price at dispatch; NO wallet/
     upgrades/spend — F-07 breadth freeze guard), after audit verdict lands.
+  - **S5.3 DONE (code + objective gates; SME sensory verdict PENDING)** — hero swap #4:
+    procedural rebar mill (`tools/blender/hero_rebar_mill.py`) replaces the rm-1024
+    ComfyUI GLB in ONE commit `bc5ee41` (add+delete law): beam-heating furnace + roller
+    table + 4 twin-column stands + run-out; named `charge_gate` node slides while feeding.
+    Budget PASS 572/2500 tris, 42,848/150,000 B (old GLB 1.63 MB deleted, 38x lighter).
+    Wired in slice5 twin + fullplant (`RebarMillFullplant`, busy from SESSION state);
+    suite 34/292 green, both vite builds OK, browser screenshot-verified at :5179
+    (idle close-up, mid-roll hot bar, zone fit — docs/evidence/s53/). Scoping decision
+    AWAITING YASSER SIGN-OFF: reheat furnace folded INTO the rebar-mill hero (no separate
+    layout slot; wire-rod hero deferred per "V3 covers the rebar branch only").
+  - NEXT: sensory pass with Yasser on the S5.3 hero, then S5.4 per PLAN_FORGED; Qwen4-max
+    audit REPORT-ID 1 verdict still pending in `inbox/`.
 
 ## The game as it plays today
 Fullplant app (`web/src/ports/fullplant`, dev port 5178 via `start_digital_twin_v2.bat` —
