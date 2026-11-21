@@ -6,9 +6,25 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 const { useEffect, useMemo, useRef, useState } = React;
 import { runSlice5, SCENARIO, PRICE_MID_B500B, type RunResult, type TickRecord } from './sim.js';
+import { lerpFlow, millFlow } from './mill_flow.js';
 
 // ---------- Simulation (deterministic mirror port; 3D layer never drives logic) ----------
 const RESULT: RunResult = runSlice5();
+
+// S5.4 — per-tick mill flow (pure projection of the TickRecord stream, no playback state).
+// roll_ticks is constant across the run; elapsed = roll_ticks - remaining is recovered
+// from the busy edges: the first mill_busy record after an idle gap is the roll-start tick.
+const ROLL_TICKS = SCENARIO.rebar_mill.roll_ticks;
+const MILL_FLOWS = (() => {
+  const flows: (ReturnType<typeof millFlow>)[] = [];
+  let startTick: number | null = null;
+  for (const r of RESULT.records) {
+    if (r.mill_busy && startTick === null) startTick = r.tick;
+    if (!r.mill_busy) startTick = null;
+    flows.push(millFlow(r.mill_busy, startTick === null ? 0 : r.tick - startTick, ROLL_TICKS));
+  }
+  return flows;
+})();
 // Print the programmatic fixture verification into the browser console too (verification bar (a)).
 console.log(`[S5 verify ${RESULT.verify.ok ? 'ALL MATCH' : 'MISMATCH'}]`);
 for (const line of RESULT.verify.lines) console.log(line);
@@ -166,10 +182,19 @@ function GantryYardHero({ url, rec, tonnage, capacity, label, accent, busy }: {
 // Replaces "rm 1024.glb" (ComfyUI box line, 1.63MB) -> 43KB / 572 tris / 4 draws.
 // Built at FINAL scene size (scale 1): furnace x -4.1..-1.1, 4 stands, run-out to +x
 // toward the product yard. charge_gate is the named animatable node (slides while the
-// mill feeds); mouth glow + bar-on-table overlays are renderer-side, busy-gated.
+// mill feeds). S5.4 nod animations: everything below is driven by MILL_FLOWS — the pure
+// per-tick projection (mill_flow.ts) of the TickRecord stream, interpolated between
+// frames for smooth playback. Determinism rule 5: no RNG, no clocks; channels are
+// projections of state. Phases: reheat discharge glow -> glowing bar threads stands
+// getting longer as it thins -> cooling-bed walk-out with glow fading hot->black ->
+// cold shear + bundle cue at the bed exit (SME non-negotiables).
 const MILL_GLB_URL = new URL('./assets/rebar_mill_hero.glb', import.meta.url).href;
+const MILL_BAR_Y = 0.95;      // roll centreline (matches hero geometry)
+const MILL_BED_Z = 1.35;      // cooling bed sits south of the mill line (visible band)
+const MILL_BED_X0 = 1.6;      // bed entry / exit x (local to the mill group)
+const MILL_BED_X1 = 4.6;
 
-function RebarMillModel({ rec }: { rec: TickRecord }) {
+function RebarMillModel({ rec, idx }: { rec: TickRecord; idx: number }) {
   const busy = rec.mill_busy;
   const gltf = GlbModel({ url: MILL_GLB_URL });
   const rig = React.useMemo(() => {
@@ -178,31 +203,78 @@ function RebarMillModel({ rec }: { rec: TickRecord }) {
     const gate = root.getObjectByName('charge_gate');
     if (gate) (gate as THREE.Mesh).userData.bindX = gate.position.x;
     root.traverse((o: THREE.Object3D) => { if (o instanceof THREE.Mesh) o.castShadow = true; });
-    // furnace mouth glow — visible ONLY while rolling (charge side faces -x)
+    // furnace mouth glow — bright during the reheat-discharge window, dim while rolling
+    // toneMapped:false — ACES was desaturating the hot-metal orange toward tan at these
+    // emissive intensities (vision checks kept reading "flat yellow paint, no glow").
     const glow = new THREE.Mesh(new THREE.BoxGeometry(0.1, 1.15, 1.0),
-      new THREE.MeshStandardMaterial({ color: '#ff7040', emissive: '#ff7040', emissiveIntensity: 0.8 }));
+      new THREE.MeshStandardMaterial({ color: '#ff7040', emissive: '#ff7040', emissiveIntensity: 2.2, toneMapped: false }));
     glow.position.set(-1.22, 0.72, 0); glow.visible = false;
     root.add(glow);
-    // hot bar on the run-out table while a batch is in process (roll centreline y~0.9)
-    const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.14, 5.6, 8),
-      new THREE.MeshStandardMaterial({ color: '#c98a3a', emissive: '#c98a3a', emissiveIntensity: 0.6 }));
-    bar.rotation.z = Math.PI / 2; bar.position.set(1.4, 0.95, 0); bar.visible = false;
+    // glowing bar threading the stands (rolling phase): head at flow.barHeadX, tail
+    // anchored in the furnace exit; length grows with elongation (longer as it thins).
+    const bar = new THREE.Mesh(new THREE.BoxGeometry(1, 0.12, 0.12),
+      new THREE.MeshStandardMaterial({ color: '#ff9a50', emissive: '#ff8030', emissiveIntensity: 2.4, toneMapped: false }));
+    bar.position.set(0, MILL_BAR_Y, 0); bar.visible = false;
     root.add(bar);
+    // shear flash at the bed exit (cold bar being cut to length + bundled)
+    const shearFlash = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.5, 0.5),
+      new THREE.MeshStandardMaterial({ color: '#e8f4ff', emissive: '#bfe0ff', emissiveIntensity: 2.6, toneMapped: false }));
+    shearFlash.position.set(MILL_BED_X1 + 0.3, 0.35, MILL_BED_Z); shearFlash.visible = false;
+    root.add(shearFlash);
+    // cooling-bed bars: a row of bars stepping across the walking beam (S5.4-prep hero
+    // has no bed geometry; the bars read as the bed). Glow fades 1 -> 0 hot->black.
+    const bars: THREE.Mesh[] = [];
+    for (let i = 0; i < 6; i++) {
+      const b = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.1, 0.1),
+        new THREE.MeshStandardMaterial({ color: '#ff9a50', emissive: '#ff8030', emissiveIntensity: 2.4, toneMapped: false }));
+      b.position.set(MILL_BED_X0 + (i % 3) * 1.0, 0.3 + Math.floor(i / 3) * 0.22, MILL_BED_Z + (i % 2) * 0.18);
+      b.visible = false; root.add(b); bars.push(b);
+    }
     const holder = new THREE.Group(); holder.add(root);
-    return { holder, gate, glow, bar };
+    return { holder, gate, glow, bar, bars, shearFlash };
   }, [gltf]);
 
-  // charge-gate slide: eased open while feeding (roll start), eased shut otherwise.
-  useFrame((_, dt) => {
+  // Every channel below is a pure projection: lerp between the two bracketing tick
+  // frames (fractional playback position), never an independent clock.
+  useFrame(({ clock }, dt) => {
     if (!rig) return;
+    const frac = (clock.elapsedTime % 0.16) / 0.16;   // sub-tick phase of the 160ms cadence
+    const flow = lerpFlow(MILL_FLOWS[idx], MILL_FLOWS[Math.min(idx + 1, MILL_FLOWS.length - 1)], frac);
+    // charge-gate slide: eased open while feeding (roll start), eased shut otherwise.
     const open = busy ? 0.9 : 0;
     const cur = (rig as any).gateDisp ?? 0;
     const next = cur + (open - cur) * (1 - Math.exp(-dt / 0.8));
     (rig as any).gateDisp = next;
     if (rig.gate) rig.gate.position.x = (rig.gate.userData.bindX as number) + next;
-    rig.glow.visible = busy;
-    rig.bar.visible = rec.mill_in_process_t > 0;
-    (rig.bar.material as THREE.MeshStandardMaterial).emissiveIntensity = busy ? 0.6 : 0.2;
+    // reheat discharge glow at roll start; steady dim while the bar threads through.
+    rig.glow.visible = flow.active;
+    (rig.glow.material as THREE.MeshStandardMaterial).emissiveIntensity = flow.discharging ? 1.6 : 0.5;
+    // rolling: glowing bar head threads the stands, tail in the furnace exit, length
+    // grows with elongation (mass-flow continuity: longer as it thins).
+    if (flow.barHeadX !== null) {
+      const x0 = -1.1;                                  // furnace exit (hero geometry)
+      const len = Math.max(0.3, flow.barHeadX! - x0);
+      rig.bar.visible = true;
+      rig.bar.scale.x = len;                            // unit box scaled to length
+      rig.bar.position.set(x0 + len / 2, MILL_BAR_Y, 0);
+      const thin = 1 / Math.sqrt(flow.elongation);      // thins as it lengthens
+      rig.bar.scale.y = rig.bar.scale.z = thin;
+      (rig.bar.material as THREE.MeshStandardMaterial).emissiveIntensity = 1.2 * flow.glow + 0.1;
+    } else {
+      rig.bar.visible = false;
+    }
+    // cooling bed: bars step across, glow fading hot -> black; cold at shear.
+    const showBed = flow.phase === 'cooling' || flow.phase === 'shear';
+    rig.bars.forEach((b, i) => {
+      b.visible = showBed;
+      if (!showBed) return;
+      const step = (i % 3) * 1.0 + flow.bedWalk * 1.0;  // one pitch walk across the bed
+      b.position.x = MILL_BED_X0 + step;
+      const mat = b.material as THREE.MeshStandardMaterial;
+      mat.emissiveIntensity = 1.2 * flow.glow;
+      mat.color.setRGB(0.5 + 0.5 * flow.glow, 0.35 + 0.25 * flow.glow, 0.25);
+    });
+    rig.shearFlash.visible = flow.shearing;
   });
 
   return (
@@ -387,7 +459,7 @@ function Scene({ idx }: { idx: number }) {
       <GantryYardHero url={YARD_BILLET_GLB_URL} rec={rec} tonnage={rec.billet_yard_t} capacity={450}
         label="Billet Yard" accent={['#c98a3a', '#5a6572']}
         busy={rec.mill_busy || (rec.billet_yard_t > 0 && rec.mill_in_process_t > 0)} />
-      <RebarMillModel rec={rec} />
+      <RebarMillModel rec={rec} idx={idx} />
       <GantryYardHero url={YARD_PRODUCT_GLB_URL} rec={rec} tonnage={rec.product_yard_t} capacity={SCENARIO.product_yard.capacity_t}
         label="Product Yard" accent={['#4fae7d', '#5a6572']} busy={rec.crane_busy_task_type !== null} />
       <TruckFleet rec={rec} />
