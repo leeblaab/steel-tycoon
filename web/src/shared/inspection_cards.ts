@@ -109,7 +109,9 @@ export function inspectSlice5Slot(slot: SlotDef, st: S5StateView): InspectionCar
       // S5.2: dispatch revenue counter ONLY — tonnage × price at the actual dispatch
       // outflow (price ladder midpoint, sme_pending). Display only; no wallet systems.
       const shipped = st.counters.dispatched_t_total ?? 0;
-      lines.push(`Shipped from the mill: ${shipped.toFixed(1)} t dispatched.`);
+      // S5.2 counter; S5.5 relabel per auditor nit: this counts plant-wide dispatch outflow
+      // (product yard -> orders), not mill-direct shipments.
+      lines.push(`Shipped from the plant: ${shipped.toFixed(1)} t dispatched.`);
       lines.push(`Dispatch revenue so far: $${Math.round(st.counters.revenue_usd ?? 0).toLocaleString('en-US')}.`);
       return {
         slot_id: slot.id,

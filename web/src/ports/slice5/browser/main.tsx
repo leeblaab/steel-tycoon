@@ -7,6 +7,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 const { useEffect, useMemo, useRef, useState } = React;
 import { runSlice5, SCENARIO, PRICE_MID_B500B, type RunResult, type TickRecord } from './sim.js';
 import { lerpFlow, millFlow } from './mill_flow.js';
+import { weighbridgeTicket, yardBundles } from './ship_flow.js';
 
 // ---------- Simulation (deterministic mirror port; 3D layer never drives logic) ----------
 const RESULT: RunResult = runSlice5();
@@ -375,6 +376,19 @@ function TruckFleet({ rec }: { rec: TickRecord }) {
   );
 }
 
+// ---------- S5.5 shipment counter roll: big cumulative-dispatch readout (presentation) ----------
+// The number is the sim's own dispatched_t_total for the current record — no new math; this
+// is the Chapter-6 "counter roll" beat so the player sees tonnes leave the plant grow.
+function ShipmentCounter({ rec }: { rec: TickRecord }) {
+  LABELS.push({ id: 'shipboard', label: `Shipped: ${rec.dispatched_t.toFixed(1)} t`, world: [LAYOUT.orders.x, 2.5, -4.2], cls: 'tonlabel' });
+  return (
+    <group position={[LAYOUT.orders.x, 0, -4.2]}>
+      <mesh position={[0, 1.1, 0]} castShadow><boxGeometry args={[2.6, 2.2, 0.3]} /><meshStandardMaterial color="#20272f" roughness={0.8} /></mesh>
+      <mesh position={[0, 1.45, 0.17]}><planeGeometry args={[2.2, 0.9]} /><meshStandardMaterial color="#0c1116" emissive="#3fae6a" emissiveIntensity={0.35} /></mesh>
+    </group>
+  );
+}
+
 // ---------- Animated carriers (interpolated between recorded tick states) ----------
 // A move spans [startTick, startTick + moveTicks]; the payload cube lerps along its path and
 // carries a tonnage label. Progress within the current tick comes from the playback clock.
@@ -429,6 +443,77 @@ function OrderDocks({ rec }: { rec: TickRecord }) {
   );
 }
 
+// ---------- S5.5 finished yard: strapped rebar bundles (pure projection, rule 5) ----------
+// Units = floor(product_yard_t / BUNDLE_T) — the SAME floor division as productYardView in
+// slice5_sim.ts / slice5_mirror.py (presentation view; loose remainder stays tonnage, F-08).
+// One InstancedMesh (1 draw): hex cross-section bundles lying along x, ground row across the
+// yard footprint then stacked tiers. The gantry hero's stock_bays already read fill level from
+// tonnes — these bundles are the finished-goods layer on top, shown only while stock exists.
+const BUNDLE_SCALE = 0.25;                       // hex radius 0.5 -> 0.125; flat-to-flat 0.216
+const BUNDLE_PITCH_Z = 0.24;                     // ground-row spacing (visible strap gap)
+const BUNDLE_TIER_DY = 0.217;                    // stack step ~ hex flat-to-flat (2*0.5*cos30*scale)
+const BUNDLE_PER_ROW = 10;                       // bundles per stacked tier
+const MAX_BUNDLE_PROPS = 28;                     // InstancedMesh cap (mobile budget)
+
+function FinishedBundles({ rec }: { rec: TickRecord }) {
+  const mesh = useRef<THREE.InstancedMesh>(null);
+  const shown = useRef(-1);
+  useFrame(() => {
+    const m = mesh.current;
+    if (!m) return;
+    const y = yardBundles(rec.product_yard_t);
+    const lit = Math.min(MAX_BUNDLE_PROPS, y.units);
+    if (lit === shown.current) return; // instances are static once set — cheap per frame
+    shown.current = lit;
+    const dummy = new THREE.Object3D();
+    for (let i = 0; i < MAX_BUNDLE_PROPS; i++) {
+      if (i < lit) {
+        const row = Math.floor(i / BUNDLE_PER_ROW), k = i % BUNDLE_PER_ROW;
+        // yard hero slab spans z ~1.96..7.84 at x=3; bundles sit on it, centred band
+        dummy.position.set(0, 0.35 + row * BUNDLE_TIER_DY, 2.4 + k * BUNDLE_PITCH_Z);
+        dummy.rotation.set(0, 0, Math.PI / 2);   // cylinder y-axis -> x (bundle lies along x)
+        dummy.scale.setScalar(BUNDLE_SCALE);
+        dummy.updateMatrix();
+        m.setMatrixAt(i, dummy.matrix);
+      } else {
+        dummy.position.set(0, -10, 0); dummy.scale.setScalar(0.0001); // hidden below floor
+        dummy.updateMatrix();
+        m.setMatrixAt(i, dummy.matrix);
+      }
+    }
+    m.instanceMatrix.needsUpdate = true;
+  });
+  return (
+    <group position={[LAYOUT.productYard.x, 0, 0]}>
+      <instancedMesh ref={mesh} args={[undefined, undefined, MAX_BUNDLE_PROPS]} frustumCulled={false}>
+        <cylinderGeometry args={[0.5, 0.5, 4.2, 6]} /> {/* hex cross-section = strapped bundle */}
+        <meshStandardMaterial color="#4fae7d" metalness={0.35} roughness={0.55} />
+      </instancedMesh>
+    </group>
+  );
+}
+
+// ---------- S5.5 weighbridge: the truck's load ticket at the dock (presentation beat) ----------
+// The tonnage is NOT invented here — it is the same per-move delta buildDispatchMoves()
+// reconstructs from the recorded ticks; the bridge just surfaces it as a load-cell label
+// while a loaded truck is on the last stretch of its route.
+function Weighbridge({ rec }: { rec: TickRecord }) {
+  const idx = RESULT.records.indexOf(rec);
+  const st = truckStateAt(idx);
+  const move = st ? DISPATCH_MOVES.get(st.startIdx) : undefined;
+  const atBridge = !!st && !!move && move.tonnage > 0.5;
+  const wx = LAYOUT.orders.x - 1.6; // bridge sits just landward of the dock row
+  LABELS.push({ id: 'weighbridge', label: atBridge ? `Weighbridge: ${weighbridgeTicket(move!.tonnage)}` : 'Weighbridge', world: [wx, 0.9, 0], cls: 'tonlabel' });
+  return (
+    <group position={[wx, 0, 0]}>
+      {/* deck slab + two low kerbs — a road scale, not a building */}
+      <mesh position={[0, 0.06, 0]} receiveShadow><boxGeometry args={[1.8, 0.12, 2.4]} /><meshStandardMaterial color="#39424e" roughness={0.9} /></mesh>
+      <mesh position={[0, 0.14, 1.25]}><boxGeometry args={[1.8, 0.16, 0.12]} /><meshStandardMaterial color={atBridge ? '#e0b34f' : '#5a6572'} emissive={atBridge ? '#e0b34f' : '#000000'} emissiveIntensity={atBridge ? 0.5 : 0} /></mesh>
+      <mesh position={[0, 0.14, -1.25]}><boxGeometry args={[1.8, 0.16, 0.12]} /><meshStandardMaterial color={atBridge ? '#e0b34f' : '#5a6572'} emissive={atBridge ? '#e0b34f' : '#000000'} emissiveIntensity={atBridge ? 0.5 : 0} /></mesh>
+    </group>
+  );
+}
+
 function Scene({ idx }: { idx: number }) {
   LABELS = [];
   const rec = RESULT.records[idx];
@@ -464,6 +549,9 @@ function Scene({ idx }: { idx: number }) {
         label="Product Yard" accent={['#4fae7d', '#5a6572']} busy={rec.crane_busy_task_type !== null} />
       <TruckFleet rec={rec} />
       <OrderDocks rec={rec} />
+      <FinishedBundles rec={rec} />
+      <Weighbridge rec={rec} />
+      <ShipmentCounter rec={rec} />
       <CarrierMove rec={rec} prev={prev} />
       <CompetingBadge rec={rec} />
     </Canvas>
