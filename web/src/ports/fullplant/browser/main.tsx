@@ -1084,6 +1084,47 @@ function Slice4({ at }: { at: [number, number, number] }) {
   );
 }
 
+// ---------- S5.3: animated rebar-mill hero (charge gate slides while feeding) ----------
+// Procedural hero (tools/blender/hero_rebar_mill.py) replaces the rm-1024 ComfyUI GLB.
+// Built at final scene size (scale 1). charge_gate named node slides +x while the mill
+// feeds; mouth glow is busy-gated — same state source as FlowPulse below.
+function RebarMillFullplant({ pos }: { pos: [number, number, number] }) {
+  const [gltf, setGltf] = React.useState<any>(null);
+  React.useEffect(() => {
+    let alive = true;
+    new GLTFLoader().load(`${S5}rebar_mill_hero.glb`, (g: { scene: THREE.Group }) => { if (alive) setGltf(g.scene); },
+      undefined, (err: unknown) => console.error(`GLB load failed (rebar_mill_hero):`, err));
+    return () => { alive = false; };
+  }, []);
+  const rig = React.useMemo(() => {
+    if (!gltf) return null;
+    const root: any = gltf.clone();
+    const gate = root.getObjectByName('charge_gate');
+    if (gate) gate.userData.bindX = gate.position.x;
+    root.traverse((o: any) => { if (o.isMesh) o.castShadow = true; });
+    const glow: any = new THREE.Mesh(new THREE.BoxGeometry(0.1, 1.15, 1.0),
+      new THREE.MeshStandardMaterial({ color: '#ff7040', emissive: '#ff7040', emissiveIntensity: 0.8 }));
+    glow.position.set(-1.22, 0.72, 0); glow.visible = false;
+    root.add(glow);
+    const holder: any = new THREE.Group(); holder.add(root);
+    return { holder, gate, glow, lastT: 0, gateDisp: 0 };
+  }, [gltf]);
+  useRafLoop(() => {
+    if (!rig) return;
+    const s5: any = SESSION.stateOf('slice5');
+    const busy = !!s5?.mill?.busy;
+    const now = performance.now() / 1000;
+    const dt = Math.max(0, Math.min(0.1, rig.lastT ? now - rig.lastT : 0.016)); rig.lastT = now;
+    const cur = rig.gateDisp ?? 0;
+    const next = cur + ((busy ? 0.9 : 0) - cur) * (1 - Math.exp(-dt / 0.8));
+    rig.gateDisp = next;
+    if (rig.gate) rig.gate.position.x = rig.gate.userData.bindX + next;
+    rig.glow.visible = busy;
+  });
+  if (!rig) return null;
+  return <primitive object={rig.holder} position={pos} />;
+}
+
 // ---------- Slice 5: rebar mill GLB + product-yard gantry + order docks ----------
 function Slice5({ at }: { at: [number, number, number] }) {
   const steel = <meshStandardMaterial color="#4a5563" metalness={0.6} roughness={0.45} />;
@@ -1093,10 +1134,8 @@ function Slice5({ at }: { at: [number, number, number] }) {
   const docks = SESSION.builtNode('dispatch');
   return (
     <group position={at}>
-      {mill && <><Glb url={`${S5}rebar_mill.glb`} scale={4} pos={[-2, 0, 0]} />
-      <FlowPulse from={[-6, 0.8, 0]} to={[1.5, 0.7, 0]} active={() => !!(SESSION.stateOf('slice5') as any)?.mill?.busy} color="#4fae7d" />
-      {/* cooling bed */}
-      <mesh position={[0.6, 0.45, 0]}><boxGeometry args={[2.6, 0.3, 1.4]} /><meshStandardMaterial color="#2a3038" metalness={0.5} roughness={0.5} /></mesh></>}
+      {mill && <><RebarMillFullplant pos={[-2, 0, 0]} />
+      <FlowPulse from={[-6, 0.8, 0]} to={[1.5, 0.7, 0]} active={() => !!(SESSION.stateOf('slice5') as any)?.mill?.busy} color="#4fae7d" /></>}
       {/* product yard gantry with green bundles */}
       {yard5 && <group position={[3, 0, 0]}>
         {[-2.6, 2.6].map((dx) => (

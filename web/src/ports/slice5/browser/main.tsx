@@ -183,36 +183,54 @@ function BilletYardModel({ rec }: { rec: TickRecord }) {
   );
 }
 
-// Rebar mill -> "rm 1024.glb" (ComfyUI, 25.10), was the reheating-furnace + 3-stand box line.
-// Compressed 20MB -> 1.63MB (weld/simplify/quantize). Scale knob MILL_MODEL_SCALE (normalized
-// model like drp/jetty; mill plot ~3.6m wide + run-out -> start at 4, tune from screenshots).
-const MILL_GLB_URL = new URL('./assets/rebar_mill.glb', import.meta.url).href;
-const MILL_MODEL_SCALE = 4;
+// S5.3 hero swap #4: procedural rebar mill (tools/blender/hero_rebar_mill.py, FORGED F-01).
+// Replaces "rm 1024.glb" (ComfyUI box line, 1.63MB) -> 43KB / 572 tris / 4 draws.
+// Built at FINAL scene size (scale 1): furnace x -4.1..-1.1, 4 stands, run-out to +x
+// toward the product yard. charge_gate is the named animatable node (slides while the
+// mill feeds); mouth glow + bar-on-table overlays are renderer-side, busy-gated.
+const MILL_GLB_URL = new URL('./assets/rebar_mill_hero.glb', import.meta.url).href;
 
 function RebarMillModel({ rec }: { rec: TickRecord }) {
   const busy = rec.mill_busy;
   const gltf = GlbModel({ url: MILL_GLB_URL });
-  const scaled: THREE.Group | null = gltf ? gltf.clone() : null;
-  if (scaled) {
-    scaled.scale.setScalar(MILL_MODEL_SCALE);
-    scaled.traverse((o: THREE.Object3D) => { if (o instanceof THREE.Mesh) o.castShadow = true; });
-  }
-  const minY = scaled ? new THREE.Box3().setFromObject(scaled).min.y : 0;
+  const rig = React.useMemo(() => {
+    if (!gltf) return null;
+    const root: THREE.Group = gltf.clone();
+    const gate = root.getObjectByName('charge_gate');
+    if (gate) (gate as THREE.Mesh).userData.bindX = gate.position.x;
+    root.traverse((o: THREE.Object3D) => { if (o instanceof THREE.Mesh) o.castShadow = true; });
+    // furnace mouth glow — visible ONLY while rolling (charge side faces -x)
+    const glow = new THREE.Mesh(new THREE.BoxGeometry(0.1, 1.15, 1.0),
+      new THREE.MeshStandardMaterial({ color: '#ff7040', emissive: '#ff7040', emissiveIntensity: 0.8 }));
+    glow.position.set(-1.22, 0.72, 0); glow.visible = false;
+    root.add(glow);
+    // hot bar on the run-out table while a batch is in process (roll centreline y~0.9)
+    const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.14, 5.6, 8),
+      new THREE.MeshStandardMaterial({ color: '#c98a3a', emissive: '#c98a3a', emissiveIntensity: 0.6 }));
+    bar.rotation.z = Math.PI / 2; bar.position.set(1.4, 0.95, 0); bar.visible = false;
+    root.add(bar);
+    const holder = new THREE.Group(); holder.add(root);
+    return { holder, gate, glow, bar };
+  }, [gltf]);
+
+  // charge-gate slide: eased open while feeding (roll start), eased shut otherwise.
+  useFrame((_, dt) => {
+    if (!rig) return;
+    const open = busy ? 0.9 : 0;
+    const cur = (rig as any).gateDisp ?? 0;
+    const next = cur + (open - cur) * (1 - Math.exp(-dt / 0.8));
+    (rig as any).gateDisp = next;
+    if (rig.gate) rig.gate.position.x = (rig.gate.userData.bindX as number) + next;
+    rig.glow.visible = busy;
+    rig.bar.visible = rec.mill_in_process_t > 0;
+    (rig.bar.material as THREE.MeshStandardMaterial).emissiveIntensity = busy ? 0.6 : 0.2;
+  });
+
   return (
     <>
       {/* mill hall label anchor (invisible; accent band shows busy state) */}
       <Building pos={[LAYOUT.mill.x, 0, 0]} size={[0.001, 5.5, 0.001]} label="Rebar Mill" color="#333b45" accent={busy ? '#e07070' : '#5a6572'} />
-      {scaled && <primitive object={scaled} position={[LAYOUT.mill.x, -minY, 0]} />}
-      {/* reheating-furnace mouth glow kept as the busy-state cue */}
-      {busy && <mesh position={[LAYOUT.mill.x - 1.5, 0.7, 1.15]}><boxGeometry args={[0.8, 0.5, 0.1]} /><meshStandardMaterial color="#ff7040" emissive="#ff7040" emissiveIntensity={0.8} /></mesh>}
-      {/* cooling bed / run-out table leaving toward the product yard */}
-      <mesh position={[LAYOUT.mill.x + 2.6, 0.45, 0]}><boxGeometry args={[2.6, 0.3, 1.4]} /><meshStandardMaterial color="#2a3038" metalness={0.5} roughness={0.5} /></mesh>
-      {rec.mill_in_process_t > 0 && (
-        <mesh position={[LAYOUT.mill.x + 1.6, 0.72, 0]} rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[0.14, 0.14, 3.4, 8]} />
-          <meshStandardMaterial color="#c98a3a" emissive="#c98a3a" emissiveIntensity={busy ? 0.6 : 0.2} />
-        </mesh>
-      )}
+      {rig && <primitive object={rig.holder} position={[LAYOUT.mill.x, 0, 0]} />}
     </>
   );
 }
