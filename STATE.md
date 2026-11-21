@@ -223,6 +223,24 @@ end goal; desktop/browser for now. No-rush iterative cadence, one Go-gated micro
   - NEXT: **S5.4 mill nod animations** per PLAN_FORGED (glowing bar threads stands getting
     longer as it thins; cooling-bed walk-out with glow fading to black; reheat discharge glow;
     bundle strapping) — Yasser Go'd S5.4 + "once done proceed to next" (S5.5), AFK during batch.
+  - **S5.4 DONE (code + objective gates; SME sensory verdict PENDING)** — commit `0743d68`
+    (pushed): mill nod animations driven by the S5.1 mill_process_view via a NEW pure
+    projection layer `web/src/ports/slice5/browser/mill_flow.ts` — per-tick `MillFlow`
+    (phase, barHeadX −0.81→0.84 elongation, bedWalk, glowFade hot→black, strap cue),
+    deterministic no-RNG (rule 5), interpolated between ticks with sub-tick wall-clock frac
+    (S2.2 pattern). `RebarMillModel` renders: reheat discharge glow at furnace mouth, glowing
+    bar threading the stands getting longer as it thins, cooling-bed bars walking out with
+    emissive fading to black, shear/strapping flash at bed exit. Emissive materials
+    `toneMapped:false` — ACES desaturated hot-metal orange toward tan (the "flat yellow paint"
+    vision reads); fixed. +9 projection tests; suite **35 files / 301 green**. Live gate:
+    RAF-freeze pixel probes at :4173 (big viewport) show emissive-orange px during the
+    rolling window (busy [5,10],[12,17],… roll_ticks=6); tick-by-tick timeline matches sim.
+    Caveat logged: RAF keeps repainting between CDP screenshots — freeze
+    `requestAnimationFrame` before pixel-probing a stepped (paused) twin. Evidence in
+    browser workspace (frozen_t7.png). Sensory pass with Yasser pending; S5.3 scoping
+    sign-off still awaited.
+  - NEXT: **S5.5 shipment/finish stage** per PLAN_FORGED ("Shipped from the mill" relabel per
+    auditor nit) — Go'd by Yasser ("once S5.4 is done proceed to next").
 
 ## The game as it plays today
 Fullplant app (`web/src/ports/fullplant`, dev port 5178 via `start_digital_twin_v2.bat` —
@@ -242,8 +260,8 @@ EAF/LF/CCM, slice5 mills); each is a pure tick engine with a Python mirror + par
 - Unknown values are asked, never invented.
 
 ## Verified facts (measured, not remembered — re-measure if in doubt)
-- Test suite: `cd web && npx vitest run --root .` → **34 files / 292 tests green** (re-measured
-  21.11 post-S5.3b; +12 caster-pose/billet-fade/ladle-continuation/parity/revenue tests since S4.2).
+- Test suite: `cd web && npx vitest run --root .` → **35 files / 301 tests green** (re-measured
+  21.11 post-S5.4; +9 mill_flow projection tests since S5.3b).
 - Fresh-clone gate passed at S0.1 (stranger's clone builds and plays step 1).
 - Remote master head: S1.3 hero-swap commit (20.11) — in sync after push; `git log -1` for hash.
 - S1.3 perf (headless SwiftShader, relative deltas only): GLB download 16.5 MB, tris/frame 6.8k,

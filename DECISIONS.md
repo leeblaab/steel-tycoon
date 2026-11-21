@@ -154,3 +154,13 @@ gate = F-06 chapter swaps).
   tone mapping, shadows). R3F scene-graph extraction from devtools is not reliably reachable
   in production builds (no __r3f canvas handle; blob/data-URL imports CSP-blocked) — verify
   visual claims via mid-run screenshots + vision passes instead.
+
+- **S5.4 (21.11) — mill nod animations (`0743d68`):** animation layer is a PURE projection
+  (`mill_flow.ts`) over the S5.1 mill_process_view TickRecords — no sim/RNG changes (rule 5).
+  Sub-tick wall-clock frac interpolation between per-tick MillFlow snapshots (S2.2 pattern;
+  1-tick phases would never animate otherwise). KEY PITFALL: emissive hot-metal materials
+  read as flat tan under ACESFilmicToneMapping — set `toneMapped:false` on glow materials
+  (emissiveIntensity ~2.2-2.6). KEY VERIFICATION TRICK: R3F keeps repainting via RAF between
+  CDP screenshots, so pixel probes of a paused/stepped twin must freeze
+  `window.requestAnimationFrame = () => 0` first; at small canvas sizes the mill band is a
+  few px wide — use Emulation.setDeviceMetricsOverride (1600x1000 dsf=2) for probes.
