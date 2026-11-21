@@ -241,6 +241,14 @@ end goal; desktop/browser for now. No-rush iterative cadence, one Go-gated micro
     sign-off still awaited.
   - NEXT: **S5.5 shipment/finish stage** per PLAN_FORGED ("Shipped from the mill" relabel per
     auditor nit) — Go'd by Yasser ("once S5.4 is done proceed to next").
+  - **S5.5 WIP pushed `4a7ff1b` (21.11, end-of-session save at Yasser's request)**: pure
+    projections `ship_flow.ts` (yardBundles = floor(t/2 t) strapped-bundle count matching
+    productYardView math; weighbridgeTicket while a loaded truck is on the bridge — 7 tests) +
+    main.tsx FinishedBundles (InstancedMesh hex stacks in product yard), Weighbridge (deck +
+    amber kerbs + ticket label at dock), ShipmentCounter billboard ("Shipped: X t").
+    inspection_cards nit "Shipped from the mill"→"the plant". Suite 36 files / 308 green,
+    vite build clean. NOT yet browser-verified — remaining S5.5 steps: visual verification +
+    campaign-walk gate + STATE/DECISIONS close-out entry.
 
 ## The game as it plays today
 Fullplant app (`web/src/ports/fullplant`, dev port 5178 via `start_digital_twin_v2.bat` —
