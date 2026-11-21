@@ -49,3 +49,6 @@ content/_vendor/cc0/*
 !content/_vendor/cc0/cc0_mapping_draft.json
 !content/_vendor/cc0/LICENSES.md
 
+
+# agent planner/auditor pipeline (transient)
+inbox/

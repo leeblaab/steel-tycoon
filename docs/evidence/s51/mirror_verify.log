@@ -1,0 +1,26 @@
+scenario: s5_billet_rebar_dispatch_orders_seed11_120
+win: False
+orders: [('O1', 'completed', 39.2), ('O2', 'completed', 39.2), ('O3', 'partial', 19.6)]
+carrier moves: 10  rolls: 10  dispatch moves: 10
+blocked dispatch attempts: 63 (empty-yard: 63)  crane wait: 0  mill wait: 0  mill starved: 0
+product yard refusals: 0  yield loss: 2.0 t
+dispatched: 98.0 t  revenue: 62230.0 USD (B500B mid 635.0, sme_pending band, midpoint convention)
+balance error at end: 2.1316282072803006e-14
+S5.1 process: reheat discharges 10  shear cuts 10  bundles strapped 40  route rebar
+negative tests:
+  PASS N1 no-billet starvation (no fabricated product, balance closed) — rolls=0 dispatch=0 balance=0.0
+  PASS N2 crane non-release diverges from healthy — broken dispatch=0 healthy dispatch=10 broken crane_wait=0 (weakness: crane_wait unreachable under lazy dispatch)
+  PASS N3 capacity refusal fires only when physically reachable — control refusals=10 refusal_ticks=[11, 18, 25, 32, 39, 46, 53, 60, 67, 74] bare_residual=98.0 closed_residual=0.0
+  PASS N4 double-count control runs the broken rule and diverges — healthy residual=2.1316282072803006e-14 broken residual=-8.399999999999999
+S5.1 phase/process tests:
+  PASS P1 phase order reheat->rolling->cooling->shear per roll, idle outside — cycles=10 first=(5, ['reheat', 'rolling', 'cooling', 'shear']) idle_before_first=True
+  PASS P2 additive events/counters + pre-S5.1 regression unchanged — dis=[5, 12, 19]... shear=[10, 17, 24]... bundles=[11, 18, 25]... counters=10/10/40 reg=clean
+  PASS P3 views pure + bed/stand/bundle arithmetic — pure=True bed=True tamper=True mono=True resident_yard=True (units=4 loose=0.4)
+  PASS P4 routes: default heal, wire-rod idle, rebar tags — default=True same_outputs=True wr_idle=True tags=True
+  PASS N5 no-billet: zero process outputs, balance closed — dis=0 shear=0 bundles=0 balance=0.0
+  PASS N6 wire-rod enabled raises (defined-but-idle, F-08) — 
+  PASS N7 unknown active route raises — 
+  PASS N8 rebar disabled raises — 
+  PASS N9 active wire_rod (idle) raises — 
+measurement dump: C:\AI_LAB\SteelX\mirror\..\docs\evidence\s51\mirror_measure.json
+S5.1 phase tests: 9/9 PASS

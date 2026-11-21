@@ -202,3 +202,4 @@ EAF/LF/CCM, slice5 mills); each is a pure tick engine with a Python mirror + par
 | `docs/gameplay.md`, `docs/economy_spec.md`, `docs/sim_loop_spec.md`, `docs/foundations_definitions.md` | live contracts/specs |
 | `docs/audit_1_architecture_qwen.md`, `docs/audit_2_visuals_qwen.md` | external audit evidence (findings not all verified) |
 | `docs/Raodmap V3.md`, `RoadMap_V2.md`, old session prompts | FROZEN history — never plan from these |
+- [ ] AUDIT S5.1 report-1

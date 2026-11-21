@@ -78,6 +78,28 @@
       "note": "product-yard reorganization task enters the queue while O2 deadline approaches — crane contention pressure (same shape as the Slice 2 competing task)",
       "provenance": "game-balance"
     },
+    "product_routes": {
+      "active": "rebar",
+      "rebar": {
+        "enabled": true,
+        "stands_count": 6,
+        "bundle_t": 2.0,
+        "product_form": "bundle",
+        "provenance": "engineering-estimate",
+        "sme_pending": true,
+        "note": "6-stand bar mill (project baseline); rebar bundles ~2-3 t industry band, 2.0 t design midpoint. Bundle count is a presentation view (floor division), never an inventory split (F-08 tonnage-only)."
+      },
+      "wire_rod": {
+        "enabled": false,
+        "stands_count": 10,
+        "coil_t": 2.0,
+        "product_form": "coil",
+        "provenance": "engineering-estimate",
+        "sme_pending": true,
+        "note": "DEFINED-BUT-IDLE in v1 (F-08): routing drops in later as a switch. Wire-rod mills ~10-12 stands incl. laying head; rod coils ~1.5-3 t. The coil is the signature (S5.3)."
+      },
+      "note": "S5.1 two-route switch. active must be rebar in v1; enabling wire_rod raises (validate_scenario). Absent block = DEFAULT_PRODUCT_ROUTES (pre-S5.1 fixtures/states heal on first tick)."
+    },
     "win_condition": "3 orders dispatched in full before their deadlines, with material balance closed every tick",
     "feasibility_check": "Winning sequence hand-derived from stage order before shipping (mirror run is the arbiter): stage order per tick = order-deadline check, competing-task enqueue, carrier move, mill roll, dispatch task enqueue (at tick 1 for each open order), dispatch crane. Carrier moves start ticks 1,5,...,45 (12 moves = 120 t billet); rolls complete at 7,13,...,73 (12 x 9.8 = 117.6 t product). Dispatch tasks are enqueued at tick 1 (product yard is empty at start — first move cannot start before first product). Crane runs FIFO by priority: dispatch move completions at 4,7,10,13,16,19,22,25,28,31,34,37,40,43,46,49,52,55,58,61,64,67,70,73,76,79,82,85,88,91,94,97,100,103,106,109,112,115,118,121 (the last lands past tick 120 — 39 completions inside the run). The competing reorganize task (priority 1, created tick 40) overtakes the FIFO dispatch queue and runs ticks 40-43, delaying the tick-40 dispatch start to tick 44. O1 (30 t): completions at 4,7,10 = 30 t -> completed at tick 10 < deadline 60. O2 (30 t): completions at 13,16,19,22 = 39.2 t (whole-batch dispatch, no partial-batch splitting in v1) -> completed at tick 22 < 90. O3 (30 t): completions at 25,28,31,34 = 39.2 t -> completed at tick 34 < 120. Total dispatched inside the run = 39 moves x 9.8 t = 382.2 t. Product-yard capacity (60 t) is never binding here: max product-yard stock is 49 t at tick 72 (117.6 produced - 68.6 dispatched), so no refusal fires in the baseline — the capacity rule is proven by negative test N3, not by the baseline. Reachability check (standing rule): the contention block can only fire because the dispatch drain (3 ticks/move) is slower than the mill feed (4 ticks/move) and the yard has stock at tick 40 — verified by mirror run.",
     "dispatch_rule_note": "v1 dispatch rule is dispatch = min(stock, batch_t_per_move) — whole-batch moves, no partial-batch splitting. An order completes when cumulative dispatched_t >= required_t. A test that asserts 'backlog clears below required_t' contradicts this contract; expected values are derived from the contract arithmetic, not the narrative."
@@ -164,6 +186,40 @@
       "dispatched_t_total": 98.0,
       "revenue_usd": 62230.0,
       "revenue_note": "dispatched_t x price_mid 635.0 of content/prices/price_ladder_draft.json grade B500B (sme_pending band, midpoint convention stated explicitly); revenue fires on the actual dispatch outflow, not on arrival at the product yard"
+    },
+    "mill_process": {
+      "note": "S5.1 ADDITIVE outputs (pure derivation from the roll countdown, S2.0 heat-phase pattern). Every expected_outputs block above is UNCHANGED and re-asserted by the mirror P2 regression + the TS parity suite. Phase bands reheat[0,0.30)/rolling[0.30,0.55)/cooling[0.55,0.80)/shear[0.80,1.0) — design values sme_pending; all four observable at roll_ticks=6. Discrete ticks sample mid-band (frac multiples of 1/6); the S5.4 renderer interpolates frac continuously so stand/bed/glow sweep 0->1 (S2.2 sub-tick pattern). CONTRACT READING (flagged for SME): the bed/shear/bundle rhythm lives INSIDE the v1 roll cycle (presentation compression) — dispatch is NOT gated on cooling/bundling; hard process gating = later explicit rule change (same reading as S3.1 feed gating). Pins below MEASURED from the fresh mirror run (docs/evidence/s51/mirror_measure.json), never hand-derived.",
+      "route": "rebar",
+      "phase_ticks": {
+        "reheat": [5, 6, 12, 13, 19, 20, 26, 27, 33, 34, 40, 41, 47, 48, 54, 55, 61, 62, 68, 69],
+        "rolling": [7, 8, 14, 15, 21, 22, 28, 29, 35, 36, 42, 43, 49, 50, 56, 57, 63, 64, 70, 71],
+        "cooling": [9, 16, 23, 30, 37, 44, 51, 58, 65, 72],
+        "shear": [10, 17, 24, 31, 38, 45, 52, 59, 66, 73]
+      },
+      "events": {
+        "reheat_discharges": [5, 12, 19, 26, 33, 40, 47, 54, 61, 68],
+        "shear_cuts": [10, 17, 24, 31, 38, 45, 52, 59, 66, 73],
+        "bundles_strapped": [11, 18, 25, 32, 39, 46, 53, 60, 67, 74]
+      },
+      "counters_at_tick_120": {
+        "reheat_discharges": 10,
+        "shear_cuts": 10,
+        "bundles_strapped": 40
+      },
+      "key_ticks": {
+        "7": { "mill_phase": "rolling", "stand_progress": 0.133333, "current_stand": 0, "elongation_factor": 2.466667 },
+        "8": { "mill_phase": "rolling", "stand_progress": 0.8, "current_stand": 4, "elongation_factor": 9.8 },
+        "9": { "mill_phase": "cooling", "bed_walk_progress": 0.466667, "bed_glow": 0.533333, "bed_on_bed_t": 10.0 },
+        "10": { "mill_phase": "shear", "shearing": true }
+      },
+      "sme_pending": [
+        "phase bands (reheat 0.30 / rolling 0.55 / cooling 0.80)",
+        "stands_count: rebar 6, wire_rod 10",
+        "bundle_t 2.0 t (rebar bundles ~2-3 t), coil_t 2.0 t (rod coils ~1.5-3 t)",
+        "ELONGATION_TOTAL 12x — game-balance visual cue; real pass schedule is a Phase 2 upgrade path",
+        "hot-vs-cold shear reading (glow fades to black across the bed, cold shear at exit)",
+        "process gating on cooling/bundling — later explicit rule change, not assumed"
+      ]
     },
     "win": false,
     "win_note": "DEMO-LEVEL CLOSED: O1 completed @35 (<60) and O2 completed @63 (<90) with balance closed every tick; O3 misses ONLY because opening stock (100 t billet -> 98 t product) cannot cover 90 t demand plus whole-batch pipeline losses. Known limitation, documented; scenario-data fix (opening stock or order sizes) deferred to the later tuning pass per Yasser's decision.",

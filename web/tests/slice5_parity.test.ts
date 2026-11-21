@@ -16,6 +16,11 @@ import {
   targetMoves,
   deepClone,
   pyRound,
+  millProcessView,
+  productYardView,
+  routesOf,
+  millPhaseView,
+  DEFAULT_PRODUCT_ROUTES,
   type Slice5Fixture,
 } from '../src/ports/slice5/shared/slice5_sim.ts';
 
@@ -133,6 +138,9 @@ test('baseline: balance identity holds every tick (mirror semantics — in-fligh
     assert.ok(Math.abs(raw - st.balance_error) < 1e-9, `tick ${st.tick}: TS raw balance ${raw} != mirror-formula ${st.balance_error}`);
     assert.deepStrictEqual(records[i], {
       tick: st.tick,
+      mill_phase: st.mill.phase,
+      mill_phase_progress: pyRound(st.mill.phase_progress, 6),
+      mill_route: st.mill.route,
       crane_busy_task_type: st.crane.busy_task_id ? (st.tasks.find((t) => t.task_id === st.crane.busy_task_id)!.task_type as string) : null,
       product_yard_t: pyRound(st.product_yard_t, 6),
       dispatched_t: pyRound(st.counters.dispatched_t_total, 6),
@@ -271,4 +279,150 @@ test('validateScenario raises on every invalid input class (mirror messages pinn
   }
   // valid scenario passes
   assert.strictEqual(validateScenario(FIXTURE), true);
+});
+
+// ---------- S5.1 mill-process view (additive outputs; mirror-first, pure derivation) ----------
+// The pre-S5.1 baseline tests above ARE the regression guard: they still assert the unchanged
+// fixture expected_outputs (event ticks, counters, key ticks, balance) against the extended
+// port. These tests pin the ADDITIVE outputs measured from the fresh mirror run.
+
+const MP = (EXP as any).mill_process;
+
+function seedOrders(): ReturnType<typeof freshState> {
+  const st = freshState(FIXTURE);
+  for (const o of FIXTURE.scenario.orders) {
+    st.orders.push({ order_id: o.order_id, product_grade: o.product_grade, required_t: o.required_t, deadline_tick: o.deadline_tick, dispatched_t: 0.0, status: 'open', priority: 2 });
+  }
+  return st;
+}
+
+test('S5.1 phase_ticks: mill phase per tick matches fixture (pure derivation)', () => {
+  const { records } = run(FIXTURE, PRICE_MID);
+  for (const phase of ['reheat', 'rolling', 'cooling', 'shear'] as const) {
+    const got = records.filter((r) => r.mill_phase === phase).map((r) => r.tick);
+    assert.deepStrictEqual(got, MP.phase_ticks[phase], `phase ${phase} ticks`);
+  }
+  assert.strictEqual(records[0].mill_phase, null); // tick 1: before first roll
+  assert.strictEqual(records[10].mill_phase, null); // tick 11: first completion -> idle
+  assert.ok(records.every((r) => r.mill_route === 'rebar'));
+});
+
+test('S5.1 additive event ticks + counters match fixture pins (mirror-faithful strings)', () => {
+  const { state } = run(FIXTURE, PRICE_MID);
+  const ticksOf = (pred: (e: string) => boolean) => state.events.filter((e) => pred(e.event)).map((e) => e.tick);
+  assert.deepStrictEqual(ticksOf((e) => e.startsWith('reheat discharge:')), MP.events.reheat_discharges);
+  assert.deepStrictEqual(ticksOf((e) => e.startsWith('shear cuts bar')), MP.events.shear_cuts);
+  assert.deepStrictEqual(ticksOf((e) => e.startsWith('bundles strapped:')), MP.events.bundles_strapped);
+  assert.strictEqual(state.counters.reheat_discharges, MP.counters_at_tick_120.reheat_discharges); // 10
+  assert.strictEqual(state.counters.shear_cuts, MP.counters_at_tick_120.shear_cuts); // 10
+  assert.strictEqual(state.counters.bundles_strapped, MP.counters_at_tick_120.bundles_strapped); // 40
+  // Python float formatting preserved: 10.0t / 2.0t / 1.8t (pyFloatStr + pyRound)
+  assert.ok(state.events.some((e) => e.event === 'reheat discharge: 10.0t billet -> stands (route rebar)'));
+  assert.ok(state.events.some((e) => e.event === 'shear cuts bar to length (route rebar, 9.8t batch)'));
+  assert.ok(state.events.some((e) => e.event === 'bundles strapped: 4 x 2.0t + 1.8t loose (route rebar)'));
+});
+
+test('S5.1 key_ticks: view snapshots match fixture (stand/bed/shear arithmetic)', () => {
+  let st = seedOrders();
+  const snaps: Record<number, { mill: ReturnType<typeof millProcessView>; yard: ReturnType<typeof productYardView> }> = {};
+  for (let i = 0; i < 10; i++) {
+    st = tick(st, FIXTURE, PRICE_MID);
+    if ([7, 8, 9, 10].includes(st.tick)) snaps[st.tick] = { mill: millProcessView(st, FIXTURE), yard: productYardView(st, FIXTURE) };
+  }
+  const near = (a: number, b: number) => assert.ok(Math.abs(a - b) < 1e-6, `${a} != ${b}`);
+  const k7 = MP.key_ticks['7'], k8 = MP.key_ticks['8'], k9 = MP.key_ticks['9'], k10 = MP.key_ticks['10'];
+  assert.strictEqual(snaps[7].mill.phase, k7.mill_phase);
+  near(snaps[7].mill.stand_progress!, k7.stand_progress);
+  assert.strictEqual(snaps[7].mill.current_stand, k7.current_stand);
+  near(snaps[7].mill.elongation_factor, k7.elongation_factor);
+  assert.strictEqual(snaps[8].mill.phase, k8.mill_phase);
+  near(snaps[8].mill.stand_progress!, k8.stand_progress);
+  assert.strictEqual(snaps[8].mill.current_stand, k8.current_stand);
+  near(snaps[8].mill.elongation_factor, k8.elongation_factor);
+  assert.strictEqual(snaps[9].mill.phase, k9.mill_phase);
+  near(snaps[9].mill.bed!.walk_progress, k9.bed_walk_progress);
+  near(snaps[9].mill.bed!.glow, k9.bed_glow);
+  assert.strictEqual(snaps[9].mill.bed!.on_bed_t, k9.bed_on_bed_t);
+  assert.strictEqual(snaps[10].mill.phase, k10.mill_phase);
+  assert.strictEqual(snaps[10].mill.shearing, k10.shearing);
+  assert.strictEqual(snaps[10].mill.bed, null);
+});
+
+test('S5.1 views are pure: state never mutated; tampering a clone cannot move the ledger', () => {
+  let st = seedOrders();
+  for (let i = 0; i < 9; i++) st = tick(st, FIXTURE, PRICE_MID); // tick 9 = cooling band
+  const before = JSON.stringify(st);
+  const v = millProcessView(st, FIXTURE);
+  const y = productYardView(st, FIXTURE);
+  assert.strictEqual(JSON.stringify(st), before, 'view mutated state');
+  v.bed!.glow = -999;
+  y.units = 999; // mutate the returned views — must not alias state
+  assert.strictEqual(JSON.stringify(st), before, 'view output aliases state');
+  const clone = deepClone(st);
+  clone.product_yard_t = 999.0;
+  productYardView(clone, FIXTURE);
+  assert.strictEqual(JSON.stringify(st), before, 'clone tamper moved the original ledger');
+  const raw = 100.0 - st.carrier.batch_t - st.mill.batch_t - st.product_yard_t - st.counters.dispatched_t_total - st.counters.yield_loss_t;
+  assert.ok(Math.abs(st.balance_error - raw) < 1e-9, 'balance identity diverged');
+});
+
+test('S5.1 routes: absent block heals to default; wire-rod idle; rebar tags on every new event', () => {
+  const fxNo = withScenario((c) => { delete c.product_routes; });
+  assert.deepStrictEqual(routesOf(fxNo), DEFAULT_PRODUCT_ROUTES);
+  const a = run(fxNo, PRICE_MID);
+  const b = run(FIXTURE, PRICE_MID);
+  assert.deepStrictEqual(a.state.counters, b.state.counters, 'default heal diverged');
+  assert.deepStrictEqual(a.records.map((r) => r.mill_phase), b.records.map((r) => r.mill_phase));
+  assert.ok(!b.state.events.some((e) => e.event.includes('wire_rod')), 'wire-rod produced while idle');
+  const newEvents = b.state.events.filter((e) => /^(reheat discharge:|shear cuts bar|bundles strapped:)/.test(e.event));
+  assert.ok(newEvents.length > 0);
+  assert.ok(newEvents.every((e) => e.event.includes('route rebar')), 'missing route tag');
+});
+
+test('S5.1 resident-yard bundle arithmetic: 8.4 t -> 4 bundles + 0.4 t loose (P3)', () => {
+  const fx = withScenario((c) => { c.dispatch_crane.move_ticks = 10; });
+  const { state } = run(fx, PRICE_MID);
+  assert.ok(Math.abs(state.product_yard_t - 8.4) < 1e-9);
+  const y = productYardView(state, fx);
+  assert.strictEqual(y.units, 4);
+  assert.ok(Math.abs(y.loose_t - 0.4) < 1e-9);
+  assert.strictEqual(y.product_form, 'bundle');
+});
+
+test('S5.1 no-billet: zero process outputs, balance closed (N5)', () => {
+  const fx = withScenario((c) => { c.billet_yard.initial_billet_t = 0.0; });
+  const { state } = run(fx, PRICE_MID);
+  assert.strictEqual(state.counters.reheat_discharges, 0);
+  assert.strictEqual(state.counters.shear_cuts, 0);
+  assert.strictEqual(state.counters.bundles_strapped, 0);
+  assert.ok(!state.events.some((e) => /^(reheat discharge:|shear cuts bar|bundles strapped:)/.test(e.event)));
+  assert.ok(Math.abs(state.balance_error) < 1e-6);
+});
+
+test('S5.1 validateScenario route negatives raise with pinned messages (N6-N9)', () => {
+  const cases: Array<[string, (c: any) => void, string]> = [
+    ['wire-rod enabled', (c) => { c.product_routes.wire_rod.enabled = true; }, 'defined-but-idle'],
+    ['unknown active route', (c) => { c.product_routes.active = 'bogus'; }, 'unknown product route'],
+    ['rebar disabled', (c) => { c.product_routes.rebar.enabled = false; }, 'rebar route must be enabled'],
+    ['active wire_rod (idle)', (c) => { c.product_routes.active = 'wire_rod'; }, 'v1 active route must be rebar'],
+  ];
+  for (const [name, mut, msg] of cases) {
+    const fx = withScenario(mut);
+    assert.throws(() => validateScenario(fx), (err: unknown) => {
+      const m = err instanceof Error ? err.message : String(err);
+      assert.ok(m.includes(msg), `${name}: "${m}" lacks "${msg}"`);
+      return true;
+    }, `${name}: expected raise`);
+  }
+  assert.strictEqual(validateScenario(FIXTURE), true);
+  assert.strictEqual(validateScenario(withScenario((c) => { delete c.product_routes; })), true); // pre-S5.1 heal
+});
+
+test('S5.1 millPhaseView: band edges + raises on non-positive total (mirror semantics)', () => {
+  assert.deepStrictEqual(millPhaseView(6, 6), ['reheat', 0.0]);
+  assert.strictEqual(millPhaseView(4, 6)[0], 'rolling');
+  assert.strictEqual(millPhaseView(2, 6)[0], 'cooling');
+  assert.strictEqual(millPhaseView(1, 6)[0], 'shear');
+  assert.throws(() => millPhaseView(1, 0), /roll_ticks must be positive/);
+  assert.throws(() => millPhaseView(1, -3), /roll_ticks must be positive/);
 });

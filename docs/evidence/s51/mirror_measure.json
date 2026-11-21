@@ -1,0 +1,218 @@
+{
+  "reheat_discharge_ticks": [
+    5,
+    12,
+    19,
+    26,
+    33,
+    40,
+    47,
+    54,
+    61,
+    68
+  ],
+  "shear_cut_ticks": [
+    10,
+    17,
+    24,
+    31,
+    38,
+    45,
+    52,
+    59,
+    66,
+    73
+  ],
+  "bundle_ticks": [
+    11,
+    18,
+    25,
+    32,
+    39,
+    46,
+    53,
+    60,
+    67,
+    74
+  ],
+  "phase_ticks": {
+    "reheat": [
+      5,
+      6,
+      12,
+      13,
+      19,
+      20,
+      26,
+      27,
+      33,
+      34,
+      40,
+      41,
+      47,
+      48,
+      54,
+      55,
+      61,
+      62,
+      68,
+      69
+    ],
+    "rolling": [
+      7,
+      8,
+      14,
+      15,
+      21,
+      22,
+      28,
+      29,
+      35,
+      36,
+      42,
+      43,
+      49,
+      50,
+      56,
+      57,
+      63,
+      64,
+      70,
+      71
+    ],
+    "cooling": [
+      9,
+      16,
+      23,
+      30,
+      37,
+      44,
+      51,
+      58,
+      65,
+      72
+    ],
+    "shear": [
+      10,
+      17,
+      24,
+      31,
+      38,
+      45,
+      52,
+      59,
+      66,
+      73
+    ]
+  },
+  "counters_at_tick_120": {
+    "reheat_discharges": 10,
+    "shear_cuts": 10,
+    "bundles_strapped": 40
+  },
+  "sample_events": [
+    "carrier move completes: 10.0t delivered to mill",
+    "mill roll starts on 10.0t batch",
+    "reheat discharge: 10.0t billet -> stands (route rebar)",
+    "carrier move completes: 10.0t delivered to mill",
+    "shear cuts bar to length (route rebar, 9.8t batch)",
+    "carrier move starts: 10.0t billet -> rebar mill",
+    "mill roll completes: 9.8t product -> product yard",
+    "bundles strapped: 4 x 2.0t + 1.8t loose (route rebar)",
+    "dispatch move starts for order O1: 9.8t"
+  ],
+  "view_snapshots": {
+    "7": {
+      "mill": {
+        "route": "rebar",
+        "product_form": "bundle",
+        "phase": "rolling",
+        "phase_progress": 0.13333333333333328,
+        "stands_count": 6,
+        "stand_progress": 0.13333333333333328,
+        "current_stand": 0,
+        "elongation_factor": 2.466666666666666,
+        "bed": null,
+        "shearing": false
+      },
+      "yard": {
+        "route": "rebar",
+        "product_form": "bundle",
+        "yard_t": 0.0,
+        "units": 0,
+        "unit_t": 2.0,
+        "loose_t": 0.0
+      }
+    },
+    "8": {
+      "mill": {
+        "route": "rebar",
+        "product_form": "bundle",
+        "phase": "rolling",
+        "phase_progress": 0.7999999999999998,
+        "stands_count": 6,
+        "stand_progress": 0.7999999999999998,
+        "current_stand": 4,
+        "elongation_factor": 9.799999999999997,
+        "bed": null,
+        "shearing": false
+      },
+      "yard": {
+        "route": "rebar",
+        "product_form": "bundle",
+        "yard_t": 0.0,
+        "units": 0,
+        "unit_t": 2.0,
+        "loose_t": 0.0
+      }
+    },
+    "9": {
+      "mill": {
+        "route": "rebar",
+        "product_form": "bundle",
+        "phase": "cooling",
+        "phase_progress": 0.46666666666666634,
+        "stands_count": 6,
+        "stand_progress": null,
+        "current_stand": null,
+        "elongation_factor": 1.0,
+        "bed": {
+          "on_bed_t": 10.0,
+          "walk_progress": 0.46666666666666634,
+          "glow": 0.5333333333333337
+        },
+        "shearing": false
+      },
+      "yard": {
+        "route": "rebar",
+        "product_form": "bundle",
+        "yard_t": 0.0,
+        "units": 0,
+        "unit_t": 2.0,
+        "loose_t": 0.0
+      }
+    },
+    "10": {
+      "mill": {
+        "route": "rebar",
+        "product_form": "bundle",
+        "phase": "shear",
+        "phase_progress": 0.16666666666666666,
+        "stands_count": 6,
+        "stand_progress": null,
+        "current_stand": null,
+        "elongation_factor": 1.0,
+        "bed": null,
+        "shearing": true
+      },
+      "yard": {
+        "route": "rebar",
+        "product_form": "bundle",
+        "yard_t": 0.0,
+        "units": 0,
+        "unit_t": 2.0,
+        "loose_t": 0.0
+      }
+    }
+  }
+}

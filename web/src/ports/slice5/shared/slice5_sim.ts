@@ -40,6 +40,10 @@ export interface MillState {
   busy: boolean;
   remaining_ticks: number;
   batch_t: number; // residence: batch on the mill
+  // S5.1 additive (pure derivation from the countdown; heals pre-S5.1 states on first tick)
+  phase: MillPhase | null;
+  phase_progress: number;
+  route: string;
 }
 
 export interface CraneState {
@@ -91,6 +95,10 @@ export interface Counters {
   yield_loss_t: number;
   dispatched_t_total: number;
   revenue_usd: number;
+  // S5.1 additive counters (presentation rhythm; never inventory terms)
+  reheat_discharges: number;
+  shear_cuts: number;
+  bundles_strapped: number;
 }
 
 export interface Slice5State {
@@ -120,6 +128,7 @@ export interface Slice5Scenario {
   dispatch_crane: { batch_t_per_move: number; move_ticks: number };
   orders: Array<{ order_id: string; product_grade: string; required_t: number; deadline_tick: number }>;
   competing_task?: { tick: number; task_type: string; note: string };
+  product_routes?: ProductRoutesBlock; // S5.1 two-route switch (absent = default heal)
   [k: string]: unknown;
 }
 
@@ -141,6 +150,9 @@ export interface TickSeams {
 
 export interface TickRecord {
   tick: number;
+  mill_phase: MillPhase | null; // S5.1 additive
+  mill_phase_progress: number;
+  mill_route: string;
   crane_busy_task_type: string | null;
   product_yard_t: number;
   dispatched_t: number;
@@ -171,13 +183,74 @@ export function loadPriceMid(doc: { grades: Array<{ id: string; price_mid: numbe
   return out;
 }
 
+// S5.1 mill-process view (PLAN_FORGED Stage 5): shared contract for the mill animation
+// (S5.4) + cutaway cards. PURE DERIVATION from the roll countdown (S2.0 heat-phase pattern)
+// — roll start/completion ticks, existing events/counters, dispatch, revenue and the balance
+// identity are UNCHANGED. New outputs are additive. Mirror = single source of truth.
+export type MillPhase = 'reheat' | 'rolling' | 'cooling' | 'shear';
+// Design bands, sme_pending (SME calibrates). All four observable at roll_ticks=6.
+export const MILL_PHASE_BANDS: ReadonlyArray<readonly [MillPhase, number, number]> = [
+  ['reheat', 0.0, 0.30],
+  ['rolling', 0.30, 0.55],
+  ['cooling', 0.55, 0.80],
+  ['shear', 0.80, 1.0],
+];
+// Visual mass-flow continuity cue ("longer as it thins", S5.4). Game-balance, NOT industry
+// fact (real billet->rebar elongation ~100-150x from the pass schedule, Phase 2). sme_pending.
+export const ELONGATION_TOTAL = 12.0;
+export interface RouteConfig {
+  enabled: boolean;
+  stands_count: number;
+  product_form: 'bundle' | 'coil';
+  bundle_t?: number;
+  coil_t?: number;
+  [k: string]: unknown;
+}
+export interface ProductRoutesBlock {
+  active: string;
+  rebar: RouteConfig;
+  wire_rod: RouteConfig;
+  [k: string]: unknown;
+}
+// Rebar LIVE, wire rod DEFINED-BUT-IDLE (F-08) so routing drops in later as a switch.
+// sme_pending: stands_count (rebar 6 / wire-rod 10), bundle_t 2.0 (~2-3 t), coil_t 2.0 (~1.5-3 t).
+export const DEFAULT_PRODUCT_ROUTES: ProductRoutesBlock = {
+  active: 'rebar',
+  rebar: { enabled: true, stands_count: 6, bundle_t: 2.0, product_form: 'bundle' },
+  wire_rod: { enabled: false, stands_count: 10, coil_t: 2.0, product_form: 'coil' },
+};
+export function routesOf(fx: Slice5Fixture): ProductRoutesBlock {
+  // Mirror `get('product_routes') or DEFAULT` — absent/empty heals to the default.
+  const pr = fx.scenario.product_routes;
+  return pr && Object.keys(pr).length ? pr : DEFAULT_PRODUCT_ROUTES;
+}
+// (phase, progress-in-phase) from the countdown — same shape as S2.0 heat_phase_view.
+export function millPhaseView(remainingTicks: number, totalTicks: number): [MillPhase, number] {
+  if (!(totalTicks > 0)) {
+    throw new Error('rebar_mill.roll_ticks must be positive');
+  }
+  const frac = Math.max(0.0, Math.min(1.0, (totalTicks - remainingTicks) / totalTicks));
+  for (const [name, a, b] of MILL_PHASE_BANDS) {
+    if (frac < b || name === 'shear') {
+      return [name, Math.max(0.0, Math.min(1.0, (frac - a) / (b - a)))];
+    }
+  }
+  throw new Error('unreachable: MILL_PHASE_BANDS cover [0,1]');
+}
+// Python str(float) prints integral floats with a trailing .0 (2.0 -> "2.0"); JS String(2)
+// drops it. New S5.1 event strings use this to stay mirror-faithful. Existing event lines
+// keep their pre-S5.1 formatting — parity is tick-level (fixture expected_outputs.events).
+export function pyFloatStr(x: number): string {
+  return Number.isInteger(x) ? x.toFixed(1) : String(x);
+}
+
 export function freshState(fx: Slice5Fixture): Slice5State {
   const c = fx.scenario;
   return {
     tick: 0,
     billet_yard_t: c.billet_yard.initial_billet_t,
     carrier: { busy: false, remaining_ticks: 0, batch_t: 0.0 },
-    mill: { busy: false, remaining_ticks: 0, batch_t: 0.0 }, // residence: batch on the mill
+    mill: { busy: false, remaining_ticks: 0, batch_t: 0.0, phase: null, phase_progress: 0.0, route: routesOf(fx).active }, // residence + S5.1 additive
     product_yard_t: 0.0,
     product_yard_capacity_t: c.product_yard.capacity_t,
     crane: { busy_task_id: null, remaining_ticks: 0 },
@@ -197,6 +270,9 @@ export function freshState(fx: Slice5Fixture): Slice5State {
       yield_loss_t: 0.0,
       dispatched_t_total: 0.0,
       revenue_usd: 0.0,
+      reheat_discharges: 0,
+      shear_cuts: 0,
+      bundles_strapped: 0,
     },
     balance_error: 0.0,
     win: null,
@@ -234,6 +310,22 @@ export function validateScenario(fx: Slice5Fixture): true {
   for (const o of c.orders) {
     if (o.required_t <= 0 || o.deadline_tick <= 0) {
       throw new Error(`order ${o.order_id}: required_t and deadline_tick must be positive`);
+    }
+  }
+  // S5.1 route switch validation (absent block = pre-S5.1 default, never rejected).
+  const pr = c.product_routes;
+  if (pr != null) {
+    if (pr.active !== 'rebar' && pr.active !== 'wire_rod') {
+      throw new Error(`unknown product route ${JSON.stringify(pr.active)} (rebar|wire_rod)`);
+    }
+    if (!pr.rebar?.enabled) {
+      throw new Error('rebar route must be enabled (the live v1 branch)');
+    }
+    if (pr.wire_rod?.enabled) {
+      throw new Error('wire-rod route is defined-but-idle in v1 (F-08) — routing drops in later as a switch');
+    }
+    if (pr.active !== 'rebar') {
+      throw new Error('v1 active route must be rebar (wire rod defined-but-idle, F-08)');
     }
   }
   return true;
@@ -276,6 +368,7 @@ export function tick(
   const c = fx.scenario;
   const cnt = s.counters;
   const ev: string[] = [];
+  s.mill.route = routesOf(fx).active; // S5.1: heal restored pre-S5.1 states
 
   // 1) Order deadlines checked at tick entry (deadline boundary is behavior, not a bug).
   for (const o of s.orders) {
@@ -325,6 +418,9 @@ export function tick(
       mill.remaining_ticks = c.rebar_mill.roll_ticks;
       mill.batch_t -= c.rebar_mill.batch_t_per_move;
       ev.push(`mill roll starts on ${c.rebar_mill.batch_t_per_move}t batch`);
+      // S5.1 additive: reheat discharge glow cue (S5.4) at roll start.
+      cnt.reheat_discharges += 1;
+      ev.push(`reheat discharge: ${pyFloatStr(c.rebar_mill.batch_t_per_move)}t billet -> stands (route ${mill.route})`);
     } else if (mill.batch_t > 0) {
       cnt.mill_starved_ticks += 1;
       ev.push('mill idle — partial batch on the mill (no fabricated roll)');
@@ -343,8 +439,34 @@ export function tick(
         s.product_yard_t += product;
         cnt.rolls_completed += 1;
         ev.push(`mill roll completes: ${pyRound(product, 3)}t product -> product yard`);
+        // S5.1 additive: shear+bundle result at completion (presentation view; floor
+        // division, loose remainder stays in tonnage — no inventory split).
+        const rt = routesOf(fx).rebar;
+        const nBundles = Math.floor(product / rt.bundle_t!);
+        const looseT = product - nBundles * rt.bundle_t!;
+        cnt.bundles_strapped += nBundles;
+        ev.push(`bundles strapped: ${nBundles} x ${pyFloatStr(rt.bundle_t!)}t + ${pyRound(looseT, 3)}t loose (route ${mill.route})`);
       }
       mill.busy = false;
+    }
+  }
+
+  // S5.1: derive the mill phase enum from the roll countdown (pure presentation contract,
+  // S2.0 shape; set unconditionally so restored pre-S5.1 states heal). The shear-cut event
+  // fires on the cooling->shear band transition; prev phase is read from the INPUT state
+  // (pure state-in, no extra state field).
+  const prevPhase = state.mill.phase ?? null;
+  if (!mill.busy) {
+    mill.phase = null;
+    mill.phase_progress = 0.0;
+  } else {
+    const [ph, pp] = millPhaseView(mill.remaining_ticks, c.rebar_mill.roll_ticks);
+    mill.phase = ph;
+    mill.phase_progress = pp;
+    if (ph === 'shear' && prevPhase !== 'shear') {
+      const productT = (c.rebar_mill.batch_t_per_move * (100.0 - c.rebar_mill.yield_loss_pct)) / 100.0;
+      cnt.shear_cuts += 1;
+      ev.push(`shear cuts bar to length (route ${mill.route}, ${pyRound(productT, 3)}t batch)`);
     }
   }
 
@@ -482,6 +604,9 @@ export function run(
     st = tick(st, fx, priceMid, { double_count, max_dispatch_moves });
     records.push({
       tick: st.tick,
+      mill_phase: st.mill.phase,
+      mill_phase_progress: pyRound(st.mill.phase_progress, 6),
+      mill_route: st.mill.route,
       crane_busy_task_type: st.crane.busy_task_id
         ? st.tasks.find((t) => t.task_id === st.crane.busy_task_id)!.task_type
         : null,
@@ -499,4 +624,84 @@ export function run(
 export function targetMoves(fx: Slice5Fixture): number {
   const batch = fx.scenario.dispatch_crane.batch_t_per_move;
   return fx.scenario.orders.reduce((acc, o) => acc + Math.ceil(o.required_t / batch), 0);
+}
+
+// S5.1 pure projection for the mill animation (S5.4) + cutaway cards. Reads state, returns
+// a NEW object; never mutates state or the ledger. Tonnage-only (F-08): bed occupancy shows
+// the batch on the mill (residence tonnage); bundle/coil counts are floor-division presentation
+// views, never an inventory split. v1 dispatch is NOT gated on cooling/bundling — the
+// bed/shear/bundle rhythm lives INSIDE the roll cycle (presentation compression); hard process
+// gating = later explicit rule change. Mirror: mill_process_view.
+export interface MillProcessView {
+  route: string;
+  product_form: 'bundle' | 'coil';
+  phase: MillPhase | null;
+  phase_progress: number;
+  stands_count: number;
+  stand_progress: number | null;
+  current_stand: number | null;
+  elongation_factor: number;
+  bed: { on_bed_t: number; walk_progress: number; glow: number } | null;
+  shearing: boolean;
+}
+export function millProcessView(state: Slice5State, fx: Slice5Fixture): MillProcessView {
+  const c = fx.scenario;
+  const rt = routesOf(fx);
+  const route = rt.active;
+  const cfg = rt[route as 'rebar' | 'wire_rod'];
+  const mill = state.mill;
+  const phase = mill.phase ?? null;
+  const pp = mill.phase_progress ?? 0.0;
+  const view: MillProcessView = {
+    route,
+    product_form: cfg.product_form,
+    phase,
+    phase_progress: pp,
+    stands_count: cfg.stands_count,
+    stand_progress: null,
+    current_stand: null,
+    elongation_factor: 1.0,
+    bed: null,
+    shearing: phase === 'shear',
+  };
+  if (phase === 'rolling') {
+    view.stand_progress = pp;
+    view.current_stand = Math.min(cfg.stands_count - 1, Math.floor(pp * cfg.stands_count));
+    view.elongation_factor = 1.0 + (ELONGATION_TOTAL - 1.0) * pp;
+  } else if (phase === 'cooling') {
+    view.bed = {
+      on_bed_t: c.rebar_mill.batch_t_per_move,
+      walk_progress: pp, // bars step across the walking beam (S5.4)
+      glow: 1.0 - pp, // hot -> black across the bed; cold shear at exit
+    };
+  }
+  return view;
+}
+
+// S5.1 finished-yard presentation view (S5.5): strapped bundles (rebar) or coils (wire rod,
+// later) = floor(tonnage / unit_t); loose remainder stays in tonnage. Pure; never mutates
+// state. v1 tonnage-only dispatch can split a bundle across moves — presentation, not an
+// inventory ledger (F-08). Mirror: product_yard_view.
+export interface ProductYardView {
+  route: string;
+  product_form: 'bundle' | 'coil';
+  yard_t: number;
+  units: number;
+  unit_t: number;
+  loose_t: number;
+}
+export function productYardView(state: Slice5State, fx: Slice5Fixture): ProductYardView {
+  const rt = routesOf(fx);
+  const cfg = rt[rt.active as 'rebar' | 'wire_rod'];
+  const unitT = (cfg.product_form === 'bundle' ? cfg.bundle_t : cfg.coil_t)!;
+  const yardT = state.product_yard_t;
+  const units = Math.floor(yardT / unitT);
+  return {
+    route: rt.active,
+    product_form: cfg.product_form,
+    yard_t: yardT,
+    units,
+    unit_t: unitT,
+    loose_t: yardT - units * unitT,
+  };
 }
